@@ -6,4 +6,4 @@ Basic monitor system with notifications for arduino, using:
     + serial
     + sqlite3
     + Sequelize
-    + Pase
+    + Parse

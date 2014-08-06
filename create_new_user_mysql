@@ -1,0 +1,3 @@
+CREATE USER 'henan'@'localhost' INTETIFIED BY 'henan2009';
+GRANT ALL PRIVILEGES ON * . * TO 'henan'@'localhost';
+FLUSH PRIVILEGES;
