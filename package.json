@@ -1,28 +1,24 @@
 {
-  "name": "monitduino",
-  "version": "0.0.0",
-  "description": "simple monitoring system for arduino",
-  "main": "index.js",
-  "scripts": {
-    "test": "test"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@bitbucket.org:rscnt/monitduino.git"
-  },
-  "keywords": [
-    "arduino",
-    "monitor"
-  ],
-  "dependencies": {
-      "sequelize": "*",
-      "parse": "*",
-      "johnny-five": "*",
-      "serialport": "*",
-      "nunjucks": "*",
-      "socket.io": "*",
-      "express": "*"
-  },
-  "author": "henry ascencio",
-  "license": "MIT"
+    "name": "monitduino",
+    "version": "0.0.1",
+    "private": true,
+    "scripts": {
+        "start": "node ./bin/www"
+    },
+    "dependencies": {
+        "express": "~4.2.0",
+        "static-favicon": "~1.0.0",
+        "morgan": "~1.0.0",
+        "cookie-parser": "~1.0.1",
+        "body-parser": "~1.0.0",
+        "debug": "~0.7.4",
+        "jade": "~1.3.0",
+        "sequelize": "*",
+        "parse": "*",
+        "johnny-five": "*",
+        "serialport": "*",
+        "nunjucks": "*",
+        "socket.io": "*",
+        "express": "*"
+    }
 }
