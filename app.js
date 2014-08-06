@@ -8,6 +8,9 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
+//sequelize
+var db = require('./models');
+
 var app = express();
 
 // view engine setup
@@ -55,5 +58,20 @@ app.use(function(err, req, res, next) {
     });
 });
 
+// squalize
 
-module.exports = app;
+db
+.sequelize
+.sync({ force: true })
+.complete(function(err) {
+    if (err) {
+        throw err[0]
+    } else {
+        http.createServer(app).listen(app.get('port'), function(){
+            monit.init();
+            console.log('Express server listening on port ' + app.get('port'))
+        })
+    }
+});
+
+//module.exports = app;
