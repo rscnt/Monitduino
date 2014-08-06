@@ -1,6 +1,7 @@
 module.exports = function(sequelize, DataTypes) {
     var Registry = sequelize.define('Registry', {
-        data: DataTypes.DATE,
+        name: DataTypes.STRING,
+        date: DataTypes.DATE,
         value: DataTypes.DECIMAL,
     }, {
         classMethods: {

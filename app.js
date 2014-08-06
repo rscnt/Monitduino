@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-var debug = require('debug')('monitduino');
 
 var express = require('express');
 var path = require('path');
@@ -12,8 +11,9 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 
 //sequelize
-var http = require('http');
 var db = require('./models');
+
+
 
 var app = express();
 
@@ -66,6 +66,9 @@ app.use(function(err, req, res, next) {
 
 
 app.set('port', process.env.PORT || 3000);
+
+var debug = require('debug')('monitduino');
+
 db
 .sequelize
 .sync({ force: true })
