@@ -19,6 +19,7 @@
         "serialport": "*",
         "nunjucks": "*",
         "socket.io": "*",
-        "express": "*"
+        "express": "*",
+        "sqlite3": "*"
     }
 }
