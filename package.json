@@ -3,7 +3,7 @@
     "version": "0.0.1",
     "private": true,
     "scripts": {
-        "start": "node ./bin/www"
+        "start": "node ./app.js"
     },
     "dependencies": {
         "express"        : "~4.2.0",
@@ -14,13 +14,14 @@
         "debug"          : "~0.7.4",
         "jade"           : "~1.3.0",
         "sequelize"      : "*",
+        "sequelize-cli"  : "*",
         "parse"          : "*",
         "johnny-five"    : "*",
         "serialport"     : "*",
         "nunjucks"       : "*",
         "socket.io"      : "*",
         "express"        : "*",
-        "sqlite3"        : "*",
+        "mysql"          : "*",
         "lodash"         : "*"
     }
 }

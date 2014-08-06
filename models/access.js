@@ -1,13 +1,13 @@
 module.exports = function(sequelize, DataTypes) {
-    var Acceso = sequelize.define('Acceso', {
-        fecha: DataTypes.DATE
+    var Access = sequelize.define('Access', {
+        date: DataTypes.DATE
     }, {
         classMethods: {
             associate: function(models) {
-                Acceso.belongsTo(models.Usuario);
+                Access.belongsTo(models.User);
             }
         }
     });
 
-   return Acceso;
+   return Access;
 };

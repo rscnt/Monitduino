@@ -1,16 +1,16 @@
-models.exports = function(sequelize, DataTypes) {
-    var Dato = sequelize.define('Dato', {
-        maximo: DataTypes.DECIMAL,
-        minimo: DataTypes.DECIMAL,
-        metrica: DataTypes.STRING,
-        descripcion: DataTypes.TEXT
+module.exports = function(sequelize, DataTypes) {
+    var Data = sequelize.define('Data', {
+        max: DataTypes.DECIMAL,
+        min: DataTypes.DECIMAL,
+        metric: DataTypes.STRING,
+        description: DataTypes.TEXT
     }, {
         classMethods: {
             associate: function(models) {
-                Dato.belongsTo(models.Registro);
+                Data.belongsTo(models.Registry);
             }
         }
     });
 
-    return Dato;
+    return Data;
 }

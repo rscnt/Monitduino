@@ -1,3 +1,6 @@
+#!/usr/bin/env node
+var debug = require('debug')('monitduino');
+
 var express = require('express');
 var path = require('path');
 var favicon = require('static-favicon');
@@ -9,6 +12,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 
 //sequelize
+var http = require('http');
 var db = require('./models');
 
 var app = express();
@@ -60,6 +64,8 @@ app.use(function(err, req, res, next) {
 
 // squalize
 
+
+app.set('port', process.env.PORT || 3000);
 db
 .sequelize
 .sync({ force: true })
@@ -67,10 +73,9 @@ db
     if (err) {
         throw err[0]
     } else {
-        http.createServer(app).listen(app.get('port'), function(){
-            monit.init();
-            console.log('Express server listening on port ' + app.get('port'))
-        })
+        var server = app.listen(app.get('port'), function() {
+            debug('Express server listening on port ' + server.address().port);
+        });
     }
 });
 
