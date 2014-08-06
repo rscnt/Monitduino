@@ -1,0 +1,28 @@
+{
+  "name": "monitduino",
+  "version": "0.0.0",
+  "description": "simple monitoring system for arduino",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@bitbucket.org:rscnt/monitduino.git"
+  },
+  "keywords": [
+    "arduino",
+    "monitor"
+  ],
+  "dependencies": {
+      "sequelize": "*",
+      "parse": "*",
+      "johnny-five": "*",
+      "serialport": "*",
+      "nunjucks": "*",
+      "socket.io": "*",
+      "express": "*"
+  },
+  "author": "henry ascencio",
+  "license": "MIT"
+}
