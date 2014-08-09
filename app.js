@@ -19,6 +19,9 @@ var app = express();
 var http = require('http').Server(app);
 var io = require("socket.io")(http);
 
+var ard = require('./monitduino/jfive');
+ard.init();
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
