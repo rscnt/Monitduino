@@ -77,8 +77,8 @@ var init = function() {board.on("ready", function(){
 			console.log(tro);
 		});
 
+        
 // object
-
 this.repl.inject({
 	liq_a: liq_a, 
 	liq_b: liq_b,
@@ -88,22 +88,52 @@ this.repl.inject({
 });
 };
 
-var initS = function() { serialPort.on('open',function() {
-	console.log('Port open');
-});
+/* 
+ * initS : 
+ * A callback is supposed to be passed, when is opened, we do something. 
+ */
+var initS = function(callback) { 
+    serialPort.on('open',function() {
+        if (typeof callback === "function") {
+            callback.call();
+        }
+    });
 };
 
-var dataS = function() {serialPort.on('data', function(data) {
-	var info = data; 					//recolecta info del puerto serial
-	var ext = info.split(","); 			//divide la informacion (Hum, Temp)
-	var celsius = parseFloat(ext[1]); 	//recoge la temperatura
-	var hum_ = parseFloat(ext[0]);		//recoge la humedad.
-	return celsius","hum_;	
-});
+/* 
+ * dataS : 
+ * Accepts a function that reacts each time some data is collected. 
+ * The function should receive as parameter an object, that object
+ * has the following schema:
+ *  {Celsius: 1, Humedad: 2}
+ */
+var dataS = function(callback) {
+
+    serialPort.on('data', function(data) {
+        //recolecta info del puerto serial
+        var info = data; 					
+        //divide la informacion (Hum, Temp)
+        var ext = info.split(","); 			
+        //recoge la temperatura
+        var celsius = parseFloat(ext[1]); 	
+        //recoge la humedad.
+        var hum_ = parseFloat(ext[0]);		
+        // result object
+        var object  = {
+            Celsius: celsius,
+            Humedad: hum_
+        };
+
+        if (typeof callback === 'function') {
+            callback(object);
+        }
+
+        return object;	
+
+    });
 };
 
 
 module.exports.init = init;
 module.exports.initS = initS;
 module.exports.dataS = dataS;
-
