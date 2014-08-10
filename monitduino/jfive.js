@@ -1,39 +1,41 @@
+var Storage = new require("./storage"),
+    storage = new Storage();
 var five = require("johnny-five"),
-	board,button,sensor;
-var com = require("serialport");
+	board,button,sensor,
+    com = require("serialport");
 
-/*var serialPort = new com.SerialPort("/dev/ttyUSB0", {
+var serialPort = new com.SerialPort("/dev/ttyUSB0", {
 	baudrate: 9600,
 	parser: com.parsers.readline('\r\n')
 });
-*/
+
 
 board = new five.Board();
 
 var init = function() {board.on("ready", function(){
 
-		liq_a = new five.Button({
+		var liq_a = new five.Button({
 			board: board,
 			pin: 22,
 			holdtime: 3000,
 			invert: false
 		});
 
-		liq_b = new five.Button({
+		var liq_b = new five.Button({
 			board: board,
 			pin: 23,
 			holdtime: 3000,
 			invert: false
 		});
 
-		hum_a = new five.Button({
+		var hum_a = new five.Button({
 			board: board,
 			pin: 24,
 			holdtime: 3000,
 			invert: false
 		});
 
-		t_rack = new five.Sensor({
+		var t_rack = new five.Sensor({
 			pin: "A0",
 			freq: 3000
 		});
@@ -41,40 +43,37 @@ var init = function() {board.on("ready", function(){
 // development
 	
 			liq_a.on('hold', function(data){
-				l_a = "1";
+				var l_a = "1";
+                return l_a;
 			});
 				
 
 			liq_a.on('up', function(data){
-				l_a = "0"
+				var l_a = "0";
+                return l_a;
 			});
 
 	
 
 		liq_b.on('hold', function(data){
-			var l_b = "1"
-			console.log("1");
+			var l_b = "1";
 		});
 
 		liq_b.on('up', function(data){
-			var l_b = "0"
-			console.log("0");
+			var l_b = "0";
 		});
 
 		hum_a.on('hold', function(data){
-			var h = "1" 
-			console.log("1");
-	});
+			var h = "1";
+        });
 
 		hum_a.on('up', function(data){
 			var h = "0" 
-			console.log("0");
 		});
 
 		t_rack.on('data', function(){
 			tr = (5 * this.value * 100) / 1024;
 			tro = tr.toFixed(2);
-			console.log(tro);
 		});
 
         
@@ -107,7 +106,7 @@ var initS = function(callback) {
  * has the following schema:
  *  {Celsius: 1, Humedad: 2}
  */
-var dataS = function(callback) {
+var dataS = function() {
 
     serialPort.on('data', function(data) {
         //recolecta info del puerto serial
@@ -123,11 +122,14 @@ var dataS = function(callback) {
             Celsius: celsius,
             Humedad: hum_
         };
-
-        if (typeof callback === 'function') {
-            callback(object);
-        }
-
+        storage.createRegistry(
+            Storage.data.Celsius,
+            object.Celsius
+        );
+        storage.createRegistry(
+            Storage.data.Humedad,
+            object.Humedad
+        );
         return object;	
 
     });

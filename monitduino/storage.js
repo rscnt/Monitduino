@@ -5,17 +5,7 @@
 
 var db   = require('../models');
 var Parse = require('parse').Parse;
-
-module.exports = Storage;
-
-function Storage() {
-    Parse.initialize("xpt9oXP4BTzvh2PlhMBNZolQg5o72SpF5HPxrB6a", "pG8XiyyD1CzNo4BpzpKNnZ1INg0TDXmdmAKqYZlM");
-    Parse.Access   = Parse.Object.extend("Access");
-    parse.Alert    = Parse.Object.extend("Alert");
-    parse.Data     = Parse.Object.extend("Data");
-    parse.Registry = Parse.Object.extend("Registry");
-    parse.User     = Parse.Object.extend("User");
-};
+var _ = require("lodash");
 
 var parse = {
     Data     : undefined,
@@ -23,18 +13,35 @@ var parse = {
     User     : undefined,
     Alert    : undefined,
     Access   : undefined
-}
+};
 
-var StorageData = function (schema, parseObject, referenceID) {
-    this.schema : schema;
-    this.parseObject: parseObject;
-    this.referenceID: referenceID;
-    db.Data.create({
-        name: this.schema.name,
-        max: this.schema.max,
-        min: this.schema.min,
-        metric: this.schema.metric
-    }).success(function(data){
+/*
+ *
+ */
+var createData = function (schema, parseObject, referenceID) {
+    db.Data 
+    .find({ where: { name: schema.name  }  })
+    .complete(function(err, data) {
+        if (!!err) {
+            console.log("Error on QUERY");
+        } else if (!data) {
+            console.log(data);
+            // No data found.
+            db.Data.create({
+                name: schema.name,
+                max: schema.max,
+                min: schema.min,
+                metric: schema.metric
+            }).success(function(data){
+                return data;
+            });
+        } else {
+            schema.name   = data.selectedValue.name;
+            schema.max    = data.selectedValue.max;
+            schema.min    = data.selectedValue.min;
+            schema.metric = data.selectedValue.metric;
+        }
+
     });
     return this;
 };
@@ -82,40 +89,69 @@ var Data  = {
     }
 };
 
+function Storage() {
+    Parse.initialize("xpt9oXP4BTzvh2PlhMBNZolQg5o72SpF5HPxrB6a", "pG8XiyyD1CzNo4BpzpKNnZ1INg0TDXmdmAKqYZlM");
+    Parse.Access   = Parse.Object.extend("Access");
+    Parse.Alert    = Parse.Object.extend("Alert");
+    Parse.Data     = Parse.Object.extend("Data");
+    Parse.Registry = Parse.Object.extend("Registry");
+    Parse.User     = Parse.Object.extend("User");
+}
+
+
+/**
+ *
+ * */
+Storage.data = {
+    Celsius: "temperatura",
+    Humedad: "humedad"
+};
+
+Storage.prototype.initStorage = function() {
+    _.forEach(Data, function(data){
+        createData(data.schema, undefined, undefined);
+    });
+};
+
 /**
  * @param integer dataID,  name of the table or registry to save.
  * @param decimal dataValue, decimal with the value returned.
  * @return object, a Registry new instance.
  */
-storage.createRegistry = function(dataID, dataValue) {
-    var registry = undefined;
-    db.Data.find({
-        where: {
-            id: dataID
-        }
-    }, function(data) {
-        // se intenta crear un registro.
-        db.Registry.create({
-            date: Date.now(),
-            value: dataValue,
-        }).success( function(registry) {
-            // el registro ha sido guardado, se asocia la entidad data.
-            registry.setData(data).success(function(){
-                //Out of this hell.
-                if (parse.Registry !== undefined) {
-                    parseRegistry = new Registry();
-                    parseRegistry.set("date", registry.date);
-                    parseRegistry.set("value", registry.value);
-                    parseRegistry.set("parent", data.remoteID);
-                    parseRegistry.save(null, function(parseRegistry){
-                        registry.update({remoteID: parseRegistry.id});
-                    });
-                }
-                registry = registry;
+Storage.prototype.createRegistry = function(dataName, dataValue) {
+    var aRegistry;
+    db.Data 
+    .find({ where: { name: dataName  }  })
+    .complete(function(err, data) {
+        if (!!err) {
+            console.log("Error on QUERY");
+        } else if (!data) {
+            console.log('Data ' + dataName + 'not found');
+        } else {
+            // se intenta crear un registro.
+            db.Registry.create({
+                name: dataName,
+                date: Date.now(),
+                value: dataValue,
+            }).success(function(registry) { 
+                // el registro ha sido guardado, se asocia la entidad data.
+                registry.setDatum(data).success(function(){
+                    //Out of this hell.
+                    if (parse.Registry !== undefined) {
+                        var parseRegistry = new parse.Registry();
+                        parseRegistry.set("date"   , registry.date);
+                        parseRegistry.set("value"  , registry.value);
+                        parseRegistry.set("parent" , data.remoteID);
+                        parseRegistry.save(null , function(parseRegistry){
+                            registry.update({remoteID: parseRegistry.id});
+                        });
+                    }
+                    aRegistry = registry;
+                });
             });
-        });
+        }
     });
-    return registry;
+    return aRegistry;
 };
 
 /**
@@ -125,35 +161,37 @@ storage.createRegistry = function(dataID, dataValue) {
  * @param integer level, the level value.  
  * @return object, a new alert object.
  */
-storage.storeAlert = function (dataID, value, level) {
-    var alert = undefined;
-    db.Data.find({
-        where: {
-            id: dataID
-        }
-    }, function(data) {
-        // se intenta crear un registro.
-        db.Alert.create({
-            date: Date.now(),
-            value: dataValue,
-            level: level
-        }).success( function(alert) {
-            // el registro ha sido guardado, se asocia la entidad data.
-            alert.setData(data).success(function(){
-                //Out of this hell.
-                switch(alert.level) {
-                    case 1:
-                        break;
-                    case 2:
-                        break;
-                    case 3:
-                        break;
-                    default:
-                        break;
-                }
-                alert = alert;
+Storage.prototype.storeAlert = function (registryID, priority) {
+    var anAlert;
+    db.Registry.find({where: {id: registryID}})
+    .complete(function(err, registry){
+        if (!!err) {
+            console.log(err);
+        } else if (!registry)  {
+            console.log(registry);
+        } else {
+            db.Alert.create({
+               priority: priority,
+               date: Date.now()
+            }).success(function(alert){
+                anAlert = alert;
+                alert.setRegistry(registry)
+                    .success(function(){
+                        if (Parse.Alert !== undefined) {
+                            var parseAlert = new parse.Alert();
+                            parseAlert.set("date", alert.date);
+                            parseAlert.set("priority", alert.priority);
+                            parseAlert.set("value", registry.value);
+                            parseAlert.set("name", registry.name);
+                            parseAlert.save(null, function(parseAlertRemote){
+                                alert.update({remoteID: parseAlertRemote.id});
+                            });
+                        }
+                    });
             });
-        });
+        }
     });
-    return alert;
+    return anAlert;
 };
+
+module.exports = Storage;

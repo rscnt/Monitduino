@@ -8,10 +8,10 @@ module.exports = function(sequelize, DataTypes) {
     }, {
         classMethods: {
             associate: function(models) {
-                Data.belongsTo(models.Registry);
+                Data.hasOne(models.Registry);
             }
         }
     });
 
     return Data;
-}
+};

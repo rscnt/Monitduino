@@ -5,7 +5,6 @@ module.exports = function(sequelize, DataTypes) {
     }, {
         classMethods: {
             associate: function(models) {
-                Alert.hasOne(models.Data);
                 Alert.belongsTo(models.Registry);
             }
         }
