@@ -6,12 +6,10 @@ var favicon = require('static-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var nunjucks = require('nunjucks');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-
-
-
 
 var app = express();
 var http = require('http').Server(app);
@@ -21,6 +19,13 @@ var ard = require('./monitduino/jfive');
 var db = require('./models/index.js');
 var Storage = require('./monitduino/storage');
 var storage = new Storage(io);
+
+//nunjucks configuration
+
+nunjucks.configure('views', {
+    autoescape: true,
+    express: app
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
