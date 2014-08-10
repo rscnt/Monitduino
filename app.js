@@ -10,8 +10,6 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
-//sequelize
-var db = require('./models');
 
 
 
@@ -20,7 +18,9 @@ var http = require('http').Server(app);
 var io = require("socket.io")(http);
 
 var ard = require('./monitduino/jfive');
-ard.init();
+var db = require('./models/index.js');
+var Storage = require('./monitduino/storage');
+var storage = new Storage();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -83,6 +83,9 @@ db
     } else {
         var server = app.listen(app.get('port'), function() {
             debug('Express server listening on port ' + server.address().port);
+            ard.init();
+            storage.initStorage();
+            ard.dataS(storage);
         });
     }
 });

@@ -1,3 +1,0 @@
-CREATE USER 'henan'@'localhost' IDENTIFIED BY 'henan2009';
-GRANT ALL PRIVILEGES ON * . * TO 'henan'@'localhost';
-FLUSH PRIVILEGES;
