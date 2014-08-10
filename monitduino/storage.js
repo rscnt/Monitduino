@@ -119,6 +119,7 @@ Storage.prototype.initStorage = function() {
  * @return object, a Registry new instance.
  */
 Storage.prototype.createRegistry = function(dataName, dataValue) {
+    var that = this;
     var aRegistry;
     db.Data 
     .find({ where: { name: dataName  }  })
@@ -136,6 +137,9 @@ Storage.prototype.createRegistry = function(dataName, dataValue) {
             }).success(function(registry) { 
                 // el registro ha sido guardado, se asocia la entidad data.
                 registry.setDatum(data).success(function(){
+                    if (registry.value >= data.max) {
+                        that.storeAlert(registry.id, 1);
+                    }
                     //Out of this hell.
                     if (parse.Registry !== undefined) {
                         var parseRegistry = new parse.Registry();
@@ -177,7 +181,7 @@ Storage.prototype.storeAlert = function (registryID, priority) {
                 anAlert = alert;
                 alert.setRegistry(registry)
                     .success(function(){
-                        if (Parse.Alert !== undefined) {
+                        if (parse.Alert !== undefined) {
                             var parseAlert = new parse.Alert();
                             parseAlert.set("date", alert.date);
                             parseAlert.set("priority", alert.priority);
