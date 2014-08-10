@@ -20,7 +20,7 @@ var io = require("socket.io")(http);
 var ard = require('./monitduino/jfive');
 var db = require('./models/index.js');
 var Storage = require('./monitduino/storage');
-var storage = new Storage();
+var storage = new Storage(io);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

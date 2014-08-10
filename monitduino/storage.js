@@ -6,6 +6,7 @@
 var db   = require('../models');
 var Parse = require('parse').Parse;
 var _ = require("lodash");
+var socketIO;
 
 var parse = {
     Data     : undefined,
@@ -89,13 +90,14 @@ var Data  = {
     }
 };
 
-function Storage() {
+function Storage(io) {
     Parse.initialize("xpt9oXP4BTzvh2PlhMBNZolQg5o72SpF5HPxrB6a", "pG8XiyyD1CzNo4BpzpKNnZ1INg0TDXmdmAKqYZlM");
     Parse.Access   = Parse.Object.extend("Access");
     Parse.Alert    = Parse.Object.extend("Alert");
     Parse.Data     = Parse.Object.extend("Data");
     Parse.Registry = Parse.Object.extend("Registry");
     Parse.User     = Parse.Object.extend("User");
+    socketIO = io;
 }
 
 
