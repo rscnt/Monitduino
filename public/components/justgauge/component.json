@@ -1,0 +1,8 @@
+{
+  "name": "justgauge",
+  "version": "1.0.0",
+  "main": "./justgage.js",
+  "dependencies": {
+	"raphael": "2.1.0"
+  }
+}

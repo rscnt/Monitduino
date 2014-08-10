@@ -1,0 +1,19 @@
+{
+  "name": "justgauge",
+  "version": "1.0.0",
+  "main": "./justgage.js",
+  "dependencies": {
+    "raphael": "2.1.0"
+  },
+  "homepage": "https://github.com/oscarcv/justgage",
+  "_release": "1.0.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.0.0",
+    "commit": "4ce4262d1d0147e0e5c2ba3b09e406ce165f852a"
+  },
+  "_source": "git://github.com/oscarcv/justgage.git",
+  "_target": "~1.0.0",
+  "_originalSource": "justgauge",
+  "_direct": true
+}
