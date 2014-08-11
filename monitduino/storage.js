@@ -90,13 +90,20 @@ var Data  = {
     }
 };
 
-function Storage(io) {
+function Storage (io) {
     Parse.initialize("xpt9oXP4BTzvh2PlhMBNZolQg5o72SpF5HPxrB6a", "pG8XiyyD1CzNo4BpzpKNnZ1INg0TDXmdmAKqYZlM");
     parse.Access   = Parse.Object.extend("Access");
+<<<<<<< HEAD
     Parse.Alert    = Parse.Object.extend("Alert");
     Parse.Data     = Parse.Object.extend("Data");
     Parse.Registry = Parse.Object.extend("Registry");
     Parse.User     = Parse.Object.extend("User");
+=======
+    parse.Alert    = Parse.Object.extend("Alert");
+    parse.Data     = Parse.Object.extend("Data");
+    parse.Registry = Parse.Object.extend("Registry");
+    parse.User     = Parse.Object.extend("User");
+>>>>>>> 75d9b385971ab5cf4a6ef959b581770db8027948
     socketIO = io;
 }
 
