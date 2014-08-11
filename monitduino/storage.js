@@ -123,6 +123,26 @@ Storage.prototype.initStorage = function() {
 };
 
 /**
+The callback accepts an error and the result data.
+*/
+Storage.prototype.findDataByName = function(name, callback) {
+    db.Data 
+    .find({ where: { name: schema.name  }  })
+    .complete(function(err, data) {
+        if (!!err) {
+            callback(err, null);
+        } else if (!data) {
+            callback(null, null);
+        } else {
+            callback(null, data);
+        }
+    };
+};
+
+/**
+*/
+
+/**
  * @param integer dataID,  name of the table or registry to save.
  * @param decimal dataValue, decimal with the value returned.
  * @return object, a Registry new instance.
