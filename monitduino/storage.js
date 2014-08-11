@@ -92,7 +92,7 @@ var Data  = {
 
 function Storage(io) {
     Parse.initialize("xpt9oXP4BTzvh2PlhMBNZolQg5o72SpF5HPxrB6a", "pG8XiyyD1CzNo4BpzpKNnZ1INg0TDXmdmAKqYZlM");
-    Parse.Access   = Parse.Object.extend("Access");
+    parse.Access   = Parse.Object.extend("Access");
     Parse.Alert    = Parse.Object.extend("Alert");
     Parse.Data     = Parse.Object.extend("Data");
     Parse.Registry = Parse.Object.extend("Registry");
@@ -137,6 +137,7 @@ Storage.prototype.createRegistry = function(dataName, dataValue) {
                 date: Date.now(),
                 value: dataValue,
             }).success(function(registry) { 
+                socketIO.emit('general' , {name: registry.name, value: registry.value});
                 // el registro ha sido guardado, se asocia la entidad data.
                 registry.setDatum(data).success(function(){
                     if (registry.value >= data.max) {
