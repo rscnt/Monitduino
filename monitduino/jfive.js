@@ -8,7 +8,7 @@ var serialPort = new com.SerialPort("/dev/ttyUSB0", {
 	baudrate: 9600,
 	parser: com.parsers.readline('\r\n')
 });
-
+var time = 0;
 
 board = new five.Board();
 
@@ -37,7 +37,7 @@ var init = function() {board.on("ready", function(){
 
 		var t_rack = new five.Sensor({
 			pin: "A0",
-			freq: 3000
+			freq: 30000
 		});
 
 // development
@@ -109,6 +109,7 @@ var initS = function(callback) {
 var dataS = function() {
 
     serialPort.on('data', function(data) {
+    	time++;
         //recolecta info del puerto serial
         var info = data; 					
         //divide la informacion (Hum, Temp)
@@ -122,6 +123,8 @@ var dataS = function() {
             Celsius: celsius,
             Humedad: hum_
         };
+
+        if(time == 30){
         storage.createRegistry(
             Storage.data.Celsius,
             object.Celsius
@@ -130,6 +133,8 @@ var dataS = function() {
             Storage.data.Humedad,
             object.Humedad
         );
+        time = 0;
+        }
         return object;	
 
     });
