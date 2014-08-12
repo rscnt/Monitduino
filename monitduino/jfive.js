@@ -9,74 +9,110 @@ var serialPort = new com.SerialPort("/dev/ttyUSB0", {
 	parser: com.parsers.readline('\r\n')
 });
 var time = 0;
+var l_a = 0;
+var l_b = 0;
+var h = 0;
 
-board = new five.Board();
+var init = function() {
+	board = new five.Board();
 
-var init = function() {board.on("ready", function(){
+	board.on("ready", function(){
 
-		var liq_a = new five.Button({
-			board: board,
-			pin: 22,
-			holdtime: 3000,
-			invert: false
-		});
+	var liq_a = new five.Button({
+		board: board,
+		pin: 22,
+		holdtime: 3000,
+		invert: false
+	});
 
-		var liq_b = new five.Button({
-			board: board,
-			pin: 23,
-			holdtime: 3000,
-			invert: false
-		});
+	var liq_b = new five.Button({
+		board: board,
+		pin: 23,
+		holdtime: 3000,
+		invert: false
+	});
 
-		var hum_a = new five.Button({
-			board: board,
-			pin: 24,
-			holdtime: 3000,
-			invert: false
-		});
+	var hum_a = new five.Button({
+		board: board,
+		pin: 24,
+		holdtime: 3000,
+		invert: false
+	});
 
-		var t_rack = new five.Sensor({
-			pin: "A0",
-			freq: 30000
-		});
+	var t_rack = new five.Sensor({
+		pin: "A0",
+		freq: 30000
+	});
 
 // development
-	
-			liq_a.on('hold', function(data){
-				var l_a = "1";
-                return l_a;
-			});
-				
 
-			liq_a.on('up', function(data){
-				var l_a = "0";
-                return l_a;
-			});
+liq_a.on('hold', function(data){
+	console.log("Acces");
+	l_a = "1";
+	var object  = {
+            Liquido: l_a,
+        };
+	storage.createRegistry(
+		Storage.data.Liquido,
+		object.Liquido
+		);
+	console.log(l_a);
+	return object;
+});
 
-	
 
-		liq_b.on('hold', function(data){
-			var l_b = "1";
-		});
+liq_a.on('up', function(data){
+	console.log("Acces");
+	l_a = "0";
+	var object  = {
+            Liquido: l_a,
+        };
+	storage.createRegistry(
+		Storage.data.Liquido,
+		object.Liquido
+		);
+	console.log(l_a);
+	return object;
+});
 
-		liq_b.on('up', function(data){
-			var l_b = "0";
-		});
+liq_b.on('hold', function(data){
+	l_b = "1";
+});
 
-		hum_a.on('hold', function(data){
-			var h = "1";
-        });
+liq_b.on('up', function(data){
+	l_b = "0";
+});
 
-		hum_a.on('up', function(data){
-			var h = "0" 
-		});
+hum_a.on('hold', function(data){
+	h = "1";
+	var object  = {
+            Humo: h,
+        };
+	storage.createRegistry(
+		Storage.data.Humo,
+		object.Humo
+		);
+	return object;
+});
 
-		t_rack.on('data', function(){
-			tr = (5 * this.value * 100) / 1024;
-			tro = tr.toFixed(2);
-		});
+hum_a.on('up', function(data){
+	h = "0";
+	var object  = {
+            Humo: h,
+        };
+	storage.createRegistry(
+		Storage.data.Humo,
+		object.Humo
+		);
+	return object;
+});
 
-        
+t_rack.on('data', function(){
+	tr = (5 * this.value * 100) / 1024;
+	tro = tr.toFixed(2);
+});
+
+
 // object
 this.repl.inject({
 	liq_a: liq_a, 

@@ -8,6 +8,7 @@ var Parse = require('parse').Parse;
 var _ = require("lodash");
 var socketIO;
 var temp_p = new Array();
+var hum_p = new Array();
 
 var parse = {
     Data     : undefined,
@@ -107,7 +108,9 @@ function Storage (io) {
  * */
 Storage.data = {
     Celsius: "temperatura",
-    Humedad: "humedad"
+    Humedad: "humedad",
+    Liquido: "liquido",
+    Humo: "humo"
 };
 
 Storage.prototype.initStorage = function() {
@@ -167,6 +170,8 @@ Storage.prototype.createRegistry = function(dataName, dataValue) {
                         break;
                     case "Humedad":
                     case "humedad":
+                        hum_p.push(registry.value);
+                        socketIO.emit('humt', hum_p);
                         break;
                 }
                 // el registro ha sido guardado, se asocia la entidad data.
@@ -215,6 +220,7 @@ Storage.prototype.storeAlert = function (registryID, priority) {
                 anAlert = alert;
                 alert.setRegistry(registry)
                     .success(function(){
+                        socketIO.emit('alerta' , {name: registry.name, value: registry.value});
                         if (parse.Alert !== undefined) {
                             var parseAlert = new parse.Alert();
                             parseAlert.set("date", alert.date);

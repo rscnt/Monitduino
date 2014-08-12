@@ -482,7 +482,67 @@ var handleLiveUpdatedChart = function () {
     update();
 };
 
+var handleLiveUpdatedChartH = function () {
+    "use strict";
 
+    function update() {
+        plot.setData([ getRandomData() ]);
+        // since the axes don't change, we don't need to call plot.setupGrid()
+        plot.setupGrid();
+        plot.draw();
+        
+        setTimeout(update, updateI);
+    }
+    function getRandomData() {
+        return h;
+    }
+    if ($('#live-u-humedad').length !== 0) {
+        var data = [], totalPoints = 150;
+        
+        // setup control widget
+        var updateI = 1000;
+        $("#updateInterval").val(updateI).change(function () {
+            var v = $(this).val();
+            if (v && !isNaN(+v)) {
+                updateI = +v;
+                if (updateI < 1) {
+                    updateI = 1;
+                }
+                if (updateI > 2000) {
+                    updateI = 2000;
+                }
+                $(this).val("" + updateI);
+            }
+        });
+        
+        // setup plot
+        var options = {
+            series: { shadowSize: 0, color: purple, lines: { show: true, fill:false } }, // drawing is faster without shadows
+            yaxis: { tickColor: '#ddd', max: "80", min: "30" },
+            xaxis: {
+                tickFormatter: function() {
+                    return "";
+                },
+                show: true
+            },
+            grid: {
+                borderWidth: 1,
+                borderColor: '#ddd',
+                markings: function(axes) {
+                    var markings = [];
+                    var xaxis = axes.xaxis;
+                    for (var x = Math.floor(xaxis.min); x < xaxis.max; x += xaxis.tickSize * 2) {
+                        markings.push({ xaxis: { from: x, to: x + xaxis.tickSize }, color: "rgba(232, 232, 255, 0.2)" });
+                    }
+                    return markings;
+                },
+            },
+        }
+    };
+    var plot = $.plot($("#live-u-humedad"), [ getRandomData() ], options);
+
+    update();
+};
 var Chart = function () {
    "use strict";
    return {
@@ -496,6 +556,7 @@ var Chart = function () {
             handleDonutChart();
             handleInteractiveChart();
             handleLiveUpdatedChart();
+            handleLiveUpdatedChartH();
         }
     };
 }();

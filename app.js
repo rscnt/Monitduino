@@ -90,9 +90,9 @@ db
     } else {
         var server = http.listen(app.get('port'), function() {
             debug('Express server listening on port ' + server.address().port);
+            ard.init();
             io.on('connection', function(socket){
                 var storage = new Storage(socket);
-                ard.init();
                 storage.initStorage();
                 ard.dataS(storage);
             });
