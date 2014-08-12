@@ -124,7 +124,7 @@ var dataS = function() {
             Humedad: hum_
         };
 
-        if(time === 30){
+        if(time === 2){
         storage.createRegistry(
             Storage.data.Celsius,
             object.Celsius

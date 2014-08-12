@@ -1,60 +1,60 @@
    var livevarblue = '#348fe2',
-    blueLight	= '#5da5e8',
-    blueDark	= '#1993E4',
-    aqua		= '#49b6d6',
-    aquaLight	= '#6dc5de',
-    aquaDark	= '#3a92ab',
-	green		= '#00acac',
-	greenLight	= '#33bdbd',
-	greenDark	= '#008a8a',
-	orange		= '#f59c1a',
-	orangeLight	= '#f7b048',
-	orangeDark	= '#c47d15',
-    dark		= '#2d353c',
-    grey		= '#b6c2c9',
-    purple		= '#727cb6',
-    purpleLight	= '#8e96c5',
-    purpleDark	= '#5b6392',
-    red         = '#ff5b57';
-    
-var handleBasicChart = function () {
-	"use strict";
-	var d1 = [];
-	for (var x = 0; x < Math.PI * 2; x += 0.25) {
-		d1.push([x, Math.sin(x)]);
-	}
-	var d2 = [];
-	for (var y = 0; y < Math.PI * 2; y += 0.25) {
-		d2.push([y, Math.cos(y)]);
-	}
-	var d3 = [];
-	for (var z = 0; z < Math.PI * 2; z += 0.1) {
-		d3.push([z, Math.tan(z)]);
-	}
-	if ($('#basic-chart').length !== 0) {
+   blueLight	= '#5da5e8',
+   blueDark	= '#1993E4',
+   aqua		= '#49b6d6',
+   aquaLight	= '#6dc5de',
+   aquaDark	= '#3a92ab',
+   green		= '#00acac',
+   greenLight	= '#33bdbd',
+   greenDark	= '#008a8a',
+   orange		= '#f59c1a',
+   orangeLight	= '#f7b048',
+   orangeDark	= '#c47d15',
+   dark		= '#2d353c',
+   grey		= '#b6c2c9',
+   purple		= '#727cb6',
+   purpleLight	= '#8e96c5',
+   purpleDark	= '#5b6392',
+   red         = '#ff5b57';
+
+   var handleBasicChart = function () {
+       "use strict";
+       var d1 = [];
+       for (var x = 0; x < Math.PI * 2; x += 0.25) {
+          d1.push([x, Math.sin(x)]);
+      }
+      var d2 = [];
+      for (var y = 0; y < Math.PI * 2; y += 0.25) {
+          d2.push([y, Math.cos(y)]);
+      }
+      var d3 = [];
+      for (var z = 0; z < Math.PI * 2; z += 0.1) {
+          d3.push([z, Math.tan(z)]);
+      }
+      if ($('#basic-chart').length !== 0) {
         $.plot($("#basic-chart"), [
             { label: "data 1",  data: d1, color: purple, shadowSize: 0 },
             { label: "data 2",  data: d2, color: green, shadowSize: 0 },
             { label: "data 3",  data: d3, color: dark, shadowSize: 0 }
-        ], {
-            series: {
-                lines: { show: true },
-                points: { show: false }
-            },
-            xaxis: {
-                tickColor: '#ddd'
-            },
-            yaxis: {
-                min: -2,
-                max: 2,
-                tickColor: '#ddd'
-            },
-            grid: {
-                borderColor: '#ddd',
-                borderWidth: 1
-            }
-        });
-	}
+            ], {
+                series: {
+                    lines: { show: true },
+                    points: { show: false }
+                },
+                xaxis: {
+                    tickColor: '#ddd'
+                },
+                yaxis: {
+                    min: -2,
+                    max: 2,
+                    tickColor: '#ddd'
+                },
+                grid: {
+                    borderColor: '#ddd',
+                    borderWidth: 1
+                }
+            });
+    }
 };
 var handleStackedChart = function () {
 	"use strict";
@@ -83,8 +83,8 @@ var handleStackedChart = function () {
         d6.push([f, parseInt(Math.random() * 5 + 5)]);
     }
     var ticksLabel = [
-        [0, "Monday"], [1, "Tuesday"], [2, "Wednesday"], [3, "Thursday"],
-        [4, "Friday"], [5, "Saturday"]
+    [0, "Monday"], [1, "Tuesday"], [2, "Wednesday"], [3, "Thursday"],
+    [4, "Friday"], [5, "Saturday"]
     ];
     
     var options = { 
@@ -110,54 +110,54 @@ var handleStackedChart = function () {
         }
     };
     var xData = [
-        {
-            data:d1,
-            color: purpleDark,
-            label: 'China',
-            bars: {
-                fillColor: purpleDark
-            }
-        },
-        {
-            data:d2,
-            color: purple,
-            label: 'Russia',
-            bars: {
-                fillColor: purple
-            }
-        },
-        {
-            data:d3,
-            color: purpleLight,
-            label: 'Canada',
-            bars: {
-                fillColor: purpleLight
-            }
-        },
-        {
-            data:d4,
-            color: blueDark,
-            label: 'Japan',
-            bars: {
-                fillColor: blueDark
-            }
-        },
-        {
-            data:d5,
-            color: blue,
-            label: 'USA',
-            bars: {
-                fillColor: blue
-            }
-        },
-        {
-            data:d6,
-            color: blueLight,
-            label: 'Others',
-            bars: {
-                fillColor: blueLight
-            }
+    {
+        data:d1,
+        color: purpleDark,
+        label: 'China',
+        bars: {
+            fillColor: purpleDark
         }
+    },
+    {
+        data:d2,
+        color: purple,
+        label: 'Russia',
+        bars: {
+            fillColor: purple
+        }
+    },
+    {
+        data:d3,
+        color: purpleLight,
+        label: 'Canada',
+        bars: {
+            fillColor: purpleLight
+        }
+    },
+    {
+        data:d4,
+        color: blueDark,
+        label: 'Japan',
+        bars: {
+            fillColor: blueDark
+        }
+    },
+    {
+        data:d5,
+        color: blue,
+        label: 'USA',
+        bars: {
+            fillColor: blue
+        }
+    },
+    {
+        data:d6,
+        color: blueLight,
+        label: 'Others',
+        bars: {
+            fillColor: blueLight
+        }
+    }
     ];
     $.plot("#stacked-chart", xData, options);
     
@@ -177,7 +177,7 @@ var handleStackedChart = function () {
                 previousXValue = item.series.label;
                 previousYValue = y;
                 $("#tooltip").remove();
-    
+
                 showTooltip2(item.pageX, item.pageY, y + " " + item.series.label);
             }
         }
@@ -195,8 +195,8 @@ var handleTrackingChart = function () {
 		sin.push([i, Math.sin(i)]);
 		cos.push([i, Math.cos(i)]);
 	}
-    
-        
+
+
     function updateLegend() {
         updateLegendTimeout = null;
         
@@ -206,34 +206,34 @@ var handleTrackingChart = function () {
         if (pos.x < axes.xaxis.min || pos.x > axes.xaxis.max ||
             pos.y < axes.yaxis.min || pos.y > axes.yaxis.max) {
             return;
-        }
-        var i, j, dataset = plot.getData();
-        for (i = 0; i < dataset.length; ++i) {
-            var series = dataset[i];
-
-            for (j = 0; j < series.data.length; ++j) {
-                if (series.data[j][0] > pos.x) {
-                    break;
-                }
-            }
-            
-            var y, p1 = series.data[j - 1], p2 = series.data[j];
-            if (p1 === null) {
-                y = p2[1];
-            } else if (p2 === null) {
-                y = p1[1];
-            } else {
-                y = p1[1] + (p2[1] - p1[1]) * (pos.x - p1[0]) / (p2[0] - p1[0]);
-            }
-
-            legends.eq(i).text(series.label.replace(/=.*/, "= " + y.toFixed(2)));
-        }
     }
-	if ($('#tracking-chart').length !== 0) {
-        var plot = $.plot($("#tracking-chart"),
+    var i, j, dataset = plot.getData();
+    for (i = 0; i < dataset.length; ++i) {
+        var series = dataset[i];
+
+        for (j = 0; j < series.data.length; ++j) {
+            if (series.data[j][0] > pos.x) {
+                break;
+            }
+        }
+
+        var y, p1 = series.data[j - 1], p2 = series.data[j];
+        if (p1 === null) {
+            y = p2[1];
+        } else if (p2 === null) {
+            y = p1[1];
+        } else {
+            y = p1[1] + (p2[1] - p1[1]) * (pos.x - p1[0]) / (p2[0] - p1[0]);
+        }
+
+        legends.eq(i).text(series.label.replace(/=.*/, "= " + y.toFixed(2)));
+    }
+}
+if ($('#tracking-chart').length !== 0) {
+    var plot = $.plot($("#tracking-chart"),
         [ 
-            { data: sin, label: "Series1", color: dark, shadowSize: 0},
-            { data: cos, label: "Series2", color: red, shadowSize: 0} 
+        { data: sin, label: "Series1", color: dark, shadowSize: 0},
+        { data: cos, label: "Series2", color: red, shadowSize: 0} 
         ], 
         {
             series: {
@@ -250,21 +250,21 @@ var handleTrackingChart = function () {
                 show: true
             }
         });
-        var legends = $("#tracking-chart .legendLabel");
-        legends.each(function () {
-            $(this).css('width', $(this).width());
-        });
+    var legends = $("#tracking-chart .legendLabel");
+    legends.each(function () {
+        $(this).css('width', $(this).width());
+    });
     
-        var updateLegendTimeout = null;
-        var latestPosition = null;
-        
-        $("#tracking-chart").bind("plothover",  function (pos) {
-            latestPosition = pos;
-            if (!updateLegendTimeout) {
-                updateLegendTimeout = setTimeout(updateLegend, 50);
-            }
-        });
-	}
+    var updateLegendTimeout = null;
+    var latestPosition = null;
+
+    $("#tracking-chart").bind("plothover",  function (pos) {
+        latestPosition = pos;
+        if (!updateLegendTimeout) {
+            updateLegendTimeout = setTimeout(updateLegend, 50);
+        }
+    });
+}
 };
 var handleBarChart = function () {
 	"use strict";
@@ -284,7 +284,7 @@ var handleBarChart = function () {
             xaxis: {
                 mode: "categories",
                 tickColor: '#ddd',
-				tickLength: 0
+                tickLength: 0
             },
             grid: {
                 borderWidth: 0
@@ -360,73 +360,73 @@ var handleInteractiveChart = function () {
             left: x - 55
         }).appendTo("body").fadeIn(200);
     }
-	if ($('#interactive-chart').length !== 0) {
+    if ($('#interactive-chart').length !== 0) {
         var d1 = [[0, 42], [1, 53], [2,66], [3, 60], [4, 68], [5, 66], [6,71],[7, 75], [8, 69], [9,70], [10, 68], [11, 72], [12, 78], [13, 86]];
         var d2 = [[0, 12], [1, 26], [2,13], [3, 18], [4, 35], [5, 23], [6, 18],[7, 35], [8, 24], [9,14], [10, 14], [11, 29], [12, 30], [13, 43]];
         
         $.plot($("#interactive-chart"), [
-                {
-                    data: d1, 
-                    label: "Page Views", 
-                    color: purple,
-                    lines: { show: true, fill:false, lineWidth: 2 },
-                    points: { show: false, radius: 5, fillColor: '#fff' },
-                    shadowSize: 0
-                }, {
-                    data: d2,
-                    label: 'Visitors',
-                    color: green,
-                    lines: { show: true, fill:false, lineWidth: 2, fillColor: '' },
-                    points: { show: false, radius: 3, fillColor: '#fff' },
-                    shadowSize: 0
-                }
-            ], 
-            {
-                xaxis: {  tickColor: '#ddd',tickSize: 2 },
-                yaxis: {  tickColor: '#ddd', tickSize: 20 },
-                grid: { 
-                    hoverable: true, 
-                    clickable: true,
-                    tickColor: "#ccc",
-                    borderWidth: 1,
-                    borderColor: '#ddd'
-                },
-                legend: {
-                    labelBoxBorderColor: '#ddd',
-                    margin: 0,
-                    noColumns: 1,
-                    show: true
-                }
+        {
+            data: d1, 
+            label: "Page Views", 
+            color: purple,
+            lines: { show: true, fill:false, lineWidth: 2 },
+            points: { show: false, radius: 5, fillColor: '#fff' },
+            shadowSize: 0
+        }, {
+            data: d2,
+            label: 'Visitors',
+            color: green,
+            lines: { show: true, fill:false, lineWidth: 2, fillColor: '' },
+            points: { show: false, radius: 3, fillColor: '#fff' },
+            shadowSize: 0
+        }
+        ], 
+        {
+            xaxis: {  tickColor: '#ddd',tickSize: 2 },
+            yaxis: {  tickColor: '#ddd', tickSize: 20 },
+            grid: { 
+                hoverable: true, 
+                clickable: true,
+                tickColor: "#ccc",
+                borderWidth: 1,
+                borderColor: '#ddd'
+            },
+            legend: {
+                labelBoxBorderColor: '#ddd',
+                margin: 0,
+                noColumns: 1,
+                show: true
             }
+        }
         );
-        var previousPoint = null;
-        $("#interactive-chart").bind("plothover", function (event, pos, item) {
-            $("#x").text(pos.x.toFixed(2));
-            $("#y").text(pos.y.toFixed(2));
-            if (item) {
-                if (previousPoint !== item.dataIndex) {
-                    previousPoint = item.dataIndex;
-                    $("#tooltip").remove();
-                    var y = item.datapoint[1].toFixed(2);
-                    
-                    var content = item.series.label + " " + y;
-                    showTooltip(item.pageX, item.pageY, content);
-                }
-            } else {
-                $("#tooltip").remove();
-                previousPoint = null;            
-            }
-            event.preventDefault();
-        });
+   var previousPoint = null;
+   $("#interactive-chart").bind("plothover", function (event, pos, item) {
+    $("#x").text(pos.x.toFixed(2));
+    $("#y").text(pos.y.toFixed(2));
+    if (item) {
+        if (previousPoint !== item.dataIndex) {
+            previousPoint = item.dataIndex;
+            $("#tooltip").remove();
+            var y = item.datapoint[1].toFixed(2);
+
+            var content = item.series.label + " " + y;
+            showTooltip(item.pageX, item.pageY, content);
+        }
+    } else {
+        $("#tooltip").remove();
+        previousPoint = null;            
     }
+    event.preventDefault();
+});
+}
 };
 var handleLiveUpdatedChart = function () {
 	"use strict";
-        
+
     function update() {
         plot.setData([ getRandomData() ]);
         // since the axes don't change, we don't need to call plot.setupGrid()
-        plot.setupGrid()
+        plot.setupGrid();
         plot.draw();
         
         setTimeout(update, updateInterval);
@@ -434,7 +434,7 @@ var handleLiveUpdatedChart = function () {
     function getRandomData() {
         return t;
     }
-	if ($('#live-updated-chart').length !== 0) {
+    if ($('#live-updated-chart').length !== 0) {
         var data = [], totalPoints = 150;
         
         // setup control widget
@@ -456,23 +456,36 @@ var handleLiveUpdatedChart = function () {
         // setup plot
         var options = {
             series: { shadowSize: 0, color: purple, lines: { show: true, fill:false } }, // drawing is faster without shadows
-            yaxis: { tickColor: '#ddd' },
-            xaxis: { show: false, tickColor: '#ddd' },
+            yaxis: { tickColor: '#ddd', max: "30", min: "25" },
+            xaxis: {
+                tickFormatter: function() {
+                    return "";
+                },
+                show: true
+            },
             grid: {
                 borderWidth: 1,
-                borderColor: '#ddd'
-            }
-        };
-        var plot = $.plot($("#live-updated-chart"), [ getRandomData() ], options);
-        
-        update();
-    }
+                borderColor: '#ddd',
+                markings: function(axes) {
+                    var markings = [];
+                    var xaxis = axes.xaxis;
+                    for (var x = Math.floor(xaxis.min); x < xaxis.max; x += xaxis.tickSize * 2) {
+                        markings.push({ xaxis: { from: x, to: x + xaxis.tickSize }, color: "rgba(232, 232, 255, 0.2)" });
+                    }
+                    return markings;
+                },
+            },
+        }
+    };
+    var plot = $.plot($("#live-updated-chart"), [ getRandomData() ], options);
+
+    update();
 };
 
 
 var Chart = function () {
-	"use strict";
-    return {
+   "use strict";
+   return {
         //main function
         init: function () {
             handleBasicChart();

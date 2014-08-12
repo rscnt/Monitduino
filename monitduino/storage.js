@@ -7,6 +7,7 @@ var db   = require('../models');
 var Parse = require('parse').Parse;
 var _ = require("lodash");
 var socketIO;
+var temp_p = new Array();
 
 var parse = {
     Data     : undefined,
@@ -37,10 +38,10 @@ var createData = function (schema, parseObject, referenceID) {
                 return data;
             });
         } else {
-            schema.name   = data.selectedValue.name;
-            schema.max    = data.selectedValue.max;
-            schema.min    = data.selectedValue.min;
-            schema.metric = data.selectedValue.metric;
+            schema.name   = data.name;
+            schema.max    = data.max;
+            schema.min    = data.min;
+            schema.metric = data.metric;
         }
 
     });
@@ -93,17 +94,10 @@ var Data  = {
 function Storage (io) {
     Parse.initialize("xpt9oXP4BTzvh2PlhMBNZolQg5o72SpF5HPxrB6a", "pG8XiyyD1CzNo4BpzpKNnZ1INg0TDXmdmAKqYZlM");
     parse.Access   = Parse.Object.extend("Access");
-<<<<<<< HEAD
-    Parse.Alert    = Parse.Object.extend("Alert");
-    Parse.Data     = Parse.Object.extend("Data");
-    Parse.Registry = Parse.Object.extend("Registry");
-    Parse.User     = Parse.Object.extend("User");
-=======
     parse.Alert    = Parse.Object.extend("Alert");
     parse.Data     = Parse.Object.extend("Data");
     parse.Registry = Parse.Object.extend("Registry");
     parse.User     = Parse.Object.extend("User");
->>>>>>> 75d9b385971ab5cf4a6ef959b581770db8027948
     socketIO = io;
 }
 
@@ -127,7 +121,7 @@ The callback accepts an error and the result data.
 */
 Storage.prototype.findDataByName = function(name, callback) {
     db.Data 
-    .find({ where: { name: schema.name  }  })
+    .find({ where: { name: name  }  })
     .complete(function(err, data) {
         if (!!err) {
             callback(err, null);
@@ -136,7 +130,7 @@ Storage.prototype.findDataByName = function(name, callback) {
         } else {
             callback(null, data);
         }
-    };
+    });
 };
 
 /**
@@ -165,6 +159,16 @@ Storage.prototype.createRegistry = function(dataName, dataValue) {
                 value: dataValue,
             }).success(function(registry) { 
                 socketIO.emit('general' , {name: registry.name, value: registry.value});
+                switch(registry.name){
+                    case "Temperatura":
+                    case "temperatura":
+                        temp_p.push(registry.value);
+                        socketIO.emit('promt', temp_p);
+                        break;
+                    case "Humedad":
+                    case "humedad":
+                        break;
+                }
                 // el registro ha sido guardado, se asocia la entidad data.
                 registry.setDatum(data).success(function(){
                     if (registry.value >= data.max) {

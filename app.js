@@ -10,15 +10,17 @@ var nunjucks = require('nunjucks');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var data = require('./routes/data');
+var index = require('./routes/general');
 
 var app = express();
 var http = require('http').Server(app);
-var io = require("socket.io")(http);
+var io = require('socket.io')(http);
 
 var ard = require('./monitduino/jfive');
 var db = require('./models/index.js');
 var Storage = require('./monitduino/storage');
-var storage = new Storage(io);
+
 
 //nunjucks configuration
 
@@ -40,7 +42,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
-
+app.use('/data', data);
+app.use('/index', index);
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
@@ -78,7 +81,6 @@ app.use(function(err, req, res, next) {
 app.set('port', process.env.PORT || 3000);
 
 var debug = require('debug')('monitduino');
-
 db
 .sequelize
 .sync({ force: true })
@@ -86,11 +88,15 @@ db
     if (err) {
         throw err[0]
     } else {
-        var server = app.listen(app.get('port'), function() {
+        var server = http.listen(app.get('port'), function() {
             debug('Express server listening on port ' + server.address().port);
-            ard.init();
-            storage.initStorage();
-            ard.dataS(storage);
+            io.on('connection', function(socket){
+                var storage = new Storage(socket);
+                ard.init();
+                storage.initStorage();
+                ard.dataS(storage);
+            });
+            
         });
     }
 });

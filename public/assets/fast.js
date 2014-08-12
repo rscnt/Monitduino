@@ -5,15 +5,21 @@ var val_b = 0;
 var val_l = 0;
 var t = new Array();
 
-  socket.on('temp_1', function (data) {
-		val_t = data.toFixed(2);
-		$("#tempt").text(val_t + "C");
-  });
-  socket.on('humd', function(data){
-  		val_h = data;
-  		$("#humid").text(val_h + "%");
-  });
-
+socket.on('general', function (data) {
+  switch(data.name) {
+    case "temperatura":
+    case "Temperatura":
+      $("#tempt").text(data.value + "C");
+      console.log("Temperatura valor: " + data.value);
+    break;
+    case "Humedad":
+    case "humedad":
+      $("#humid").text(data.value + "%");
+      console.log("Humedad valor: " + data.value);
+    break;
+  }
+});
+/*
   socket.on('b_', function(data){
   		val_b = data;
   		if (val_b == "1"){
@@ -37,7 +43,7 @@ var t = new Array();
         $("#liquid").text("OFF");
       }
   });
-
+*/
   socket.on('promt', function(data){
     var res = [];
     if(t.length == 0){

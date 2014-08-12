@@ -1,22 +1,36 @@
 var express = require('express');
-var storage = require('../monitduino/storage');
+var Storage = require('../monitduino/storage');
+var storage = new Storage();
 var router = express.Router();
 
-/* GET home page. */
-router.param('data', function(req, res, next, data){
-	storage.findDataByName(id, function(err, data){
-		if (!!data) {
-			return next(new Error('failed to load user'));
-		}
+router.param('data_name', function(req, res, next, data_name) {
+	storage.findDataByName(data_name, function(err, data){
 		req.data = data;
 		next();
 	});
 });
 
-router.get('/data/:data', function(req, res, next) {
-	console.log(req.data);
-	console.log(next);
-	res.send('temp.html', {data: req.data});
-});
+
+
+router.route('/:data_name')
+.all(function(req, res, next) {
+	console.log(req.data)
+	next();
+})
+.get(function(req, res, next) {
+  res.render('base.html');
+})
+.put(function(req, res, next) {
+  // just an example of maybe updating thedata
+  req.data.name = req.params.name;
+  // save user ... etc
+  //res.render('base.html');
+})
+.post(function(req, res, next) {
+  next(new Error('not implemented'));
+})
+.delete(function(req, res, next) {
+  next(new Error('not implemented'));
+})
 
 module.exports = router;
