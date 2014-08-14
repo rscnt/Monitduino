@@ -1,4 +1,4 @@
-var socket = io.connect('http://192.168.1.4:3000');
+var socket = io.connect('http://127.0.0.1:3000');
 var val_t = 0;
 var val_h = 0;
 var val_b = 0;
