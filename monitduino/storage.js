@@ -113,6 +113,11 @@ Storage.data = {
     Humo: "humo"
 };
 
+// should be on a module
+channels = {
+    USERNEW : "user_new"
+};
+
 Storage.prototype.initStorage = function() {
     _.forEach(Data, function(data){
         createData(data.schema, undefined, undefined);
@@ -133,6 +138,19 @@ Storage.prototype.findDataByName = function(name, callback) {
         } else {
             callback(null, data);
         }
+    });
+};
+
+Storage.prototype.createUser = function(username, password, charge, description, birthdate) {
+    db.User.create({
+	username: username,
+	password: password,
+	charge: charge,
+	description: description,
+	birthdate: birthdate
+    }).success(function(newuser) {
+	socketIO.emit(channels.USERNEW, newuser);
+	return true;
     });
 };
 
@@ -159,7 +177,7 @@ Storage.prototype.createRegistry = function(dataName, dataValue) {
             db.Registry.create({
                 name: dataName,
                 date: Date.now(),
-                value: dataValue,
+                value: dataValue
             }).success(function(registry) { 
                 socketIO.emit('general' , {name: registry.name, value: registry.value});
                 switch(registry.name){
