@@ -1,5 +1,5 @@
 var express = require('express');
-var Storage = require('./monitduino/storage');
+var Storage = require('../monitduino/storage');
 var storage = new Storage();
 var router = express.Router();
 

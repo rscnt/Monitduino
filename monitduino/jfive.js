@@ -1,5 +1,6 @@
 var Storage = new require("./storage"),
     storage = new Storage();
+var socketIO;
 var five = require("johnny-five"),
 	board,button,sensor,
     com = require("serialport");
@@ -13,8 +14,32 @@ var l_a = 0;
 var l_b = 0;
 var h = 0;
 
-var init = function() {
-	board = new five.Board();
+
+var counterLiquidsA = 0;
+var counterLiquidsB = 0;
+var counterTemperature = 0;
+var counterHumidity = 0;
+var counterSmog = 0;
+
+function sendSocketAndMaybeStoreRegistry(name, value, counter, store) {
+    var registry = {name: name, value: value};
+    console.log("NAME : " + name + " Value: " + value + " Store: " + store +  " Counter: " + counter);
+    if (counter >= 10 || store) {
+	storage.createRegistry(registry.name, registry.value);
+	counter = 0;
+    }
+    counter = counter + 1; 
+    if (socketIO) {
+	console.log(registry);
+	socketIO.emit('general', registry);    
+    }
+    return registry;
+ }
+
+
+var init = function(io) {
+    socketIO = io;
+    board = new five.Board();
 
 	board.on("ready", function(){
 
@@ -46,70 +71,48 @@ var init = function() {
 
 // development
 
-liq_a.on('hold', function(data){
-	console.log("Acces");
-	l_a = "1";
-	var object  = {
-            Liquido: l_a,
-        };
-	storage.createRegistry(
-		Storage.data.Liquido,
-		object.Liquido
-		);
-	console.log(l_a);
-	return object;
+ liq_a.on('hold', function(data){
+     l_a = "1";
+    var registry = sendSocketAndMaybeStoreRegistry(Storage.data.LiquidoA, l_a, counterLiquidsA, true);
+    console.log(l_a);
+    return registry;
 });
 
 
 liq_a.on('up', function(data){
-	console.log("Acces");
-	l_a = "0";
-	var object  = {
-            Liquido: l_a,
-        };
-	storage.createRegistry(
-		Storage.data.Liquido,
-		object.Liquido
-		);
-	console.log(l_a);
-	return object;
+    console.log("Acceso en liquidos A");
+    l_a = "0";
+    var object = sendSocketAndMaybeStoreRegistry(Storage.data.LiquidoA, l_a, counterLiquidsA, false);
+    return object;
 });
 
 liq_b.on('hold', function(data){
-	l_b = "1";
+    l_b = "1";
+    var object = sendSocketAndMaybeStoreRegistry(Storage.data.LiquidoB, l_b, counterLiquidsB, true);
+    return object;
 });
 
 liq_b.on('up', function(data){
-	l_b = "0";
+    l_b = "0";
+    var object = sendSocketAndMaybeStoreRegistry(Storage.data.LiquidoB, l_b, counterLiquidsB, false);
+    return object;
 });
 
 hum_a.on('hold', function(data){
-	h = "1";
-	var object  = {
-            Humo: h,
-        };
-	storage.createRegistry(
-		Storage.data.Humo,
-		object.Humo
-		);
-	return object;
+    h = "1";
+    var object = sendSocketAndMaybeStoreRegistry(Storage.data.Humo, h, counterSmog, true);
+    return object;
 });
 
 hum_a.on('up', function(data){
 	h = "0";
-	var object  = {
-            Humo: h,
-        };
-	storage.createRegistry(
-		Storage.data.Humo,
-		object.Humo
-		);
-	return object;
+    var object = sendSocketAndMaybeStoreRegistry(Storage.data.Humo, h, counterSmog, false);
+    return object;
 });
 
 t_rack.on('data', function(){
-	tr = (5 * this.value * 100) / 1024;
-	tro = tr.toFixed(2);
+    var  tr = (5 * this.value * 100) / 1024;
+    var  tro = tr.toFixed(2);
 });
 
 
@@ -159,20 +162,14 @@ var dataS = function() {
             Celsius: celsius,
             Humedad: hum_
         };
-
         if(time === 2){
-        storage.createRegistry(
-            Storage.data.Celsius,
-            object.Celsius
-        );
-        storage.createRegistry(
-            Storage.data.Humedad,
-            object.Humedad
-        );
-        time = 0;
+	    var alertForTemperature = (object.Celsius >= Storage.schemas.Temperatura.schema.max);
+	    var alertForHumidity = (object.Humedad >= Storage.schemas.Humedad.schema.max);
+	    sendSocketAndMaybeStoreRegistry(Storage.data.Celsius, object.Celsius, counterTemperature, alertForTemperature ? true : false);
+	    sendSocketAndMaybeStoreRegistry(Storage.data.Humedad, object.Humedad, counterHumidity, alertForHumidity ? true : false);
+            time = 0;
         }
         return object;	
-
     });
 };
 

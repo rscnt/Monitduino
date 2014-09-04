@@ -9,8 +9,7 @@ var nunjucks = require('nunjucks');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var data = require('./routes/data');
-var routesLiquid = require('./routes/liquidos');
-//var index = require('./routes/general');
+var index = require('./routes/general');
 
 var app = express();
 var http = require('http').Server(app);
@@ -40,10 +39,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/usuarios', users);
-app.use('/liquidos', routesLiquid);
-app.use('/datos', data);
-// app.use('/', index);
+app.use('/users', users);
+app.use('/data', data);
+app.use('/index', index);
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
@@ -86,14 +84,14 @@ db
 .sync({ force: true })
 .complete(function(err) {
     if (err) {
-        throw err[0];
+        throw err[0]
     } else {
         var server = http.listen(app.get('port'), function() {
             debug('Express server listening on port ' + server.address().port);
+            ard.init();
             io.on('connection', function(socket){
-		ard.init(socket);            
                 var storage = new Storage(socket);
-		storage.initStorage();
+                storage.initStorage();
                 ard.dataS(storage);
             });
             
