@@ -80,6 +80,14 @@ var Data  = {
         parse: undefined,
         referenceID: undefined
     },
+    Puerta : {
+        schema : {
+            "name": "principal",
+            "metric": "datos"
+        },
+        parse: undefined,
+        referenceID: undefined
+    },
     Humo : {
         schema: {
             "name": "humo",
@@ -110,7 +118,8 @@ Storage.data = {
     Celsius: "temperatura",
     Humedad: "humedad",
     Liquido: "liquido",
-    Humo: "humo"
+    Humo: "humo",
+    Puerta: "principal"
 };
 
 Storage.prototype.initStorage = function() {

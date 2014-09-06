@@ -18,23 +18,25 @@ var init = function() {
 
 	board.on("ready", function(){
 
+	var led = new five.Led(13);
+
 	var liq_a = new five.Button({
 		board: board,
-		pin: 22,
+		pin: 2,
 		holdtime: 3000,
-		invert: false
+		invert: true
 	});
 
 	var liq_b = new five.Button({
 		board: board,
-		pin: 23,
+		pin: 3,
 		holdtime: 3000,
 		invert: false
 	});
 
 	var hum_a = new five.Button({
 		board: board,
-		pin: 24,
+		pin: 4,
 		holdtime: 3000,
 		invert: false
 	});
@@ -47,7 +49,7 @@ var init = function() {
 // development
 
 liq_a.on('hold', function(data){
-	console.log("Acces");
+	//console.log("Acces");
 	l_a = "1";
 	var object  = {
             Liquido: l_a,
@@ -56,13 +58,13 @@ liq_a.on('hold', function(data){
 		Storage.data.Liquido,
 		object.Liquido
 		);
-	console.log(l_a);
+	//console.log(l_a);
 	return object;
 });
 
 
 liq_a.on('up', function(data){
-	console.log("Acces");
+	//console.log("Acces");
 	l_a = "0";
 	var object  = {
             Liquido: l_a,
@@ -71,7 +73,7 @@ liq_a.on('up', function(data){
 		Storage.data.Liquido,
 		object.Liquido
 		);
-	console.log(l_a);
+	//console.log(l_a);
 	return object;
 });
 
@@ -118,7 +120,8 @@ this.repl.inject({
 	liq_a: liq_a, 
 	liq_b: liq_b,
 	hum_a: hum_a,
-	t_rack: t_rack
+	t_rack: t_rack,
+	led: led
 });
 });
 };
@@ -147,13 +150,14 @@ var dataS = function() {
     serialPort.on('data', function(data) {
     	time++;
         //recolecta info del puerto serial
-        var info = data; 					
+        var info = data; 
+        console.log(info);					
         //divide la informacion (Hum, Temp)
         var ext = info.split(","); 			
         //recoge la temperatura
         var celsius = parseFloat(ext[1]); 	
         //recoge la humedad.
-        var hum_ = parseFloat(ext[0]);		
+        var hum_ = parseFloat(ext[0]);
         // result object
         var object  = {
             Celsius: celsius,
@@ -171,11 +175,16 @@ var dataS = function() {
         );
         time = 0;
         }
+        
         return object;	
 
     });
 };
-
+/*
+init();
+initS();
+dataS();
+*/
 
 module.exports.init = init;
 module.exports.initS = initS;
