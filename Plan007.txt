@@ -1,0 +1,6 @@
++ Hacer la pagina de liquidos, pasillo 1, pasillo 2 y pasillo 3. Indiciador para cada uno. fecha y hora.
++ La pagina de humo, que ahi solo seria el indiciador y poner la fecha y la hora de humazos.
++ Las notificaciones para todo.
++ Usuarios.
++ Las graficas.
++ La tarjeta, pospuesto. :(

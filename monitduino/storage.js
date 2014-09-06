@@ -18,6 +18,17 @@ var parse = {
     Access   : undefined
 };
 
+
+function Storage (io) {
+    Parse.initialize("xpt9oXP4BTzvh2PlhMBNZolQg5o72SpF5HPxrB6a", "pG8XiyyD1CzNo4BpzpKNnZ1INg0TDXmdmAKqYZlM");
+    parse.Access   = Parse.Object.extend("Access");
+    parse.Alert    = Parse.Object.extend("Alert");
+    parse.Data     = Parse.Object.extend("Data");
+    parse.Registry = Parse.Object.extend("Registry");
+    parse.User     = Parse.Object.extend("User");
+    socketIO = io;
+}
+
 /*
  *
  */
@@ -49,11 +60,11 @@ var createData = function (schema, parseObject, referenceID) {
     return this;
 };
 
-var Data  = {
+Storage.schemas  = {
     Temperatura : {
         schema: {
             "name": "temperatura",
-            "max": 24.0,
+            "max": 40.0,
             "min": 12.0,
             "metric": "Celsius"
         },
@@ -63,16 +74,36 @@ var Data  = {
     Humedad : {
         schema : {
             "name": "humedad",
-            "max": 100.0,
+            "max": 80.0,
             "min": 0.0,
             "metric": "Percentage"
         },
         parse: undefined,
         referenceID: undefined
     },
-    Liquido : {
+    LiquidoA: {
         schema : {
-            "name": "liquido",
+            "name": "liquidoA",
+            "max": 1.0,
+            "min": 0.0,
+            "metric": "Boolean"
+        },
+        parse: undefined,
+        referenceID: undefined
+    },
+    LiquidoB: {
+        schema : {
+            "name": "liquidoB",
+            "max": 1.0,
+            "min": 0.0,
+            "metric": "Boolean"
+        },
+        parse: undefined,
+        referenceID: undefined
+    },
+    LiquidoC: {
+        schema : {
+            "name": "liquidoC",
             "max": 1.0,
             "min": 0.0,
             "metric": "Boolean"
@@ -100,16 +131,6 @@ var Data  = {
     }
 };
 
-function Storage (io) {
-    Parse.initialize("xpt9oXP4BTzvh2PlhMBNZolQg5o72SpF5HPxrB6a", "pG8XiyyD1CzNo4BpzpKNnZ1INg0TDXmdmAKqYZlM");
-    parse.Access   = Parse.Object.extend("Access");
-    parse.Alert    = Parse.Object.extend("Alert");
-    parse.Data     = Parse.Object.extend("Data");
-    parse.Registry = Parse.Object.extend("Registry");
-    parse.User     = Parse.Object.extend("User");
-    socketIO = io;
-}
-
 
 /**
  *
@@ -117,13 +138,25 @@ function Storage (io) {
 Storage.data = {
     Celsius: "temperatura",
     Humedad: "humedad",
+<<<<<<< HEAD
     Liquido: "liquido",
     Humo: "humo",
     Puerta: "principal"
+=======
+    LiquidoA: "liquidoA",
+    LiquidoB: "liquidoB",
+    LiquidoC: "liquidoC",
+    Humo: "humo"
+>>>>>>> 6cfc4426376aa29f80cfef14eac203d62c83227d
+};
+
+// should be on a module
+channels = {
+    USERNEW : "user_new"
 };
 
 Storage.prototype.initStorage = function() {
-    _.forEach(Data, function(data){
+    _.forEach(Storage.schemas, function(data){
         createData(data.schema, undefined, undefined);
     });
 };
@@ -142,6 +175,19 @@ Storage.prototype.findDataByName = function(name, callback) {
         } else {
             callback(null, data);
         }
+    });
+};
+
+Storage.prototype.createUser = function(username, password, charge, description, birthdate) {
+    db.User.create({
+	username: username,
+	password: password,
+	charge: charge,
+	description: description,
+	birthdate: birthdate
+    }).success(function(newuser) {
+	socketIO.emit(channels.USERNEW, newuser);
+	return true;
     });
 };
 
@@ -168,7 +214,7 @@ Storage.prototype.createRegistry = function(dataName, dataValue) {
             db.Registry.create({
                 name: dataName,
                 date: Date.now(),
-                value: dataValue,
+                value: dataValue
             }).success(function(registry) { 
                 socketIO.emit('general' , {name: registry.name, value: registry.value});
                 switch(registry.name){

@@ -11,8 +11,6 @@ router.param('data_name', function(req, res, next, data_name) {
     });
 });
 
-
-
 router.route('/:data_name')
 .all(function(req, res, next) {
     next();
