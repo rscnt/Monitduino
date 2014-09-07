@@ -24,23 +24,28 @@ var Monitduino = function(){
     this.liq_c = null;
     this.hum_a = null;
     this.t_track = null;
-    this.board = null;    
+    this.board = null;
+    this.count = 0;
 };
 
 Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, counter, store) {
     var registry = {name: name, value: value};
-    if (counter >= 30 || store) {
-	storage.createRegistry(registry.name, registry.value);
-	counter = 0;
-    }
-    counter++; 
-    if (socketIO) {
-	socketIO.emit('general', registry);    
-    }
+    if (storage !== undefined || storage !== null) {
+	storage.createRegistry(registry.name, registry.value);	
+    } else { console.log("storage not defined"); }
+    this.count = 0;
+    if (this.socketIO !== undefined || this.socketIO !== null) {
+	this.socketIO.emit('general', registry);    
+    } else { console.log("SOCKET IO not found"); }
     return registry;
 };
 
-Monitduino.prototype.setSocket = function(io){
+Monitduino.prototype.initStorage = function() {
+    storage.init();
+};
+
+
+Monitduino.prototype.setSocket = function(io) {
     this.socketIO = io;
 };
 

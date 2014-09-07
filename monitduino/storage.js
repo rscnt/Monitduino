@@ -43,8 +43,8 @@ var createData = function (schema, parseObject, referenceID) {
                 max: schema.max,
                 min: schema.min,
                 metric: schema.metric
-            }).success(function(data){
-                return data;
+            }).complete(function(err, data){
+               if (!!err) { console.log(err); }
             });
         } else {
             schema.name   = data.name;
@@ -150,7 +150,9 @@ var channels = {
     USERNEW : "user_new"
 };
 
-Storage.prototype.initStorage = function() {
+Storage.prototype.init = function() {
+    var that = this;
+    console.log(Storage.schemas);
     _.forEach(Storage.schemas, function(data){
         createData(data.schema, undefined, undefined);
     });
@@ -199,7 +201,7 @@ Storage.prototype.createRegistry = function(dataName, dataValue) {
         if (!!err) {
             console.log("Error on QUERY");
         } else if (!data) {
-            console.log('Data ' + dataName + 'not found');
+            console.log('Data ' + dataName + ' not found');
         } else {
             // se intenta crear un registro.
             db.Registry.create({

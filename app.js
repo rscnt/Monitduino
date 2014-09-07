@@ -56,6 +56,7 @@ app.use('/rack', rack);
 app.use('/lumina', luzc);
 app.use('/airc', airc);
 app.use('/camara', cam);
+
 // app.use('/', index);
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -94,6 +95,8 @@ app.set('port', process.env.PORT || 3000);
 
 var debug = require('debug')('monitduino');
 
+monitduino.setupSerialPort();
+monitduino.setupBoard();
 db
 .sequelize
 .sync({ force: true })
@@ -104,9 +107,8 @@ db
         var server = http.listen(app.get('port'), function() {
             debug('Express server listening on port ' + server.address().port);
             io.on('connection', function(socket) {
-		monitduino.setupBoard();
 		monitduino.setSocket(socket);
-		monitduino.setupSerialPort();
+		monitduino.initStorage();
             });
         });
     }
