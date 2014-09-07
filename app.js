@@ -13,10 +13,10 @@ var routesLiquid = require('./routes/liquidos');
 var routesHumo = require('./routes/humo');
 var estadoruta = require('./routes/puerta');
 var accesoruta = require('./routes/puertac');
-var rack = require('/routes/racks');
-var luzc = require('routes/lumin');
-var airec = require('routes/tempt');
-var cam = require('routes/cam');
+var rack = require('./routes/racks');
+var luzc = require('./routes/lumin');
+var airec = require('./routes/tempt');
+var cam = require('./routes/cam');
 //var index = require('./routes/general');
 
 var app = express();

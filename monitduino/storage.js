@@ -138,16 +138,16 @@ Storage.schemas  = {
 Storage.data = {
     Celsius: "temperatura",
     Humedad: "humedad",
-<<<<<<< HEAD
+
     Liquido: "liquido",
     Humo: "humo",
-    Puerta: "principal"
-=======
+    Puerta: "principal",
+
     LiquidoA: "liquidoA",
     LiquidoB: "liquidoB",
     LiquidoC: "liquidoC",
     Humo: "humo"
->>>>>>> 6cfc4426376aa29f80cfef14eac203d62c83227d
+
 };
 
 // should be on a module

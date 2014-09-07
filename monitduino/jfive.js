@@ -56,7 +56,7 @@ var init = function(io) {
 		board: board,
 		pin: 3,
 		holdtime: 3000,
-		invert: false
+		invert: true
 	});
 
 	var hum_a = new five.Button({
@@ -73,7 +73,7 @@ var init = function(io) {
 
 // development
 
-<<<<<<< HEAD
+
 liq_a.on('hold', function(data){
 	//console.log("Acces");
 	l_a = "1";
@@ -86,18 +86,18 @@ liq_a.on('hold', function(data){
 		);
 	//console.log(l_a);
 	return object;
-=======
+
  liq_a.on('hold', function(data){
      l_a = "1";
     var registry = sendSocketAndMaybeStoreRegistry(Storage.data.LiquidoA, l_a, counterLiquidsA, true);
     console.log(l_a);
     return registry;
->>>>>>> 6cfc4426376aa29f80cfef14eac203d62c83227d
+
 });
 
 
 liq_a.on('up', function(data){
-<<<<<<< HEAD
+
 	//console.log("Acces");
 	l_a = "0";
 	var object  = {
@@ -109,12 +109,12 @@ liq_a.on('up', function(data){
 		);
 	//console.log(l_a);
 	return object;
-=======
+
     console.log("Acceso en liquidos A");
     l_a = "0";
     var object = sendSocketAndMaybeStoreRegistry(Storage.data.LiquidoA, l_a, counterLiquidsA, false);
     return object;
->>>>>>> 6cfc4426376aa29f80cfef14eac203d62c83227d
+
 });
 
 liq_b.on('hold', function(data){
