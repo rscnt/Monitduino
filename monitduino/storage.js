@@ -6,7 +6,6 @@
 var db   = require('../models');
 var Parse = require('parse').Parse;
 var _ = require("lodash");
-var socketIO;
 var temp_p = new Array();
 var hum_p = new Array();
 
@@ -19,14 +18,13 @@ var parse = {
 };
 
 
-function Storage (io) {
+function Storage () {
     Parse.initialize("xpt9oXP4BTzvh2PlhMBNZolQg5o72SpF5HPxrB6a", "pG8XiyyD1CzNo4BpzpKNnZ1INg0TDXmdmAKqYZlM");
     parse.Access   = Parse.Object.extend("Access");
     parse.Alert    = Parse.Object.extend("Alert");
     parse.Data     = Parse.Object.extend("Data");
     parse.Registry = Parse.Object.extend("Registry");
     parse.User     = Parse.Object.extend("User");
-    socketIO = io;
 }
 
 /*
@@ -137,11 +135,9 @@ Storage.schemas  = {
 Storage.data = {
     Celsius: "temperatura",
     Humedad: "humedad",
-
     Liquido: "liquido",
     Humo: "humo",
     Puerta: "principal",
-
     LiquidoA: "liquidoA",
     LiquidoB: "liquidoB",
     LiquidoC: "liquidoC",
@@ -150,7 +146,7 @@ Storage.data = {
 };
 
 // should be on a module
-channels = {
+var channels = {
     USERNEW : "user_new"
 };
 
@@ -185,13 +181,9 @@ Storage.prototype.createUser = function(username, password, charge, description,
 	description: description,
 	birthdate: birthdate
     }).success(function(newuser) {
-	socketIO.emit(channels.USERNEW, newuser);
 	return true;
     });
 };
-
-/**
-*/
 
 /**
  * @param integer dataID,  name of the table or registry to save.
@@ -215,17 +207,14 @@ Storage.prototype.createRegistry = function(dataName, dataValue) {
                 date: Date.now(),
                 value: dataValue
             }).success(function(registry) { 
-                socketIO.emit('general' , {name: registry.name, value: registry.value});
                 switch(registry.name){
                     case "Temperatura":
                     case "temperatura":
                         temp_p.push(registry.value);
-                        socketIO.emit('promt', temp_p);
                         break;
                     case "Humedad":
                     case "humedad":
                         hum_p.push(registry.value);
-                        socketIO.emit('humt', hum_p);
                         break;
                 }
                 // el registro ha sido guardado, se asocia la entidad data.
@@ -274,7 +263,6 @@ Storage.prototype.storeAlert = function (registryID, priority) {
                 anAlert = alert;
                 alert.setRegistry(registry)
                     .success(function(){
-                        socketIO.emit('alerta' , {name: registry.name, value: registry.value});
                         if (parse.Alert !== undefined) {
                             var parseAlert = new parse.Alert();
                             parseAlert.set("date", alert.date);

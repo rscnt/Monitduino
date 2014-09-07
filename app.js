@@ -104,7 +104,9 @@ db
         var server = http.listen(app.get('port'), function() {
             debug('Express server listening on port ' + server.address().port);
             io.on('connection', function(socket) {
+		monitduino.setupBoard();
 		monitduino.setSocket(socket);
+		monitduino.setupSerialPort();
             });
         });
     }
