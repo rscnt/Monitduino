@@ -16,14 +16,12 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-var ard = require('./monitduino/jfive');
+var Monitduino = require('./monitduino/jfive');
+var monitduino = new Monitduino();
 var db = require('./models/index.js');
 var Storage = require('./monitduino/storage');
 
-
 //nunjucks configuration
-
-
 nunjucks.configure('views', {
     autoescape: true,
     express: app
@@ -78,13 +76,10 @@ app.use(function(err, req, res, next) {
 
 // squalize
 
-
-
-
 app.set('port', process.env.PORT || 3000);
-// ard.init();
 
 var debug = require('debug')('monitduino');
+
 db
 .sequelize
 .sync({ force: true })
@@ -94,13 +89,9 @@ db
     } else {
         var server = http.listen(app.get('port'), function() {
             debug('Express server listening on port ' + server.address().port);
-            io.on('connection', function(socket){
-		//ard.setSocket(socket);
-                //var storage = new Storage(socket);
-		//storage.initStorage();
-                //ard.dataS(storage);
+            io.on('connection', function(socket) {
+		monitduino.setSocket(socket);
             });
-            
         });
     }
 });

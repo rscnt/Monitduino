@@ -135,11 +135,6 @@ Storage.data = {
     Humo: "humo"
 };
 
-// should be on a module
-channels = {
-    USERNEW : "user_new"
-};
-
 Storage.prototype.initStorage = function() {
     _.forEach(Storage.schemas, function(data){
         createData(data.schema, undefined, undefined);

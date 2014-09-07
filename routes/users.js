@@ -9,7 +9,7 @@ router.get('/', function(req, res) {
 });
 
 router.get('/new', function(req, res) {
-  res.render("userNewTemplate.html", {title: "Crear nuevo usuario"});
+    res.json({});
 });
 
 router.post('/me', function(req, res) {

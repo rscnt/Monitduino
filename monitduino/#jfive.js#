@@ -24,7 +24,11 @@ var Monitduino = function(){
     this.liq_c = null;
     this.hum_a = null;
     this.t_track = null;
-    this.board = five.Board();    
+    this.board = null;    
+};
+
+Monitduino.prototype.startBoard = function() {
+    this.board = five.Board();
 };
 
 Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, counter, store) {
@@ -39,13 +43,10 @@ Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, cou
     }
     return registry;
 };
-
 Monitduino.prototype.setSocket = function(io){
     this.socketIO = io;
 };
-
 var negativeValue = "0", positiveValue = "1";
-
 Monitduino.prototype.pepareBoard = function ()  {
     var that = this;
     if (that.board) {
