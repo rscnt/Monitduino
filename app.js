@@ -23,6 +23,7 @@ var Storage = require('./monitduino/storage');
 
 //nunjucks configuration
 
+
 nunjucks.configure('views', {
     autoescape: true,
     express: app
@@ -78,7 +79,10 @@ app.use(function(err, req, res, next) {
 // squalize
 
 
+
+
 app.set('port', process.env.PORT || 3000);
+// ard.init();
 
 var debug = require('debug')('monitduino');
 db
@@ -91,10 +95,10 @@ db
         var server = http.listen(app.get('port'), function() {
             debug('Express server listening on port ' + server.address().port);
             io.on('connection', function(socket){
-		ard.init(socket);            
-                var storage = new Storage(socket);
-		storage.initStorage();
-                ard.dataS(storage);
+		//ard.setSocket(socket);
+                //var storage = new Storage(socket);
+		//storage.initStorage();
+                //ard.dataS(storage);
             });
             
         });

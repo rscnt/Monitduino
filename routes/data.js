@@ -16,12 +16,10 @@ router.route('/:data_name')
     next();
 })
 .get(function(req, res, next) {
-    console.log("dataTemplate: " + req.data.name);
     db.Registry.findAll({
         where: {name: req.data.name}
     }).success(function(nodeRegistrations){
-        console.log("dataTemplate");
-        res.render('dataTemplate.html', {title: req.data.name, items: nodeRegistrations});
+	res.json({title: req.data.name, results: nodeRegistrations});
     });
 })
 .put(function(req, res, next) {
@@ -35,6 +33,6 @@ router.route('/:data_name')
 })
 .delete(function(req, res, next) {
     //next(new Error('not implemented'));
-})
+});
 
 module.exports = router;
