@@ -110,6 +110,14 @@ Storage.schemas  = {
         parse: undefined,
         referenceID: undefined
     },
+    Puerta : {
+        schema : {
+            "name": "principal",
+            "metric": "datos"
+        },
+        parse: undefined,
+        referenceID: undefined
+    },
     Humo : {
         schema: {
             "name": "humo",
@@ -129,10 +137,16 @@ Storage.schemas  = {
 Storage.data = {
     Celsius: "temperatura",
     Humedad: "humedad",
+
+    Liquido: "liquido",
+    Humo: "humo",
+    Puerta: "principal",
+
     LiquidoA: "liquidoA",
     LiquidoB: "liquidoB",
     LiquidoC: "liquidoC",
     Humo: "humo"
+
 };
 
 // should be on a module

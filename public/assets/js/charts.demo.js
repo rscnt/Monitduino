@@ -456,7 +456,7 @@ var handleLiveUpdatedChart = function () {
         // setup plot
         var options = {
             series: { shadowSize: 0, color: purple, lines: { show: true, fill:false } }, // drawing is faster without shadows
-            yaxis: { tickColor: '#ddd', max: "30", min: "25" },
+            yaxis: { tickColor: '#ddd', max: "35", min: "25" },
             xaxis: {
                 tickFormatter: function() {
                     return "";

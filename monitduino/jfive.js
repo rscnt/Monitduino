@@ -24,7 +24,7 @@ var Monitduino = function(){
     this.liq_c = null;
     this.hum_a = null;
     this.t_track = null;
-    this.board = five.Board();    
+    this.board = null;    
 };
 
 Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, counter, store) {
@@ -46,8 +46,10 @@ Monitduino.prototype.setSocket = function(io){
 
 var negativeValue = "0", positiveValue = "1";
 
-Monitduino.prototype.pepareBoard = function ()  {
+Monitduino.prototype.setupBoard = function ()  {
+
     var that = this;
+    that.board = five.Board();
     if (that.board) {
 	that.board.on("ready", function(){
 
@@ -78,7 +80,6 @@ Monitduino.prototype.pepareBoard = function ()  {
 	    });
 
 	    // development
-
 	    that.liq_a.on('hold', function(data){
 		var registry = that.sendSocketAndMaybeStoreRegistry(Storage.data.LiquidoA, positiveValue, counterLiquidsA, true);
 	    });
@@ -113,9 +114,10 @@ Monitduino.prototype.pepareBoard = function ()  {
 
 	});
     };
+
 };
 
-Monitduino.prototype.setSerialPort = function() {
+Monitduino.prototype.setupSerialPort = function() {
     var that = this;
     /* 
      * initS : 
@@ -132,17 +134,18 @@ Monitduino.prototype.setSerialPort = function() {
      */
 
     serialPort.on('data', function(data) {
-	time++;
-	//recolecta info del puerto serial
-	var info = data; 					
-	//divide la informacion (Hum, Temp)
-	var ext = info.split(","); 			
-	//recoge la temperatura
-	var celsius = parseFloat(ext[1]); 	
-	//recoge la humedad.
-	var hum_ = parseFloat(ext[0]);		
-	// result object
-	var object  = {
+    	time++;
+        //recolecta info del puerto serial
+        var info = data; 
+        console.log(info);					
+        //divide la informacion (Hum, Temp)
+        var ext = info.split(","); 			
+        //recoge la temperatura
+        var celsius = parseFloat(ext[1]); 	
+        //recoge la humedad.
+        var hum_ = parseFloat(ext[0]);
+        // result object
+        var object  = {
             Celsius: celsius,
             Humedad: hum_
 	};
@@ -154,7 +157,6 @@ Monitduino.prototype.setSerialPort = function() {
             time = 0;
 	}
     });
-
 };
 
 module.exports = Monitduino;
