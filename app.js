@@ -15,7 +15,7 @@ var estadoruta = require('./routes/puerta');
 var accesoruta = require('./routes/puertac');
 var rack = require('./routes/racks');
 var luzc = require('./routes/lumin');
-var airec = require('./routes/tempt');
+var airc = require('./routes/tempt');
 var cam = require('./routes/cam');
 //var index = require('./routes/general');
 
@@ -52,10 +52,10 @@ app.use('/liquidos', routesLiquid);
 app.use('/datos', data);
 app.use('/humo', routesHumo);
 app.use('/estpuerta', estadoruta);
-app.use('/accpuerta', estadoruta);
+app.use('/accpuerta', accesoruta);
 app.use('/rack', rack);
 app.use('/lumina', luzc);
-app.use('/airc', airec);
+app.use('/airc', airc);
 app.use('/camara', cam);
 // app.use('/', index);
 /// catch 404 and forward to error handler

@@ -156,8 +156,8 @@ this.repl.inject({
 	led: led
 });
 });
+});
 };
-
 /* 
  * initS : 
  * A callback is supposed to be passed, when is opened, we do something. 
