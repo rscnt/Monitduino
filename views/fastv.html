@@ -4,65 +4,6 @@
 			<h1 class="page-header">General <small>Una vista rapida, a todo lo sucedido en el cuarto.</small></h1>
 {% endblock %}
 
-{% block sidenav %}
-				<ul class="nav">
-					<li class="nav-header">Navegacion</li>
-					<li class="">
-						<a href="/"><i class="fa fa-laptop"></i> <span>Dashboard</span></a>
-					</li>
-					<li>
-						<a href="/index">
-						<li class="active">
-							<i class="glyphicon glyphicon-home"></i> <span>General</span>
-						</li>
-						</a>
-					</li>
-					<li class="has-sub">
-						<a href="javascript:;">
-						    <i class="fa fa-tree"></i> 
-						    <b class="caret pull-right"></b>
-						    <span>Variables Fisicas</span> 
-						</a>
-						<ul class="sub-menu">
-							<li><a href="/data/temperatura">Temperatura</a></li>
-							<li><a href="/data/humedad">Humedad</a></li>
-							<li><a href="/data/liquidos">Liquidos</a></li>
-							<li><a href="/data/humo">Humo</a></li>
-						</ul>
-					</li>
-					<li class="has-sub">
-						<a href="javascript:;">
-						    <i class="fa fa-university"></i> 
-						    <b class="caret pull-right"></b>
-						    <span>Acceso Puerta</span> 
-						</a>
-						<ul class="sub-menu">
-							<li><a href="ent">Entradas</a></li>
-							<li><a href="estp">Estado</a></li>
-							<li><a href="rack">Racks</a></li>
-						</ul>
-					</li>
-					<li class="has-sub">
-						<a href="javascript:;">
-						    <b class="caret pull-right"></b>
-						    <i class="fa fa-sliders"></i> 
-						    <span>Control</span> 
-						</a>
-						<ul class="sub-menu">
-							<li><a href="table_basic.html">Luminaria</a></li>
-							<li><a href="air_c">Temperatura</a></li>
-						</ul>
-					</li>
-					<li class="has-sub">
-					    <a href="javascript:;">
-					        <i class="fa fa-video-camera"></i>
-					        <span>
-					            Camara
-					        </span>
-					    </a>
-					</li>
-					{% endblock %}
-
 {% block fast %}
 	<!-- begin row -->
 			<div class="row">
@@ -106,6 +47,7 @@
 							<h4>HUMO EN LA SALA</h4>
 							<p>
 							<span id="humo" class="label label-default"></span>
+							DATOS.
 							</p>	
 						</div>
 						<div class="state-link">
@@ -122,6 +64,7 @@
 							<h4>LIQUIDO EN LA SALA</h4>
 							<p>
 							<span id="liquid" class="label label-default"></span>
+							DATOS.
 							</p>	
 						</div>
 						<div class="state-link">

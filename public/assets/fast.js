@@ -54,6 +54,9 @@ socket.on('general', function (data) {
 	    $( "#liquid.label-default" ).css("background-color", "#777");
 	    $("#liquid").text("Inactivo.");
 	}
+	else {
+		$("#liquid").text("No registro");
+	}
 	break;
     case "Humo":
     case "humo":
@@ -64,6 +67,9 @@ socket.on('general', function (data) {
 	else if(data.value == "0"){
 	    $( "#humo.label-default" ).css("background-color", "#777");
 	    $("#humo").text("OFF");
+	}
+	else {
+		$("#humo").text("No registro");
 	}
 	break;
     }

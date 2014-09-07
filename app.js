@@ -10,6 +10,13 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var data = require('./routes/data');
 var routesLiquid = require('./routes/liquidos');
+var routesHumo = require('./routes/humo');
+var estadoruta = require('./routes/puerta');
+var accesoruta = require('./routes/puertac');
+var rack = require('/routes/racks');
+var luzc = require('routes/lumin');
+var airec = require('routes/tempt');
+var cam = require('routes/cam');
 //var index = require('./routes/general');
 
 var app = express();
@@ -43,6 +50,13 @@ app.use('/', routes);
 app.use('/usuarios', users);
 app.use('/liquidos', routesLiquid);
 app.use('/datos', data);
+app.use('/humo', routesHumo);
+app.use('/estpuerta', estadoruta);
+app.use('/accpuerta', estadoruta);
+app.use('/rack', rack);
+app.use('/lumina', luzc);
+app.use('/airc', airec);
+app.use('/camara', cam);
 // app.use('/', index);
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
