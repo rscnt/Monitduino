@@ -4,7 +4,7 @@ var db = require('../models');
 var router = express.Router();
 
 router.get('/', function(req, resp){
-    resp.render('temair.html', {title: 'Control Temperatura'});
+    resp.render('temperatura.html', {title: 'Temperatura'});
 });
 
 router.get("/data", function(req, resp) {

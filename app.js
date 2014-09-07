@@ -8,14 +8,24 @@ var nunjucks = require('nunjucks');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-var data = require('./routes/data');
+//var data = require('./routes/data');
+// Sensor principal de liquidos.
 var routesLiquid = require('./routes/liquidos');
+//Sensor de humo principal.
 var routesHumo = require('./routes/humo');
+//Sensor principal de temepratura.
+var routesTemperatura = require("./routes/temperatura");
+//TODO: Puerta B
 var estadoruta = require('./routes/puerta');
+//TODO: Puerta C
 var accesoruta = require('./routes/puertac');
+//TODO: Racks.
 var rack = require('./routes/racks');
+//TODO: Luminaria.
 var luzc = require('./routes/lumin');
+//TODO: Temperatura.
 var airc = require('./routes/tempt');
+//TODO: Camara.
 var cam = require('./routes/cam');
 //var index = require('./routes/general');
 
@@ -48,7 +58,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/usuarios', users);
 app.use('/liquidos', routesLiquid);
-app.use('/datos', data);
+//app.use('/datos', data);
+app.use("/temperatura", routesTemperatura);
 app.use('/humo', routesHumo);
 app.use('/estpuerta', estadoruta);
 app.use('/accpuerta', accesoruta);
@@ -97,6 +108,7 @@ var debug = require('debug')('monitduino');
 
 monitduino.setupSerialPort();
 monitduino.setupBoard();
+
 db
 .sequelize
 .sync({ force: true })
@@ -106,9 +118,9 @@ db
     } else {
         var server = http.listen(app.get('port'), function() {
             debug('Express server listening on port ' + server.address().port);
+	    monitduino.initStorage();
             io.on('connection', function(socket) {
 		monitduino.setSocket(socket);
-		monitduino.initStorage();
             });
         });
     }

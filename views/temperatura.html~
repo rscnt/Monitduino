@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block header %}
-<h1 class="page-header">Liquidos <small>Detecta si hay agua en un lugar del cuarto.</small></h1>
+<h1 class="page-header">Temperatura <small>Metrica de la temperatura en el cuarto.</small></h1>
 {% endblock %}
 
 {% block temp %}
@@ -14,10 +14,9 @@
     <div class="widget widget-state bg-blue">
       <div class="state-icon"><i id="liquidoA" class="fa fa-umbrella"></i></div>
       <div class="state-info">
-	<h4>PASILLO 1</h4>
+	<h4>Temperatura</h4>
 	<p>
-	  AlphaLiquid.
-	  <span class="label label-default"></span>
+	  <span id="valor-temperatura-not-dashboard"> 0.0 </span>
 	</p>	
       </div>
     </div>

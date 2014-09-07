@@ -1,4 +1,5 @@
-var socket = io.connect('http://127.0.0.1:3000');
+var domain = "http://127.0.0.1:3000";
+var socket = io.connect(domain);
 var val_t = 0;
 var val_h = 0;
 var val_b = 0;
@@ -6,12 +7,118 @@ var val_l = 0;
 var t = new Array();
 var h = new Array();
 
+
+var fetchData = function(name, callback) {
+    var url = domain + "/" + name + "/data";
+    console.log(url);
+    $.get(url, function(data){
+	if (callback) {
+	    callback(data);
+	}
+    });
+};
+
+var formatDate = function(stringDate) {
+    var date = Date.parse(stringDate),
+	dDate = moment(date).format("MMMM Do YYYY, h:mm:ss a");
+    return dDate;
+};
+
+var displayBlockOfAlert = function(b){
+    var redBlock = "<div style=\"background: red; width: 100%; height: 10px; display: block;\"></div>";
+    var whiteBlock = "<div style=\"background: white; width: 100%; height: 10px; display: block;\"></div>";
+    return b ? redBlock : whiteBlock;
+};
+
+var $temperaturaDataTable;
+var refreshTemperatruaDataTable = function() {
+    $temperaturaDataTable = $("#temperatura-data-table");
+    if ($temperaturaDataTable) {
+	fetchData("temperatura", function(data){
+	    if (data) {
+		for(var i in data.items) {
+		    var dDate = formatDate(data.items[i].date);
+		    var alert = displayBlockOfAlert(data.items[i].AlertId);
+		    $temperaturaDataTable.find("tbody").append (
+			"<tr><td> " + data.items[i].name  + "</td> " +
+			    "<td>" + dDate  +  "</td>" + 
+			    "<td>" + data.items[i].value  + "</td>" + 
+			    "<td>" + alert + "<td>"
+			    +"</tr>"
+		    );
+		}
+	    }
+	});
+    }
+};
+
+var $humedadDataTable;
+var refreshHumedadDataTable = function() {
+    $temperaturaDataTable = $("#humedad-data-table");
+    if ($temperaturaDataTable) {
+	fetchData("humedad", function(data){
+	    if (data) {
+		for(var i in data.items) {
+		    var dDate = formatDate(data.items[i].date);
+		    var alert = displayBlockOfAlert(data.items[i].AlertId);
+		    $temperaturaDataTable.find("tbody").append (
+			"<tr><td> " + data.items[i].name  + "</td> " +
+			    "<td>" + dDate  +  "</td>" + 
+			    "<td>" + data.items[i].value  + "</td>" + 
+			    "<td>" + alert + "<td>"
+			    +"</tr>"
+		    );
+		}
+	    }
+	});
+    }
+};
+
+var $liquidosDataTable;
+var refreshLiquidosTable = function() {
+    $liquidosDataTable = $("#liquidos-data-table");
+    if ($liquidosDataTable) {
+	fetchData("liquidos", function(data){
+	    $liquidosDataTable.find("tbody").html("");
+	    for(var i in data.items) {
+		var dDate = formatDate(data.items[i].date);
+		var alert = displayBlockOfAlert(data.items[i].value);
+		$liquidosDataTable.find("tbody").append(
+		    "<tr><td>"+data.items[i].name+"</td>"+
+			"<td>"+dDate+"</td>"+
+			"<td>"+alert+"</td></tr>"
+		);
+	    }
+	});
+    }
+};
+
+
+var $humoDataTable;
+var refreshHumoDataTable = function() {
+    $liquidosDataTable = $("#humo-data-table");
+    if ($liquidosDataTable) {
+	fetchData("humo", function(data){
+	    $liquidosDataTable.find("tbody").html("");
+	    for(var i in data.items) {
+		var dDate = formatDate(data.items[i].date);
+		var alert = displayBlockOfAlert(data.items[i].value);
+		$liquidosDataTable.find("tbody").append(
+		    "<tr><td>"+data.items[i].name+"</td>"+
+			"<td>"+dDate+"</td>"+
+			"<td>"+alert+"</td></tr>"
+		);
+	    }
+	});
+    }
+};
+
+
 socket.on('general', function (data) {
     switch(data.name) {
     case "temperatura":
     case "Temperatura":
 	$("#tempt").text(data.value + " C");
-	console.log("Temperatura valor: " + data.value);
 	socket.on('promt', function(data){
 	    var res = [];
 	    if(t.length == 0){
@@ -27,7 +134,6 @@ socket.on('general', function (data) {
     case "Humedad":
     case "humedad":
 	$("#humid").text(data.value + " %");
-	console.log("Humedad valor: " + data.value);
 	socket.on('humt', function(data){
 	    var ras = [];
 	    if(h.length == 0){
@@ -131,54 +237,32 @@ socket.on('general', function(data){
     }
 }); 
 
-/*
- socket.on('b_', function(data){
- val_b = data;
- if (val_b == "1"){
- $( "#humo.label-default" ).css("background-color", "#f89406");
- $("#humo").text("ON");
- }
- else if(val_b == "0"){
- $( "#humo.label-default" ).css("background-color", "#777");
- $("#humo").text("OFF");
- }
- });
+socket.on('promt', function(data){
+    var res = [];
+    if(t.length == 0){
+	for (var i = 0; i < data.length; ++i) {
+	    res.push([i, data[i]]);
+	}
+	t = res;
+    } else {
+	t.push([t.length+1, data[data.length - 1]]);
+    }
+});
 
- socket.on('l_', function(data){
- val_l = data;
- if (val_l == "1"){
- $( "#liquid.label-default" ).css("background-color", "#f89406");
- $("#liquid").text("ON");
- }
- else if(val_l == "0"){
- $( "#liquid.label-default" ).css("background-color", "#777");
- $("#liquid").text("OFF");
- }
- });
- */
-/*
- socket.on('promt', function(data){
- var res = [];
- if(t.length == 0){
- for (var i = 0; i < data.length; ++i) {
- res.push([i, data[i]]);
- }
- t = res;
- } else {
- t.push([t.length+1, data[data.length - 1]]);
- }
- });
+socket.on('humt', function(data){
+    var ras = [];
+    if(h.length == 0){
+	for (var i = 0; i < data.length; ++i) {
+	    ras.push([i, data[i]]);
+	}
+	h = ras;
+    } else {
+	h.push([h.length+1, data[data.length - 1]]);
+    }
+});
 
- socket.on('humt', function(data){
- var ras = [];
- if(h.length == 0){
- for (var i = 0; i < data.length; ++i) {
- ras.push([i, data[i]]);
- }
- h = ras;
- } else {
- h.push([h.length+1, data[data.length - 1]]);
- }
- });
 
- */
+refreshLiquidosTable();
+refreshHumedadDataTable();
+refreshTemperatruaDataTable();
+refreshHumoDataTable();

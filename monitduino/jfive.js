@@ -30,11 +30,11 @@ var Monitduino = function(){
 
 Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, counter, store) {
     var registry = {name: name, value: value};
-    if (storage !== undefined || storage !== null) {
+    if (storage !== undefined && storage !== null) {
 	storage.createRegistry(registry.name, registry.value);	
     } else { console.log("storage not defined"); }
     this.count = 0;
-    if (this.socketIO !== undefined || this.socketIO !== null) {
+    if (this.socketIO !== undefined && this.socketIO !== null) {
 	this.socketIO.emit('general', registry);    
     } else { console.log("SOCKET IO not found"); }
     return registry;
@@ -56,6 +56,7 @@ Monitduino.prototype.setupBoard = function ()  {
     var that = this;
     that.board = five.Board();
     if (that.board) {
+
 	that.board.on("ready", function(){
 
 	    that.liq_a = new five.Button({
@@ -154,6 +155,7 @@ Monitduino.prototype.setupSerialPort = function() {
             Celsius: celsius,
             Humedad: hum_
 	};
+
 	if(time === 5){
 	    var alertForTemperature = (object.Celsius >= Storage.schemas.Temperatura.schema.max);
 	    var alertForHumidity = (object.Humedad >= Storage.schemas.Humedad.schema.max);
@@ -161,6 +163,7 @@ Monitduino.prototype.setupSerialPort = function() {
 	    that.sendSocketAndMaybeStoreRegistry(Storage.data.Humedad, object.Humedad, counterHumidity, alertForHumidity ? true : false);
             time = 0;
 	}
+
     });
 };
 

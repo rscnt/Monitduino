@@ -1,3 +1,4 @@
+/** Racks: Puertas y temperatura. */
 var express = require('express');
 var Storage = require('../monitduino/storage');
 var db = require('../models');
