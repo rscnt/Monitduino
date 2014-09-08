@@ -30,11 +30,21 @@ var Monitduino = function(){
 
 Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, counter, store) {
     var registry = {name: name, value: value};
-    if (storage !== undefined || storage !== null) {
+    if (storage !== undefined && storage !== null) {
 	storage.createRegistry(registry.name, registry.value);	
     } else { console.log("storage not defined"); }
     this.count = 0;
-    if (this.socketIO !== undefined || this.socketIO !== null) {
+    if (this.socketIO !== undefined && this.socketIO !== null) {
+   	switch(registry.name){
+   	case "Temperatura":
+   	case "temperatura":
+    this.socketIO.emit('promt', registry.value);
+    break;
+    case "Humedad":
+   	case "humedad":
+    this.socketIO.emit('humt', registry.value);
+    break;
+    };      	
 	this.socketIO.emit('general', registry);    
     } else { console.log("SOCKET IO not found"); }
     return registry;
@@ -83,6 +93,8 @@ Monitduino.prototype.setupBoard = function ()  {
 		pin: "A0",
 		freq: 30000
 	    });
+
+	    that.alarma = new five.Led(8);
 
 	    // development
 	    that.liq_a.on('hold', function(data){
@@ -158,8 +170,8 @@ Monitduino.prototype.setupSerialPort = function() {
 	    var alertForTemperature = (object.Celsius >= Storage.schemas.Temperatura.schema.max);
 	    var alertForHumidity = (object.Humedad >= Storage.schemas.Humedad.schema.max);
 	    that.sendSocketAndMaybeStoreRegistry(Storage.data.Celsius, object.Celsius, counterTemperature, alertForTemperature ? true : false);
-	    that.sendSocketAndMaybeStoreRegistry(Storage.data.Humedad, object.Humedad, counterHumidity, alertForHumidity ? true : false);
-            time = 0;
+	    that.sendSocketAndMaybeStoreRegistry(Storage.data.Humedad, object.Humedad, counterHumidity, alertForHumidity ? true : false); 
+        time = 0;
 	}
     });
 };
