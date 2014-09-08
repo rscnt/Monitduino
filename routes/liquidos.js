@@ -9,9 +9,9 @@ router.get('/', function(req, resp){
 
 router.get("/data", function(req, resp) {
     db.Registry.findAll({
-        where: {name: {like: "liquido"}}
+        where: {name: {like: "liquido%"}}
     }).success(function(nodeRegistrations){
-	resp.json({items: nodeRegistrations});
+	resp.json({name: "liquidos", items: nodeRegistrations});
     });    
 });
 

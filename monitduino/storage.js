@@ -35,6 +35,8 @@ var createData = function (schema, parseObject, referenceID) {
     .find({ where: { name: schema.name  }  })
     .complete(function(err, data) {
         if (!!err) {
+	    console.log("ERROR");
+	    console.log(err);
 	    throw err;
         } else if (!data) {
             // No data found.
@@ -44,7 +46,8 @@ var createData = function (schema, parseObject, referenceID) {
                 min: schema.min,
                 metric: schema.metric
             }).complete(function(err, data){
-               if (!!err) { console.log(err); }
+		if (!!err) { console.log("ERROR ON DATA"); console.log(err); }
+		console.log(data);
             });
         } else {
             schema.name   = data.name;

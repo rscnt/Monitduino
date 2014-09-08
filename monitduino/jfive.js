@@ -166,12 +166,13 @@ Monitduino.prototype.setupSerialPort = function() {
             Celsius: celsius,
             Humedad: hum_
 	};
+
 	if(time === 5){
 	    var alertForTemperature = (object.Celsius >= Storage.schemas.Temperatura.schema.max);
 	    var alertForHumidity = (object.Humedad >= Storage.schemas.Humedad.schema.max);
 	    that.sendSocketAndMaybeStoreRegistry(Storage.data.Celsius, object.Celsius, counterTemperature, alertForTemperature ? true : false);
-	    that.sendSocketAndMaybeStoreRegistry(Storage.data.Humedad, object.Humedad, counterHumidity, alertForHumidity ? true : false); 
-        time = 0;
+	    that.sendSocketAndMaybeStoreRegistry(Storage.data.Humedad, object.Humedad, counterHumidity, alertForHumidity ? true : false);
+            time = 0;
 	}
     });
 };
