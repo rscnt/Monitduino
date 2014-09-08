@@ -15,6 +15,7 @@ var routesLiquid = require('./routes/liquidos');
 var routesHumo = require('./routes/humo');
 //Sensor principal de temepratura.
 var routesTemperatura = require("./routes/temperatura");
+var routesHumedad = require("./routes/humedad");
 //TODO: Puerta B
 var estadoruta = require('./routes/puerta');
 //TODO: Puerta C
@@ -60,6 +61,7 @@ app.use('/usuarios', users);
 app.use('/liquidos', routesLiquid);
 //app.use('/datos', data);
 app.use("/temperatura", routesTemperatura);
+app.use("/humedad", routesHumedad);
 app.use('/humo', routesHumo);
 app.use('/estpuerta', estadoruta);
 app.use('/accpuerta', accesoruta);

@@ -54,8 +54,8 @@ var refreshTemperatruaDataTable = function() {
 
 var $humedadDataTable;
 var refreshHumedadDataTable = function() {
-    $temperaturaDataTable = $("#humedad-data-table");
-    if ($temperaturaDataTable) {
+    $humedadDataTable = $("#humedad-data-table");
+    if ($humedadDataTable) {
 	fetchData("humedad", function(data){
 	    if (data) {
 		for(var i in data.items) {
@@ -203,9 +203,21 @@ var $liquidoBEl = $("#liquidoB");
 var $liquidoCEl = $("#liquidoC");
 var $temperatureIndicator = $("#valor-temperatura-not-dashboard");
 var $temperaturaIconDetail = $("temperatura-icon-detail");
-
+var $humedadIndicator = $("#valor-humedad-not-dashboard");
+var $humedadIconDetail = $("humedad-icon-detail");
 socket.on('general', function(data){
     switch(data.name) {
+    case "Humedad":
+    case "humedad":
+	if ($humedadIndicator) {
+	    $humedadIndicator.html(data.value);
+	}
+	if (data.AlertId) {
+	    $humedadIconDetail.css("color", "red");
+	} else {
+	    $humedadIconDetail.css("color", "white");
+	}
+  	break;
     case "Temperatura":
     case "temperatura":
 	if ($temperatureIndicator) {
@@ -216,6 +228,7 @@ socket.on('general', function(data){
 	} else {
 	    $temperaturaIconDetail.css("color", "white");
 	} 
+	break;
     case "liquidoA":
     case "LiquidoA":
 	if ($liquidoAEl) {
