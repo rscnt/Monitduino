@@ -201,9 +201,21 @@ socket.on('alerta', function (data) {
 var $liquidoAEl = $("#liquidoA");
 var $liquidoBEl = $("#liquidoB");
 var $liquidoCEl = $("#liquidoC");
+var $temperatureIndicator = $("#valor-temperatura-not-dashboard");
+var $temperaturaIconDetail = $("temperatura-icon-detail");
 
 socket.on('general', function(data){
     switch(data.name) {
+    case "Temperatura":
+    case "temperatura":
+	if ($temperatureIndicator) {
+	    $temperatureIndicator.html(data.value);
+	}
+	if (data.AlertId) {
+	    $temperaturaIconDetail.css("color", "red");
+	} else {
+	    $temperaturaIconDetail.css("color", "white");
+	} 
     case "liquidoA":
     case "LiquidoA":
 	if ($liquidoAEl) {
@@ -260,6 +272,7 @@ socket.on('humt', function(data){
 	h.push([h.length+1, data[data.length - 1]]);
     }
 });
+
 
 
 refreshLiquidosTable();
