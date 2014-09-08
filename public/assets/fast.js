@@ -251,17 +251,14 @@ socket.on('general', function(data){
 }); 
 
 socket.on('promt', function(data){
-	var tem = [];
-	tem.push(j, data);
-	var temp = tem;
     var res = [];
     if(t.length == 0){
-	for (var i = 0; i <= temp.length; ++i) {
-	    res.push([i, temp[i]]);
+	for (var i = 0; i <= data.length; ++i) {
+	    res.push([i, data[i]]);
 	}
 	t = res;
     } else {
-	t.push([t.length+1, temp[temp.length - 1]]);
+	t.push([t.length+1, data[data.length - 1]]);
     }
     j++;
 });
