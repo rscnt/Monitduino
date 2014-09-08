@@ -55,6 +55,7 @@ var refreshTemperatruaDataTable = function() {
 
 var $humedadDataTable;
 var refreshHumedadDataTable = function() {
+    console.log("Humedad");
     $humedadDataTable = $("#humedad-data-table");
     if ($humedadDataTable) {
 	fetchData("humedad", function(data){
@@ -203,9 +204,9 @@ var $liquidoAEl = $("#liquidoA");
 var $liquidoBEl = $("#liquidoB");
 var $liquidoCEl = $("#liquidoC");
 var $temperatureIndicator = $("#valor-temperatura-not-dashboard");
-var $temperaturaIconDetail = $("temperatura-icon-detail");
+var $temperaturaIconDetail = $("#temperatura-icon-detail");
 var $humedadIndicator = $("#valor-humedad-not-dashboard");
-var $humedadIconDetail = $("humedad-icon-detail");
+var $humedadIconDetail = $("#humedad-icon-detail");
 socket.on('general', function(data){
     switch(data.name) {
     case "Humedad":
@@ -294,6 +295,6 @@ socket.on('humt', function(data){
 
 
 refreshLiquidosTable();
-refreshHumedadDataTable();
 refreshTemperatruaDataTable();
 refreshHumoDataTable();
+refreshHumedadDataTable();

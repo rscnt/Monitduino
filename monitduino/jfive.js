@@ -54,7 +54,6 @@ Monitduino.prototype.initStorage = function() {
     storage.init();
 };
 
-
 Monitduino.prototype.setSocket = function(io) {
     this.socketIO = io;
 };
