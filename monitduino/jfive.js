@@ -40,15 +40,46 @@ Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, cou
    	switch(registry.name){
    	case "Temperatura":
    	case "temperatura":
-   	datoT.push([registry.value]);
-    this.socketIO.emit('promt', datoT);
-    break;
-    case "Humedad":
+   	    datoT.push([registry.value]);
+	    if (registry.value >= Storage.schemas.Temperatura.schema.max) {
+		this.socketIO.emit('alert', {name: "temperatura", value: registry.value});
+	    }
+	    this.socketIO.emit('promt', datoT);
+	    break;
+	case "Humedad":
    	case "humedad":
-   	datoH.push([registry.value]);
-    this.socketIO.emit('humt', datoH);
-    break;
-    };      	
+   	    datoH.push([registry.value]);
+	    if (registry.value) {
+		this.socketIO.emit('alert', {name: "humedad", value: registry.value});
+	    }
+	    this.socketIO.emit('humt', datoH);
+	    break;
+	case "liquidoA":
+	case "LiquidoA":
+	    if (registry.value) {
+	    	this.socketIO.emit('alert', {name: "liquidoA", value: registry.value});
+	    }
+	    break;
+	case "liquidoB":
+	case "LiquidoB":
+	    if (registry.value) {
+	    	this.socketIO.emit('alert', {name: "liquidoB", value: registry.value});
+	    }
+	    break;
+	case "liquidoC":
+	case "LiquidoC":
+	    if (registry.value >= Storage.schemas.LiquidoC.schema.max) {
+	    	this.socketIO.emit('alert', {name: "liquidoC", value: registry.value});
+	    }
+	    break;
+	case "humo":
+	case "humo":
+	    if (registry.value) {
+	    	this.socketIO.emit('alert', {name: "humo", value: registry.value});
+	    }
+	    break;
+	};   
+	
 	this.socketIO.emit('general', registry);    
     } else { console.log("SOCKET IO not found"); }
     return registry;

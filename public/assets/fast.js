@@ -11,8 +11,8 @@ var j = 0;
 
 var fetchData = function(name, callback) {
     var url = domain + "/" + name + "/data";
-    console.log(url);
     $.get(url, function(data){
+	console.log(data);
 	if (callback) {
 	    callback(data);
 	}
@@ -57,18 +57,18 @@ var $humedadDataTable;
 var refreshHumedadDataTable = function() {
     console.log("Humedad");
     $humedadDataTable = $("#humedad-data-table");
-    if ($humedadDataTable) {
+    if ($humedadDataTable.length) {
 	fetchData("humedad", function(data){
-	    if (data) {
+	    if (data !== null && data !== undefined) {
 		for(var i in data.items) {
 		    var dDate = formatDate(data.items[i].date);
 		    var alert = displayBlockOfAlert(data.items[i].AlertId);
-		    $temperaturaDataTable.find("tbody").append (
-			"<tr><td> " + data.items[i].name  + "</td> " +
-			    "<td>" + dDate  +  "</td>" + 
-			    "<td>" + data.items[i].value  + "</td>" + 
-			    "<td>" + alert + "<td>"
-			    +"</tr>"
+                   $humedadDataTable.find("tbody").append (
+                       "<tr><td> " + data.items[i].name  + "</td> " +
+                           "<td>" + dDate  +  "</td>" + 
+                           "<td>" + data.items[i].value  + "</td>" + 
+                           "<td>" + alert + "<td>"		    
+			   +"</tr>"
 		    );
 		}
 	    }
@@ -115,6 +115,45 @@ var refreshHumoDataTable = function() {
     }
 };
 
+var $label_quantity_alerts = $("#alerts-quantity-label");
+var $notificationSection = $("#notificationSection");
+var stupidWayToBuildDOMForTheAlert = function(message, formatedTime, type) {
+    var strDOM = "<li class=\"media\">";
+    strDOM += "<a href=\"javascript;;\">";
+    strDOM += "<div class=\"pull-left\">";
+    strDOM += "<img src=\"\" class=\"media-object\" alt=\"\"/></div>";
+    strDOM += "<div class=\"media-body\"";
+    strDOM += "<h6 class=\"media-heading\">" + message + "</h6>";
+    strDOM += "<div class=\"text-muted\">" + formatedTime + "</div>";
+    strDOM += "</div></a><li>";
+    return strDOM;
+};
+socket.on("alert", function(data){
+    console.log("Alerta ");
+    console.log(data);
+    switch(data.name) {
+    case "LiquidoA":
+    case "liquidoA":
+    case "LiquidoB":
+    case "liquidoB":
+    case "LiquidoC":
+    case "liquidoC":
+	$notificationSection.append(stupidWayToBuildDOMForTheAlert("Se ha detectado liquidos", moment(Date.now()).format("Do - MM hh:mm:ss")));
+	break;
+    case "Humedad":
+    case "humedad":
+	$notificationSection.append(stupidWayToBuildDOMForTheAlert("Se ha detectado humedad en el cuarto", moment(Date.now()).format("Do - MM hh:mm:ss")));
+	break;
+    case "Temperatura":
+    case "temperatura":
+	$notificationSection.append(stupidWayToBuildDOMForTheAlert("Se han detectado temperaturas altas", moment(Date.now()).format("Do - MM hh:mm:ss")));
+	break;
+    case "Humo":
+    case "humo":
+	$notificationSection.append(stupidWayToBuildDOMForTheAlert("Se han detectado precencia de humo", moment(Date.now()).format("Do - MM hh:mm:ss")));
+	break;               
+    }
+});
 
 socket.on('general', function (data) {
     switch(data.name) {
