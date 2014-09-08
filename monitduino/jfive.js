@@ -16,6 +16,8 @@ var counterLiquidsB = 0;
 var counterTemperature = 0;
 var counterHumidity = 0;
 var counterSmog = 0;
+var datoT = new Array;
+var datoH = new Array;
 
 var Monitduino = function(){
     this.socketIO = null;
@@ -38,11 +40,13 @@ Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, cou
    	switch(registry.name){
    	case "Temperatura":
    	case "temperatura":
-    this.socketIO.emit('promt', registry.value);
+   	datoT.push([registry.value]);
+    this.socketIO.emit('promt', datoT);
     break;
     case "Humedad":
    	case "humedad":
-    this.socketIO.emit('humt', registry.value);
+   	datoH.push([registry.value]);
+    this.socketIO.emit('humt', datoH);
     break;
     };      	
 	this.socketIO.emit('general', registry);    
