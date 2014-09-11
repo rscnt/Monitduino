@@ -4,7 +4,7 @@
 			<h1 class="page-header">Control de temperatura <small>Control de los aires y temperatura.</small></h1>
 {% endblock %}
 
-
+{% block temp %}
 <!-- begin row -->
 			<div class="row">
 			    <!-- begin col-6 -->
@@ -22,10 +22,10 @@
                         <div class="panel-body">
                             <p>
 								<div class="btn-group">
-								<button type="button" class="btn btn-white">Bajo</button>
-								<button type="button" class="btn btn-white">Medio</button>
-								<button type="button" class="btn btn-white">Optimo</button>
-								<button type="button" class="btn btn-white">Alto</button>
+								<input id="a1b" type="button" class="btn btn-white" value="Bajo">
+								<input id="a1m" type="button" class="btn btn-white" value="Medio">
+								<input id="a1o" type="button" class="btn btn-white" value="Optimo">
+								<input id="a1a" type="button" class="btn btn-white" value="Alto">
 							</div>
 							</p>
                         </div>
@@ -47,10 +47,10 @@
                         <div class="panel-body">
                             <p>
 								<div class="btn-group">
-								<button type="button" class="btn btn-red">Bajo</button>
-								<button type="button" class="btn btn-orange">Medio</button>
-								<button type="button" class="btn btn-blue">Optimo</button>
-								<button type="button" class="btn btn-green">Alto</button>
+								<input id="a2b" type="button" class="btn btn-white" value="Bajo">
+								<input id="a2m" type="button" class="btn btn-white" value="Medio">
+								<input id="a1o" type="button" class="btn btn-white" value="Optimo">
+								<input id="a1a" type="button" class="btn btn-white" value="Alto">
 							</div>
 							</p>
                         </div>
@@ -75,9 +75,9 @@
                         </div>
                         <div class="panel-body">
 							 <p>
-								<a href="javascript:;" class="btn btn-success btn-lg m-r-5">Encender</a>
-								<a href="javascript:;" class="btn btn-white btn-lg">Apagar</a>
-								<a href="javascript:;" class="fa fa-cubes">Estado</a>
+								<input id="air1e" type="button" class="btn btn-danger m-r-5 m-b-5" value="Encender">
+								<input id="air1o" type="button" class="btn btn-success m-r-5 m-b-5" value="Apagar">
+								<span class="fa fa-cubes">Estado</span>
 							</p>
                         </div>
                     </div>
@@ -97,9 +97,9 @@
                         </div>
                         <div class="panel-body">
 							 <p>
-								<a href="javascript:;" class="btn btn-succes btn-lg m-r-5">Encender</a>
-								<a href="javascript:;" class="btn btn-white btn-lg">Apagar</a>
-								<a href="javascript:;" class="fa fa-cubes">Estado</a>
+								<input id="air2e" type="button" class="btn btn-danger m-r-5 m-b-5" value="Encender">
+								<input id="air2o" type="button" class="btn btn-success m-r-5 m-b-5" value="Apagar">
+								<span class="fa fa-cubes">Estado</span>
 							</p>
 						</div>
 					</div>

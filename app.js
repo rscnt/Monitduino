@@ -25,7 +25,7 @@ var rack = require('./routes/racks');
 //TODO: Luminaria.
 var luzc = require('./routes/lumin');
 //TODO: Temperatura.
-var airc = require('./routes/tempt');
+var aircon = require('./routes/tempt');
 //TODO: Camara.
 var cam = require('./routes/cam');
 //var index = require('./routes/general');
@@ -67,7 +67,7 @@ app.use('/estpuerta', estadoruta);
 app.use('/accpuerta', accesoruta);
 app.use('/rack', rack);
 app.use('/lumina', luzc);
-app.use('/airc', airc);
+app.use('/airc', aircon);
 app.use('/camara', cam);
 
 // app.use('/', index);

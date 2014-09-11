@@ -20,7 +20,7 @@ var datoT = new Array;
 var datoH = new Array;
 
 var Monitduino = function(){
-    this.socketIO = null;
+    this.socketIO = null; 
     this.liq_a = null;
     this.liq_b = null;
     this.liq_c = null;
@@ -28,7 +28,17 @@ var Monitduino = function(){
     this.t_track = null;
     this.board = null;
     this.count = 0;
-};
+    this.humos = 0;
+    this.alarma = null;
+	this.luz1 = null;
+	this.luz2 = null;
+	this.aire1 = null;
+	this.aire2 = null;
+	this.aires1 = 0;
+	this.aires2 = 0;
+	this.luces1 = 0;
+	this.luces2 = 0;
+	};
 
 Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, counter, store) {
     var registry = {name: name, value: value};
@@ -91,6 +101,76 @@ Monitduino.prototype.initStorage = function() {
 
 Monitduino.prototype.setSocket = function(io) {
     this.socketIO = io;
+    this.setupSocketEvents();
+};
+
+Monitduino.prototype.setupSocketEvents = function(){
+	var that = this;
+	this.socketIO.on('humo', function(data){
+		this.humos = data;
+		that.activatedesalarm(data);
+	});
+	this.socketIO.on('luz1', function(data){
+		this.luces1 = data;
+		that.activarluz1(data);
+	});
+	this.socketIO.on('luz2', function(data){
+		this.luces2 = data;
+		that.activarluz2(data);
+	});
+	this.socketIO.on('aire1', function(data){
+		this.aires1 = data;
+		that.activaraire1(data);
+	});
+	this.socketIO.on('aire2', function(data){
+		this.aires2 = data;
+		that.activaraire2(data);
+	});
+};
+
+Monitduino.prototype.activarluz1 = function(activate){
+	var result = false;
+	if(this.luz1 != null && this.luz1 != undefined){
+		activate ? this.luz1.on() : this.luz1.off();
+		result = true;
+	}
+	return result = true;
+}
+
+Monitduino.prototype.activarluz2 = function(activate){
+	var result = false;
+	if(this.luz2 != null && this.luz2 != undefined){
+		activate ? this.luz2.on() : this.luz2.off();
+		result = true;
+	}
+	return result = true;
+}
+
+Monitduino.prototype.activaraire1 = function(activate){
+	var result = false;
+	if(this.aire1 != null && this.aire1 != undefined){
+		activate ? this.aire1.on() : this.aire2.off();
+		result = true;
+	}
+	return result = true;
+}
+
+Monitduino.prototype.activaraire2 = function(activate){
+	var result = false;
+	if(this.aire2 != null && this.aire2 != undefined){
+		activate ? this.aire2.on() : this.aire2.off();
+		result = true;
+	}
+	return result = true;
+}
+
+Monitduino.prototype.activatedesalarm = function(activate){
+	var result = false;
+	if(this.alarma !== null && this.alarma !== undefined){
+		activate ? this.alarma.on() : this.alarma.off();
+		result = true;
+	}
+	return result = true;
 };
 
 var negativeValue = "0", positiveValue = "1";
@@ -128,7 +208,21 @@ Monitduino.prototype.setupBoard = function ()  {
 		freq: 30000
 	    });
 
-	    that.alarma = new five.Led(8);
+	    that.alarma = new five.Led(13);
+	    that.luz1 = new five.Led(8);
+	    that.luz2 = new five.Led(9);
+	    that.aire1 = new five.Led(7);
+	    that.aire2 = new five.Led(6);
+
+	    //probe
+	  	
+		if(that.humos){
+			that.alarma.on();
+		}
+		else {
+			that.alarma.off();
+		}
+
 
 	    // development
 	    that.liq_a.on('hold', function(data){
