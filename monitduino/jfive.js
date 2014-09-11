@@ -38,6 +38,8 @@ var Monitduino = function(){
 	this.aires2 = 0;
 	this.luces1 = 0;
 	this.luces2 = 0;
+	this.airesC = 0;
+	this.airesC2 = 0;
 	};
 
 Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, counter, store) {
@@ -118,19 +120,27 @@ Monitduino.prototype.setupSocketEvents = function(){
 		this.luces2 = data;
 		that.activarluz2(data);
 	});
-	this.socketIO.on('aire1', function(data){
+	this.socketIO.on('air1', function(data){
 		this.aires1 = data;
 		that.activaraire1(data);
 	});
-	this.socketIO.on('aire2', function(data){
+	this.socketIO.on('air2', function(data){
 		this.aires2 = data;
 		that.activaraire2(data);
+	});
+	this.socketIO.on('a1control', function(data){
+		this.airesC = data;
+		that.controlaire1(data);
+	});
+	this.socketIO.on('a2control', function(data){
+		this.airesC2 = data;
+		that.controlaire2(data);
 	});
 };
 
 Monitduino.prototype.activarluz1 = function(activate){
 	var result = false;
-	if(this.luz1 != null && this.luz1 != undefined){
+	if(this.luz1 !== null && this.luz1 !== undefined){
 		activate ? this.luz1.on() : this.luz1.off();
 		result = true;
 	}
@@ -139,7 +149,7 @@ Monitduino.prototype.activarluz1 = function(activate){
 
 Monitduino.prototype.activarluz2 = function(activate){
 	var result = false;
-	if(this.luz2 != null && this.luz2 != undefined){
+	if(this.luz2 !== null && this.luz2 !== undefined){
 		activate ? this.luz2.on() : this.luz2.off();
 		result = true;
 	}
@@ -148,8 +158,8 @@ Monitduino.prototype.activarluz2 = function(activate){
 
 Monitduino.prototype.activaraire1 = function(activate){
 	var result = false;
-	if(this.aire1 != null && this.aire1 != undefined){
-		activate ? this.aire1.on() : this.aire2.off();
+	if(this.aire1 !== null && this.aire1 !== undefined){
+		activate ? this.aire1.on() : this.aire1.off();
 		result = true;
 	}
 	return result = true;
@@ -157,9 +167,47 @@ Monitduino.prototype.activaraire1 = function(activate){
 
 Monitduino.prototype.activaraire2 = function(activate){
 	var result = false;
-	if(this.aire2 != null && this.aire2 != undefined){
+	if(this.aire2 !== null && this.aire2 !== undefined){
 		activate ? this.aire2.on() : this.aire2.off();
 		result = true;
+	}
+	return result = true;
+}
+
+Monitduino.prototype.controlaire1 = function(control){
+	var result = false;
+	if(this.aire1 !== null && this.aire1 !== undefined){
+		if (control == 1){
+			this.aire1.brightness(64);
+		}
+		if (control == 2){
+			this.aire1.brightness(128);
+		}
+		if (control == 3){
+			this.aire1.brightness(190);
+		}
+		if (control == 4){
+			this.aire1.brightness(255);
+		}
+	}
+	return result = true;
+}
+
+Monitduino.prototype.controlaire2 = function(control){
+	var result = false;
+	if(this.aire2 !== null && this.aire2 !== undefined){
+		if (control == 1){
+			this.aire2.brightness(64);
+		}
+		if (control == 2){
+			this.aire2.brightness(128);
+		}
+		if (control == 3){
+			this.aire2.brightness(190);
+		}
+		if (control == 4){
+			this.aire2.brightness(255);
+		}
 	}
 	return result = true;
 }
@@ -215,14 +263,67 @@ Monitduino.prototype.setupBoard = function ()  {
 	    that.aire2 = new five.Led(6);
 
 	    //probe
-	  	
+	    
 		if(that.humos){
 			that.alarma.on();
 		}
 		else {
 			that.alarma.off();
 		}
+		
+		if(that.luces1){
+			that.luz1.on();
+		}
+		else {
+			that.luz1.off();
+		}
 
+		if(that.luces2){
+			that.luz2.on();
+		}
+		else {
+			that.luz2.off();
+		}
+
+		if(that.aires1){
+			that.aire1.on();
+		}
+		else {
+			that.aire1.off();
+		}
+
+		if(that.aires2){
+			that.aire2.on();
+		}
+		else {
+			that.aire2.off();
+		}
+
+		if(that.airesC == 1){
+			that.aire1.brightness(64);
+		}
+		if (that.airesC == 2){
+			that.aire1.brightness(128);
+		}
+		if (that.airesC == 3){
+			that.aire1.brightness(200);
+		}
+		if (that.airesC == 4){
+			that.aire1.brightness(255);
+		}
+
+		if(that.airesC2 == 1){
+			that.aire2.brightness(64);
+		}
+		if (that.airesC2 == 2){
+			that.aire2.brightness(128);
+		}
+		if (that.airesC2 == 3){
+			that.aire2.brightness(200);
+		}
+		if (that.airesC2 == 4){
+			that.aire2.brightness(255);
+		}
 
 	    // development
 	    that.liq_a.on('hold', function(data){

@@ -331,7 +331,7 @@ socket.on('humt', function(data){
 var encender = function (){
 	$("#encender").click(function(){
 		var state = 1;
-		//console.log("Boton Encendido");
+		console.log("Boton Encendido");
 		socket.emit('humo', state);
 	});
 };
@@ -339,7 +339,7 @@ var encender = function (){
 var apagar = function(){
 	$("#apagar").click(function(){
 		var state = 0;
-		//console.log("Boton Apagado");
+		console.log("Boton Apagado");
 		socket.emit('humo', state);
 	});
 };
@@ -352,7 +352,7 @@ var encenderluz1 = function(){
 	});
 };
 
-var encenderluz1 = function(){
+var apagarluz1 = function(){
 	$("#luz1o").click(function(){
 		var state = 0;
 		socket.emit('luz1', state);
@@ -364,62 +364,83 @@ var encenderluz2 = function(){
 		var state = 1; 
 		socket.emit('luz2', state);
 	});
-}
+};
 
-var encenderluz2 = function(){
+var apagarluz2 = function(){
 	$("#luz2o").click(function(){
 		var state = 0; 
 		socket.emit('luz2', state);
 	});
-}
+};
 
 var encenderaire1 = function(){
 	$("#air1e").click(function(){
 		var state = 1; 
 		socket.emit('air1', state);
 	});
-}
+};
 
-var encenderaire1 = function(){
+var apagaraire1 = function(){
 	$("#air1o").click(function(){
 		var state = 0; 
+		console.log("BotonApagado")
 		socket.emit('air1', state);
 	});
-}
+};
 
 var encenderaire2 = function(){
-	$("#air1e").click(function(){
+	$("#air2e").click(function(){
 		var state = 1; 
 		socket.emit('air2', state);
 	});
-}
+};
 
-var encenderaire2 = function(){
+var apagaraire2 = function(){
 	$("#air2o").click(function(){
 		var state = 0; 
 		socket.emit('air2', state);
 	});
-}
+};
 
 var controlaire1 = function(){
 	var estado = 0;
-	$("#a1b").click(function{
+	$("#a1b").click(function(){
 		estado = 1;
-		socket.emit('a1control, estado');
+		socket.emit('a1control', estado);
 	});
-	$("#a1m").click(function{
+	$("#a1m").click(function(){
 		estado = 2;
-		socket.emit('a1control, estado');
+		socket.emit('a1control', estado);
 	});
-	$("#a1o").click(function{
+	$("#a1o").click(function(){
 		estado = 3;
-		socket.emit('a1control, estado');
+		socket.emit('a1control', estado);
 	});
-	$("#a1a").click(function{
+	$("#a1a").click(function(){
 		estado = 4;
-		socket.emit('a1control, estado');
+		socket.emit('a1control', estado);
 	});
-}
+};
+
+var controlaire2 = function(){
+	var estado = 0;
+	$("#a2b").click(function(){
+		estado = 1;
+		socket.emit('a2control', estado);
+	});
+	$("#a2m").click(function(){
+		estado = 2;
+		socket.emit('a2control', estado);
+	});
+	$("#a2o").click(function(){
+		estado = 3;
+		socket.emit('a2control', estado);
+	});
+	$("#a2a").click(function(){
+		estado = 4;
+		socket.emit('a2control', estado);
+	});
+};
 
 refreshLiquidosTable();
 refreshTemperatruaDataTable();
@@ -427,3 +448,13 @@ refreshHumoDataTable();
 refreshHumedadDataTable();
 encender();
 apagar();
+encenderluz1();
+apagarluz1();
+encenderluz2();
+apagarluz2();
+encenderaire1();
+apagaraire1();
+encenderaire2();
+apagaraire2();
+controlaire1();
+controlaire2();
