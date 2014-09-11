@@ -47,51 +47,52 @@ Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, cou
     } else { console.log("storage not defined"); }
     this.count = 0;
     if (this.socketIO !== undefined && this.socketIO !== null) {
-   	switch(registry.name){
+   	switch(registry.name) {
    	case "Temperatura":
    	case "temperatura":
    	    datoT.push([registry.value]);
 	    if (registry.value >= Storage.schemas.Temperatura.schema.max) {
-		this.socketIO.emit('alert', {name: "temperatura", value: registry.value});
+		this.socketIO.emit('alert', {name: "temperatura alta.", value: registry.value});
 	    }
 	    this.socketIO.emit('promt', datoT);
 	    break;
 	case "Humedad":
    	case "humedad":
-   	    datoH.push([registry.value]);
+    	    datoH.push([registry.value]);
 	    if (registry.value) {
-		this.socketIO.emit('alert', {name: "humedad", value: registry.value});
+		this.socketIO.emit('alert', {name: "Hay una alta precensia de humedad.", value: registry.value});
 	    }
 	    this.socketIO.emit('humt', datoH);
 	    break;
 	case "liquidoA":
 	case "LiquidoA":
 	    if (registry.value) {
-	    	this.socketIO.emit('alert', {name: "liquidoA", value: registry.value});
+	    	this.socketIO.emit('alert', {name: "Se ha detectado liquido en sala A.", value: registry.value});
 	    }
 	    break;
 	case "liquidoB":
 	case "LiquidoB":
 	    if (registry.value) {
-	    	this.socketIO.emit('alert', {name: "liquidoB", value: registry.value});
+	    	this.socketIO.emit('alert', {name: "Se ha detectado liquido en sala B.", value: registry.value});
 	    }
 	    break;
 	case "liquidoC":
 	case "LiquidoC":
 	    if (registry.value >= Storage.schemas.LiquidoC.schema.max) {
-	    	this.socketIO.emit('alert', {name: "liquidoC", value: registry.value});
+	    	this.socketIO.emit('alert', {name: "Se ha detectado liquido en sala C.", value: registry.value});
 	    }
 	    break;
 	case "humo":
 	case "humo":
 	    if (registry.value) {
-	    	this.socketIO.emit('alert', {name: "humo", value: registry.value});
+	    	this.socketIO.emit('alert', {name: "Se ha detectado humo en la sala.", value: registry.value});
 	    }
 	    break;
 	};   
 	
 	this.socketIO.emit('general', registry);    
-    } else { console.log("SOCKET IO not found"); }
+    } else {
+    }
     return registry;
 };
 
@@ -166,7 +167,7 @@ Monitduino.prototype.activaraire2 = function(activate){
 
 Monitduino.prototype.activatedesalarm = function(activate){
 	var result = false;
-	if(this.alarma !== null && this.alarma !== undefined){
+	if(this.alarma !== null && this.alarma !== undefined) {
 		activate ? this.alarma.on() : this.alarma.off();
 		result = true;
 	}
