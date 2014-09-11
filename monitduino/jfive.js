@@ -244,9 +244,16 @@ Monitduino.prototype.setupBoard = function ()  {
 		invert: false
 	    });
 
-	    that.hum_a = new five.Button({
+	    that.liq_b = new five.Button({
 		board: that.board,
 		pin: 24,
+		holdtime: 3000,
+		invert: false
+	    });
+
+	    that.hum_a = new five.Button({
+		board: that.board,
+		pin: 25,
 		holdtime: 3000,
 		invert: false
 	    });

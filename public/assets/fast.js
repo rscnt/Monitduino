@@ -8,7 +8,12 @@ var t = new Array();
 var h = new Array();
 var j = 0;
 
-
+$("#liquid").text("No registro");
+$("#humo").text("No registro");
+/*
+$("#tempt").text("No registro");
+$("#humid").text("No registro");
+*/
 var fetchData = function(name, callback) {
     var url = domain + "/" + name + "/data";
     $.get(url, function(data){
@@ -209,11 +214,11 @@ socket.on('general', function (data) {
     case "humo":
 	if (data.value == "1"){
 	    $( "#humo.label-default" ).css("background-color", "#f89406");
-	    $("#humo").text("ON");
+	    $("#humo").text("Activo");
 	}
 	else if(data.value == "0"){
 	    $( "#humo.label-default" ).css("background-color", "#777");
-	    $("#humo").text("OFF");
+	    $("#humo").text("Inactivo");
 	}
 	else {
 		$("#humo").text("No registro");
