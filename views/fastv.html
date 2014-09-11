@@ -18,7 +18,7 @@
 							</p>	
 						</div>
 						<div class="state-link">
-							<a href="temp">View Detail <i class="fa fa-arrow-circle-o-right"></i></a>
+							<a href="temp">Ver detalles <i class="fa fa-arrow-circle-o-right"></i></a>
 						</div>
 					</div>
 				</div>
@@ -34,7 +34,7 @@
 							</p>	
 						</div>
 						<div class="state-link">
-							<a href="hum">View Detail <i class="fa fa-arrow-circle-o-right"></i></a>
+							<a href="hum">Ver detalles <i class="fa fa-arrow-circle-o-right"></i></a>
 						</div>
 					</div>
 				</div>
@@ -47,11 +47,11 @@
 							<h4>HUMO EN LA SALA</h4>
 							<p>
 							<span id="humo" class="label label-default"></span>
-							DATOS.
+							
 							</p>	
 						</div>
 						<div class="state-link">
-							<a href="humo">View Detail <i class="fa fa-arrow-circle-o-right"></i></a>
+							<a href="humo">Ver detalles <i class="fa fa-arrow-circle-o-right"></i></a>
 						</div>
 					</div>
 				</div>
@@ -64,18 +64,38 @@
 							<h4>LIQUIDO EN LA SALA</h4>
 							<p>
 							<span id="liquid" class="label label-default"></span>
-							DATOS.
+							
 							</p>	
 						</div>
 						<div class="state-link">
-							<a href="liq">View Detail <i class="fa fa-arrow-circle-o-right"></i></a>
+							<a href="liq">Ver detalles <i class="fa fa-arrow-circle-o-right"></i></a>
 						</div>
 					</div>
 				</div>
 				<!-- end col-3 -->
 			</div>
 			<!-- end row -->	
-{% endblock %}
+			<!-- begin row -->
+			<div class="row">
+				<!-- begin col-3 -->
+				<div class="col-md-12 col-sm-6">
+					<div class="widget widget-state bg-black">
+						<div class="state-icon"><i id="humalarma" class="fa fa-bullhorn"></i></div>
+						<div class="state-info">
+							<h4>Des/Activar alarma</h4>
+							<p>
+								<input id="encender" type="button" class="btn btn-danger m-r-5 m-b-5" value="Encender">
+								<input id="apagar" type="button" class="btn btn-success m-r-5 m-b-5" value="Apagar">
+								<span class="label label-default"></span>
+							</p>	
+						</div>
+					</div>
+				</div>
+				<!-- end col-3 -->
+			</div>
+			<!-- end row -->
+			{% endblock %}
+
 
 {% block tablesf %}
 	<!-- begin col-6 -->
