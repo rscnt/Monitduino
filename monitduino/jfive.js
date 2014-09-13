@@ -18,6 +18,7 @@ var counterHumidity = 0;
 var counterSmog = 0;
 var datoT = new Array;
 var datoH = new Array;
+var regexp = /(^([\d.,])*)$/;
 
 var Monitduino = function(){
     this.socketIO = null; 
@@ -40,6 +41,7 @@ var Monitduino = function(){
 	this.luces2 = 0;
 	this.airesC = 0;
 	this.airesC2 = 0;
+	this.alarmas = 0;
 	};
 
 Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, counter, store) {
@@ -93,7 +95,8 @@ Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, cou
 	};   
 	
 	this.socketIO.emit('general', registry);    
-    } else { console.log("SOCKET IO not found"); }
+    } 
+    else { console.log("SOCKET IO not found"); }
     return registry;
 };
 
@@ -101,15 +104,15 @@ Monitduino.prototype.initStorage = function() {
     storage.init();
 };
 
-Monitduino.prototype.setSocket = function(io) {
-    this.socketIO = io;
-    this.setupSocketEvents();
-};
 
 Monitduino.prototype.setupSocketEvents = function(){
 	var that = this;
 	this.socketIO.on('humo', function(data){
 		this.humos = data;
+		that.activatedesalarm(data);
+	});
+	this.socketIO.on('alerta', function(data){
+		this.alarmas = data;
 		that.activatedesalarm(data);
 	});
 	this.socketIO.on('luz1', function(data){
@@ -369,7 +372,11 @@ Monitduino.prototype.setupBoard = function ()  {
     };
 
 };
-
+/*
+var verificacion = function(serialdata){
+        	var OK = rexp.exec() 
+        }
+*/
 Monitduino.prototype.setupSerialPort = function() {
     var that = this;
     /* 
@@ -387,29 +394,50 @@ Monitduino.prototype.setupSerialPort = function() {
      */
 
     serialPort.on('data', function(data) {
-    	time++;
+    	
         //recolecta info del puerto serial
-        var info = data; 
-        console.log(info);					
-        //divide la informacion (Hum, Temp)
-        var ext = info.split(","); 			
-        //recoge la temperatura
-        var celsius = parseFloat(ext[1]); 	
-        //recoge la humedad.
-        var hum_ = parseFloat(ext[0]);
-        // result object
-        var object  = {
+        var info = data;
+        var cel = 0;
+        var hum = 0;
+        var object = {
+        	Celsius: '',
+        	Humedad: '' 
+        }
+        // verificar la informacion
+        console.log(info);
+        var ok = regexp.test(info);
+        if(ok){
+        	time++;
+        	var ext = info.split(","); 			
+        	//recoge la temperatura
+        	var celsius = parseFloat(ext[1]); 	
+        	cel = celsius;
+        	//recoge la humedad.
+        	var hum_ = parseFloat(ext[0]);
+        	hum = hum_;
+        	// result object
+        	object  = {
             Celsius: celsius,
             Humedad: hum_
-	};
+        	};
+            if(time === 5){
+            	var alertForTemperature = (object.Celsius >= Storage.schemas.Temperatura.schema.max);
+            	var alertForHumidity = (object.Humedad >= Storage.schemas.Humedad.schema.max);
+            	that.sendSocketAndMaybeStoreRegistry(Storage.data.Celsius, object.Celsius, counterTemperature, alertForTemperature ? true : false);
+            	that.sendSocketAndMaybeStoreRegistry(Storage.data.Humedad, object.Humedad, counterHumidity, alertForHumidity ? true : false);
+            	time = 0;
+            }
+        
+        }
+        else {
+        	console.log("No acceso");
+        	var puerta = info;
+        	if (puerta == "AOP" || puerta == "OP" || puerta == "EOP" || puerta == "CP"){
+        		console.log("estado puerta" + puerta);
+        	}
+        }					
 
-	if(time === 5){
-	    var alertForTemperature = (object.Celsius >= Storage.schemas.Temperatura.schema.max);
-	    var alertForHumidity = (object.Humedad >= Storage.schemas.Humedad.schema.max);
-	    that.sendSocketAndMaybeStoreRegistry(Storage.data.Celsius, object.Celsius, counterTemperature, alertForTemperature ? true : false);
-	    that.sendSocketAndMaybeStoreRegistry(Storage.data.Humedad, object.Humedad, counterHumidity, alertForHumidity ? true : false);
-            time = 0;
-	}
+	
     });
 };
 
