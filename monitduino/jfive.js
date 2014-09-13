@@ -1,5 +1,7 @@
 var Storage = new require("./storage"),
     storage = new Storage();
+var redis = new require("redis"),
+    client = redis.createClient();
 var socketIO;
 var five = require("johnny-five"),
     com = require("serialport");
@@ -20,7 +22,9 @@ var datoT = new Array;
 var datoH = new Array;
 
 var Monitduino = function(){
-    this.socketIO = null; 
+    var that = this;
+    this.socketIO = null;
+    this.nNotifications = null;
     this.liq_a = null;
     this.liq_b = null;
     this.liq_c = null;
@@ -30,17 +34,25 @@ var Monitduino = function(){
     this.count = 0;
     this.humos = 0;
     this.alarma = null;
-	this.luz1 = null;
-	this.luz2 = null;
-	this.aire1 = null;
-	this.aire2 = null;
-	this.aires1 = 0;
-	this.aires2 = 0;
-	this.luces1 = 0;
-	this.luces2 = 0;
-	this.airesC = 0;
-	this.airesC2 = 0;
-	};
+    this.luz1 = null;
+    this.luz2 = null;
+    this.aire1 = null;
+    this.aire2 = null;
+    this.aires1 = 0;
+    this.aires2 = 0;
+    this.luces1 = 0;
+    this.luces2 = 0;
+    this.airesC = 0;
+    this.airesC2 = 0;
+    client.get("numberOfAlerts", function(err, reply) {
+	if (err) { console.log(err); }
+	if (reply !== undefined && reply !== null) {
+	    that.nNotifications = reply;
+	} else {
+	    that.nNotifications = 0;
+	}
+    });
+};
 
 Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, counter, store) {
     var registry = {name: name, value: value};
@@ -62,7 +74,7 @@ Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, cou
    	case "humedad":
     	    datoH.push([registry.value]);
 	    if (registry.value) {
-		this.socketIO.emit('alert', {name: "Hay una alta precensia de humedad.", value: registry.value});
+		this.socketIO.emit('alert', {name: "Se ha detectado humedad en la sala.", value: registry.value});
 	    }
 	    this.socketIO.emit('humt', datoH);
 	    break;
@@ -109,34 +121,42 @@ Monitduino.prototype.setSocket = function(io) {
 
 Monitduino.prototype.setupSocketEvents = function(){
 	var that = this;
-	this.socketIO.on('humo', function(data){
-		this.humos = data;
-		that.activatedesalarm(data);
-	});
-	this.socketIO.on('luz1', function(data){
-		this.luces1 = data;
-		that.activarluz1(data);
-	});
-	this.socketIO.on('luz2', function(data){
-		this.luces2 = data;
-		that.activarluz2(data);
-	});
-	this.socketIO.on('air1', function(data){
-		this.aires1 = data;
-		that.activaraire1(data);
-	});
-	this.socketIO.on('air2', function(data){
-		this.aires2 = data;
-		that.activaraire2(data);
-	});
-	this.socketIO.on('a1control', function(data){
-		this.airesC = data;
-		that.controlaire1(data);
-	});
-	this.socketIO.on('a2control', function(data){
-		this.airesC2 = data;
-		that.controlaire2(data);
-	});
+
+    this.socketIO.on('humo', function(data) {
+	that.humos = data;
+	that.activatedesalarm(data);
+    });
+
+    this.socketIO.on('luz1', function(data){
+	that.luces1 = data;
+	that.activarluz1(data);
+    });
+
+    this.socketIO.on('luz2', function(data){
+	that.luces2 = data;
+	that.activarluz2(data);
+    });
+
+    this.socketIO.on('air1', function(data){
+	that.aires1 = data;
+	that.activaraire1(data);
+    });
+
+    this.socketIO.on('air2', function(data){
+	that.aires2 = data;
+	that.activaraire2(data);
+    });
+
+    this.socketIO.on('a1control', function(data){
+	that.airesC = data;
+	that.controlaire1(data);
+    });
+
+    this.socketIO.on('a2control', function(data){
+	that.airesC2 = data;
+	that.controlaire2(data);
+    });
+
 };
 
 Monitduino.prototype.activarluz1 = function(activate){
@@ -272,66 +292,66 @@ Monitduino.prototype.setupBoard = function ()  {
 
 	    //probe
 	    
-		if(that.humos){
-			that.alarma.on();
-		}
-		else {
-			that.alarma.off();
-		}
-		
-		if(that.luces1){
-			that.luz1.on();
-		}
-		else {
-			that.luz1.off();
-		}
+	    if(that.humos){
+		that.alarma.on();
+	    }
+	    else {
+		that.alarma.off();
+	    }
+	    
+	    if(that.luces1){
+		that.luz1.on();
+	    }
+	    else {
+		that.luz1.off();
+	    }
 
-		if(that.luces2){
-			that.luz2.on();
-		}
-		else {
-			that.luz2.off();
-		}
+	    if(that.luces2){
+		that.luz2.on();
+	    }
+	    else {
+		that.luz2.off();
+	    }
 
-		if(that.aires1){
-			that.aire1.on();
-		}
-		else {
-			that.aire1.off();
-		}
+	    if(that.aires1){
+		that.aire1.on();
+	    }
+	    else {
+		that.aire1.off();
+	    }
 
-		if(that.aires2){
-			that.aire2.on();
-		}
-		else {
-			that.aire2.off();
-		}
+	    if(that.aires2){
+		that.aire2.on();
+	    }
+	    else {
+		that.aire2.off();
+	    }
 
-		if(that.airesC == 1){
-			that.aire1.brightness(64);
-		}
-		if (that.airesC == 2){
-			that.aire1.brightness(128);
-		}
-		if (that.airesC == 3){
-			that.aire1.brightness(200);
-		}
-		if (that.airesC == 4){
-			that.aire1.brightness(255);
-		}
+	    if(that.airesC == 1){
+		that.aire1.brightness(64);
+	    }
+	    if (that.airesC == 2){
+		that.aire1.brightness(128);
+	    }
+	    if (that.airesC == 3){
+		that.aire1.brightness(200);
+	    }
+	    if (that.airesC == 4){
+		that.aire1.brightness(255);
+	    }
 
-		if(that.airesC2 == 1){
-			that.aire2.brightness(64);
-		}
-		if (that.airesC2 == 2){
-			that.aire2.brightness(128);
-		}
-		if (that.airesC2 == 3){
-			that.aire2.brightness(200);
-		}
-		if (that.airesC2 == 4){
-			that.aire2.brightness(255);
-		}
+	    if(that.airesC2 == 1){
+		that.aire2.brightness(64);
+	    }
+	    if (that.airesC2 == 2){
+		that.aire2.brightness(128);
+	    }
+	    if (that.airesC2 == 3){
+		that.aire2.brightness(200);
+	    }
+	    if (that.airesC2 == 4){
+		that.aire2.brightness(255);
+	    }
 
 	    // development
 	    that.liq_a.on('hold', function(data){
