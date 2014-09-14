@@ -452,6 +452,7 @@ refreshLiquidosTable();
 refreshTemperatruaDataTable();
 refreshHumoDataTable();
 refreshHumedadDataTable();
+refreshLiquidosTable();
 encender();
 apagar();
 encenderluz1();
