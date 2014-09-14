@@ -16,24 +16,9 @@ router.get('/', function(req, res) {
 });
 
 router.get("/alerts", function(req, res) {
-    var redisNumberOfAlert = 
+    client.get("numberOfAlert", function(err, reply){
+	res.json({});
+    });
 });
 
 module.exports = router;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
