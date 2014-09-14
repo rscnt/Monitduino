@@ -29,6 +29,7 @@ var aircon = require('./routes/tempt');
 //TODO: Camara.
 var cam = require('./routes/cam');
 //var index = require('./routes/general');
+var alertas  = require('./routes/alertas');
 
 var app = express();
 var http = require('http').Server(app);
@@ -69,7 +70,7 @@ app.use('/rack', rack);
 app.use('/lumina', luzc);
 app.use('/airc', aircon);
 app.use('/camara', cam);
-
+app.use("/alertas", alertas);
 // app.use('/', index);
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
