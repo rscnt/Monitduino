@@ -381,7 +381,7 @@ var apagarluz2 = function(){
 var encenderaire1 = function(){
 	$("#air1e").click(function(){
 		var state = 1; 
-		console.log("BotonON")
+		console.log("BotonON");
 		socket.emit('air1', state);
 	});
 };
@@ -389,7 +389,7 @@ var encenderaire1 = function(){
 var apagaraire1 = function(){
 	$("#air1o").click(function(){
 		var state = 0; 
-		console.log("BotonApagado")
+		console.log("BotonApagado");
 		socket.emit('air1', state);
 	});
 };
