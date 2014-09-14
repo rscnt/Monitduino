@@ -143,27 +143,19 @@ socket.on("alert", function(data){
     case "liquidoB":
     case "LiquidoC":
     case "liquidoC":
-	$notificationSection.append(stupidWayToBuildDOMForTheAlert("Se ha detectado liquidos", moment(Date.now()).format("Do - MM hh:mm:ss"))
-	var alerta = 1;
-	//socket.emit('alerta', alerta);
+	$notificationSection.append(stupidWayToBuildDOMForTheAlert("Se ha detectado liquidos", moment(Date.now()).format("Do - MM hh:mm:ss")));
 	break;
     case "Humedad":
     case "humedad":
 	$notificationSection.append(stupidWayToBuildDOMForTheAlert("Se ha detectado humedad en el cuarto", moment(Date.now()).format("Do - MM hh:mm:ss")));
-	var alerta = 1;
-	//socket.emit('alerta', alerta);
 	break;
     case "Temperatura":
     case "temperatura":
 	$notificationSection.append(stupidWayToBuildDOMForTheAlert("Se han detectado temperaturas altas", moment(Date.now()).format("Do - MM hh:mm:ss")));
-	var alerta = 1;
-	//socket.emit('alerta', alerta);
 	break;
     case "Humo":
     case "humo":
 	$notificationSection.append(stupidWayToBuildDOMForTheAlert("Se han detectado precencia de humo", moment(Date.now()).format("Do - MM hh:mm:ss")));
-	var alerta = 1;
-	//socket.emit('alerta', alerta);
 	break;               
     }
 });

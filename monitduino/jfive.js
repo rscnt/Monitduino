@@ -1,16 +1,18 @@
 var Storage = new require("./storage"),
-    storage = new Storage();
+storage = new Storage();
 var socketIO;
 var five = require("johnny-five"),
-    com = require("serialport");
+com = require("serialport");
 var serialPort = new com.SerialPort("/dev/ttyUSB0", {
-    baudrate: 9600,
-    parser: com.parsers.readline('\r\n')
+	baudrate: 9600,
+	parser: com.parsers.readline('\r\n')
 });
 var time = 0;
 var l_a = 0;
 var l_b = 0;
 var h = 0;
+var cel = 0;
+var hum = 0;
 var counterLiquidsA = 0;
 var counterLiquidsB = 0;
 var counterTemperature = 0;
@@ -21,16 +23,16 @@ var datoH = new Array;
 var regexp = /(^([\d.,])*)$/;
 
 var Monitduino = function(){
-    this.socketIO = null; 
-    this.liq_a = null;
-    this.liq_b = null;
-    this.liq_c = null;
-    this.hum_a = null;
-    this.t_track = null;
-    this.board = null;
-    this.count = 0;
-    this.humos = 0;
-    this.alarma = null;
+	this.socketIO = null; 
+	this.liq_a = null;
+	this.liq_b = null;
+	this.liq_c = null;
+	this.hum_a = null;
+	this.t_track = null;
+	this.board = null;
+	this.count = 0;
+	this.humos = 0;
+	this.alarma = null;
 	this.luz1 = null;
 	this.luz2 = null;
 	this.aire1 = null;
@@ -42,73 +44,77 @@ var Monitduino = function(){
 	this.airesC = 0;
 	this.airesC2 = 0;
 	this.alarmas = 0;
-	};
+};
 
 Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, counter, store) {
-    var registry = {name: name, value: value};
-    if (storage !== undefined && storage !== null) {
-	storage.createRegistry(registry.name, registry.value);	
-    } else { console.log("storage not defined"); }
-    this.count = 0;
-    if (this.socketIO !== undefined && this.socketIO !== null) {
-   	switch(registry.name){
-   	case "Temperatura":
-   	case "temperatura":
-   	    datoT.push([registry.value]);
-	    if (registry.value >= Storage.schemas.Temperatura.schema.max) {
-		this.socketIO.emit('alert', {name: "temperatura", value: registry.value});
-	    }
-	    this.socketIO.emit('promt', datoT);
-	    break;
-	case "Humedad":
-   	case "humedad":
-   	    datoH.push([registry.value]);
-	    if (registry.value) {
-		this.socketIO.emit('alert', {name: "humedad", value: registry.value});
-	    }
-	    this.socketIO.emit('humt', datoH);
-	    break;
-	case "liquidoA":
-	case "LiquidoA":
-	    if (registry.value) {
-	    	this.socketIO.emit('alert', {name: "liquidoA", value: registry.value});
-	    }
-	    break;
-	case "liquidoB":
-	case "LiquidoB":
-	    if (registry.value) {
-	    	this.socketIO.emit('alert', {name: "liquidoB", value: registry.value});
-	    }
-	    break;
-	case "liquidoC":
-	case "LiquidoC":
-	    if (registry.value >= Storage.schemas.LiquidoC.schema.max) {
-	    	this.socketIO.emit('alert', {name: "liquidoC", value: registry.value});
-	    }
-	    break;
-	case "humo":
-	case "humo":
-	    if (registry.value) {
-	    	this.socketIO.emit('alert', {name: "humo", value: registry.value});
-	    }
-	    break;
-	};   
-	
-	this.socketIO.emit('general', registry);    
-    } 
-    else { console.log("SOCKET IO not found"); }
-    return registry;
+	var registry = {name: name, value: value};
+	if (storage !== undefined && storage !== null) {
+		storage.createRegistry(registry.name, registry.value);	
+	} else { console.log("storage not defined"); }
+	this.count = 0;
+	if (this.socketIO !== undefined && this.socketIO !== null) {
+		switch(registry.name){
+			case "Temperatura":
+			case "temperatura":
+			datoT.push([registry.value]);
+			if (registry.value >= Storage.schemas.Temperatura.schema.max) {
+				this.socketIO.emit('alert', {name: "temperatura", value: registry.value});
+			}
+			this.socketIO.emit('promt', datoT);
+			break;
+			case "Humedad":
+			case "humedad":
+			datoH.push([registry.value]);
+			if (registry.value) {
+				this.socketIO.emit('alert', {name: "humedad", value: registry.value});
+			}
+			this.socketIO.emit('humt', datoH);
+			break;
+			case "liquidoA":
+			case "LiquidoA":
+			if (registry.value) {
+				this.socketIO.emit('alert', {name: "liquidoA", value: registry.value});
+			}
+			break;
+			case "liquidoB":
+			case "LiquidoB":
+			if (registry.value) {
+				this.socketIO.emit('alert', {name: "liquidoB", value: registry.value});
+			}
+			break;
+			case "liquidoC":
+			case "LiquidoC":
+			if (registry.value >= Storage.schemas.LiquidoC.schema.max) {
+				this.socketIO.emit('alert', {name: "liquidoC", value: registry.value});
+			}
+			break;
+			case "humo":
+			case "humo":
+			if (registry.value) {
+				this.socketIO.emit('alert', {name: "humo", value: registry.value});
+			}
+			break;
+		};   
+
+		this.socketIO.emit('general', registry); 
+	} 
+	else { console.log("SOCKET IO not found"); }
+	return registry;
 };
 
 Monitduino.prototype.initStorage = function() {
-    storage.init();
+	storage.init();
 };
 
+Monitduino.prototype.setSocket = function(io) {
+     this.socketIO = io;
+ };
 
 Monitduino.prototype.setupSocketEvents = function(){
 	var that = this;
 	this.socketIO.on('humo', function(data){
-		this.humos = data;
+		that.humos = data;
+		console.log(that.humos);
 		that.activatedesalarm(data);
 	});
 	this.socketIO.on('alerta', function(data){
@@ -148,7 +154,7 @@ Monitduino.prototype.activarluz1 = function(activate){
 		result = true;
 	}
 	return result = true;
-}
+};
 
 Monitduino.prototype.activarluz2 = function(activate){
 	var result = false;
@@ -157,7 +163,7 @@ Monitduino.prototype.activarluz2 = function(activate){
 		result = true;
 	}
 	return result = true;
-}
+};
 
 Monitduino.prototype.activaraire1 = function(activate){
 	var result = false;
@@ -166,7 +172,7 @@ Monitduino.prototype.activaraire1 = function(activate){
 		result = true;
 	}
 	return result = true;
-}
+};
 
 Monitduino.prototype.activaraire2 = function(activate){
 	var result = false;
@@ -175,7 +181,7 @@ Monitduino.prototype.activaraire2 = function(activate){
 		result = true;
 	}
 	return result = true;
-}
+};
 
 Monitduino.prototype.controlaire1 = function(control){
 	var result = false;
@@ -194,7 +200,7 @@ Monitduino.prototype.controlaire1 = function(control){
 		}
 	}
 	return result = true;
-}
+};
 
 Monitduino.prototype.controlaire2 = function(control){
 	var result = false;
@@ -213,7 +219,7 @@ Monitduino.prototype.controlaire2 = function(control){
 		}
 	}
 	return result = true;
-}
+};
 
 Monitduino.prototype.activatedesalarm = function(activate){
 	var result = false;
@@ -228,137 +234,149 @@ var negativeValue = "0", positiveValue = "1";
 
 Monitduino.prototype.setupBoard = function ()  {
 
-    var that = this;
-    that.board = five.Board();
-    if (that.board) {
-	that.board.on("ready", function(){
+	var that = this;
+	that.board = five.Board();
+	if (that.board) {
+		that.board.on("ready", function(){
 
-	    that.liq_a = new five.Button({
-		board: that.board,
-		pin: 22,
-		holdtime: 3000,
-		invert: false
-	    });
+			var lcdB = 0;
 
-	    that.liq_b = new five.Button({
-		board: that.board,
-		pin: 23,
-		holdtime: 3000,
-		invert: false
-	    });
+			that.liq_a = new five.Button({
+				board: that.board,
+				pin: 22,
+				holdtime: 3000,
+				invert: false
+			});
 
-	    that.liq_b = new five.Button({
-		board: that.board,
-		pin: 24,
-		holdtime: 3000,
-		invert: false
-	    });
+			that.liq_b = new five.Button({
+				board: that.board,
+				pin: 23,
+				holdtime: 3000,
+				invert: false
+			});
 
-	    that.hum_a = new five.Button({
-		board: that.board,
-		pin: 25,
-		holdtime: 3000,
-		invert: false
-	    });
+			that.liq_b = new five.Button({
+				board: that.board,
+				pin: 24,
+				holdtime: 3000,
+				invert: false
+			});
 
-	    that.t_rack = new five.Sensor({
-		pin: "A0",
-		freq: 30000
-	    });
+			that.hum_a = new five.Button({
+				board: that.board,
+				pin: 25,
+				holdtime: 3000,
+				invert: false
+			});
 
-	    that.alarma = new five.Led(13);
-	    that.luz1 = new five.Led(8);
-	    that.luz2 = new five.Led(9);
-	    that.aire1 = new five.Led(7);
-	    that.aire2 = new five.Led(6);
+			that.t_rack = new five.Sensor({
+				pin: "A0",
+				freq: 30000
+			});
+
+			lcdButton = new five.Button({
+				board: that.board,
+				pin: 10,
+				holdtime: 1000	
+			});
+
+			that.alarma = new five.Led(13);
+			that.luz1 = new five.Led(30);
+			that.luz2 = new five.Led(31);
+			that.aire1 = new five.Led(32);
+			that.aire2 = new five.Led(33);
+
+			lcd = new five.LCD({
+				pins: [12, 11, 5, 4, 3, 2],
+			});
 
 	    //probe
-	    
-		if(that.humos){
-			that.alarma.on();
-		}
-		else {
-			that.alarma.off();
-		}
-		
-		if(that.luces1){
-			that.luz1.on();
-		}
-		else {
-			that.luz1.off();
-		}
 
-		if(that.luces2){
-			that.luz2.on();
-		}
-		else {
-			that.luz2.off();
-		}
+	    if(that.humos){
+	    	that.alarma.on();
+	    }
+	    else {
+	    	that.alarma.off();
+	    }
 
-		if(that.aires1){
-			that.aire1.on();
-		}
-		else {
-			that.aire1.off();
-		}
+	    if(that.luces1){
+	    	that.luz1.on();
+	    }
+	    else {
+	    	that.luz1.off();
+	    }
 
-		if(that.aires2){
-			that.aire2.on();
-		}
-		else {
-			that.aire2.off();
-		}
+	    if(that.luces2){
+	    	that.luz2.on();
+	    }
+	    else {
+	    	that.luz2.off();
+	    }
 
-		if(that.airesC == 1){
-			that.aire1.brightness(64);
-		}
-		if (that.airesC == 2){
-			that.aire1.brightness(128);
-		}
-		if (that.airesC == 3){
-			that.aire1.brightness(200);
-		}
-		if (that.airesC == 4){
-			that.aire1.brightness(255);
-		}
+	    if(that.aires1){
+	    	that.aire1.on();
+	    }
+	    else {
+	    	that.aire1.off();
+	    }
 
-		if(that.airesC2 == 1){
-			that.aire2.brightness(64);
-		}
-		if (that.airesC2 == 2){
-			that.aire2.brightness(128);
-		}
-		if (that.airesC2 == 3){
-			that.aire2.brightness(200);
-		}
-		if (that.airesC2 == 4){
-			that.aire2.brightness(255);
-		}
+	    if(that.aires2){
+	    	that.aire2.on();
+	    }
+	    else {
+	    	that.aire2.off();
+	    }
+
+	    if(that.airesC == 1){
+	    	that.aire1.brightness(64);
+	    }
+	    if (that.airesC == 2){
+	    	that.aire1.brightness(128);
+	    }
+	    if (that.airesC == 3){
+	    	that.aire1.brightness(200);
+	    }
+	    if (that.airesC == 4){
+	    	that.aire1.brightness(255);
+	    }
+
+	    if(that.airesC2 == 1){
+	    	that.aire2.brightness(64);
+	    }
+	    if (that.airesC2 == 2){
+	    	that.aire2.brightness(128);
+	    }
+	    if (that.airesC2 == 3){
+	    	that.aire2.brightness(200);
+	    }
+	    if (that.airesC2 == 4){
+	    	that.aire2.brightness(255);
+	    }
 
 	    // development
 	    that.liq_a.on('hold', function(data){
-		var registry = that.sendSocketAndMaybeStoreRegistry(Storage.data.LiquidoA, positiveValue, counterLiquidsA, true);
+	    	var registry = that.sendSocketAndMaybeStoreRegistry(Storage.data.LiquidoA, positiveValue, counterLiquidsA, true);
 	    });
 
 	    that.liq_a.on('up', function(data){
-		var object = that.sendSocketAndMaybeStoreRegistry(Storage.data.LiquidoA, negativeValue, counterLiquidsA, false);
+	    	var object = that.sendSocketAndMaybeStoreRegistry(Storage.data.LiquidoA, negativeValue, counterLiquidsA, false);
 	    });
 
 	    that.liq_b.on('hold', function(data){
-		var object = that.sendSocketAndMaybeStoreRegistry(Storage.data.LiquidoB, positiveValue, counterLiquidsB, true);
+	    	var object = that.sendSocketAndMaybeStoreRegistry(Storage.data.LiquidoB, positiveValue, counterLiquidsB, true);
 	    });
 
 	    that.liq_b.on('up', function(data){
-		var object = that.sendSocketAndMaybeStoreRegistry(Storage.data.LiquidoB, negativeValue, counterLiquidsB, false);
+	    	var object = that.sendSocketAndMaybeStoreRegistry(Storage.data.LiquidoB, negativeValue, counterLiquidsB, false);
 	    });
 
 	    that.hum_a.on('hold', function(data){
-		var object = that.sendSocketAndMaybeStoreRegistry(Storage.data.Humo, positiveValue, counterSmog, true);
+	    	var object = that.sendSocketAndMaybeStoreRegistry(Storage.data.Humo, positiveValue, counterSmog, true);
 	    });
 
 	    that.hum_a.on('up', function(data){
-		var object = that.sendSocketAndMaybeStoreRegistry(Storage.data.Humo, negativeValue, counterSmog, false);
-		return object;
+	    	var object = that.sendSocketAndMaybeStoreRegistry(Storage.data.Humo, negativeValue, counterSmog, false);
+	    	return object;
 	    });
 
 	    that.t_rack.on('data', function() {
@@ -366,24 +384,55 @@ Monitduino.prototype.setupBoard = function ()  {
 		 var  tr = (5 * this.value * 100) / 1024;
 		 var  tro = tr.toFixed(2);
 		 */
+		});
+
+	    
+	    lcd.on("ready", function() {});
+
+		var refrescarLCD = function(act){
+			lcd.on("ready", function() {});
+			if(act == 1){
+				lcd.on("ready", function() {});
+				lcd.clear();
+				lcd.print("Temperatura:");
+				lcd.print(cel);
+				lcd.cursor(1, 0);
+				lcd.print("Humedad :");
+				lcd.print(hum);
+			}
+			else{
+				lcd.on("ready", function() {});
+				lcd.clear();
+			}
+		}    
+
+	    lcdButton.on('hold', function(){
+	    	console.log("LCD");
+	    	refrescarLCD(1);
+	    });
+
+	    lcdButton.on('up', function(){
+	    		refrescarLCD(0)
+	    });
+
+	    
+	   		
+	    that.board.repl.inject({
+	    	lcd: lcd
 	    });
 
 	});
-    };
 
 };
-/*
-var verificacion = function(serialdata){
-        	var OK = rexp.exec() 
-        }
-*/
+};
+
 Monitduino.prototype.setupSerialPort = function() {
-    var that = this;
+	var that = this;
     /* 
      * initS : 
      * A callback is supposed to be passed, when is opened, we do something. 
      */
-    serialPort.on('open',function() {});
+     serialPort.on('open',function() {});
 
     /* 
      * dataS : 
@@ -393,16 +442,14 @@ Monitduino.prototype.setupSerialPort = function() {
      *  {Celsius: 1, Humedad: 2}
      */
 
-    serialPort.on('data', function(data) {
-    	
+     serialPort.on('data', function(data) {
+
         //recolecta info del puerto serial
         var info = data;
-        var cel = 0;
-        var hum = 0;
         var object = {
         	Celsius: '',
         	Humedad: '' 
-        }
+        };
         // verificar la informacion
         console.log(info);
         var ok = regexp.test(info);
@@ -410,24 +457,24 @@ Monitduino.prototype.setupSerialPort = function() {
         	time++;
         	var ext = info.split(","); 			
         	//recoge la temperatura
-        	var celsius = parseFloat(ext[1]); 	
+        	celsius = parseFloat(ext[1]); 	
         	cel = celsius;
         	//recoge la humedad.
-        	var hum_ = parseFloat(ext[0]);
+        	hum_ = parseFloat(ext[0]);
         	hum = hum_;
         	// result object
         	object  = {
-            Celsius: celsius,
-            Humedad: hum_
+        		Celsius: celsius,
+        		Humedad: hum_
         	};
-            if(time === 5){
-            	var alertForTemperature = (object.Celsius >= Storage.schemas.Temperatura.schema.max);
-            	var alertForHumidity = (object.Humedad >= Storage.schemas.Humedad.schema.max);
-            	that.sendSocketAndMaybeStoreRegistry(Storage.data.Celsius, object.Celsius, counterTemperature, alertForTemperature ? true : false);
-            	that.sendSocketAndMaybeStoreRegistry(Storage.data.Humedad, object.Humedad, counterHumidity, alertForHumidity ? true : false);
-            	time = 0;
-            }
-        
+        	if(time === 5){
+        		var alertForTemperature = (object.Celsius >= Storage.schemas.Temperatura.schema.max);
+        		var alertForHumidity = (object.Humedad >= Storage.schemas.Humedad.schema.max);
+        		that.sendSocketAndMaybeStoreRegistry(Storage.data.Celsius, object.Celsius, counterTemperature, alertForTemperature ? true : false);
+        		that.sendSocketAndMaybeStoreRegistry(Storage.data.Humedad, object.Humedad, counterHumidity, alertForHumidity ? true : false);
+        		time = 0;
+        	}
+
         }
         else {
         	console.log("No acceso");
@@ -437,8 +484,6 @@ Monitduino.prototype.setupSerialPort = function() {
         	}
         }					
 
-	
     });
 };
-
 module.exports = Monitduino;
