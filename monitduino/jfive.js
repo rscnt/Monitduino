@@ -108,6 +108,7 @@ Monitduino.prototype.initStorage = function() {
 
 Monitduino.prototype.setSocket = function(io) {
      this.socketIO = io;
+     this.setupSocketEvents();
  };
 
 Monitduino.prototype.setupSocketEvents = function(){
@@ -117,32 +118,28 @@ Monitduino.prototype.setupSocketEvents = function(){
 		console.log(that.humos);
 		that.activatedesalarm(data);
 	});
-	this.socketIO.on('alerta', function(data){
-		this.alarmas = data;
-		that.activatedesalarm(data);
-	});
 	this.socketIO.on('luz1', function(data){
-		this.luces1 = data;
+		that.luces1 = data;
 		that.activarluz1(data);
 	});
 	this.socketIO.on('luz2', function(data){
-		this.luces2 = data;
+		that.luces2 = data;
 		that.activarluz2(data);
 	});
 	this.socketIO.on('air1', function(data){
-		this.aires1 = data;
+		that.aires1 = data;
 		that.activaraire1(data);
 	});
 	this.socketIO.on('air2', function(data){
-		this.aires2 = data;
+		that.aires2 = data;
 		that.activaraire2(data);
 	});
 	this.socketIO.on('a1control', function(data){
-		this.airesC = data;
+		that.airesC = data;
 		that.controlaire1(data);
 	});
 	this.socketIO.on('a2control', function(data){
-		this.airesC2 = data;
+		that.airesC2 = data;
 		that.controlaire2(data);
 	});
 };
@@ -153,7 +150,7 @@ Monitduino.prototype.activarluz1 = function(activate){
 		activate ? this.luz1.on() : this.luz1.off();
 		result = true;
 	}
-	return result = true;
+	return result;
 };
 
 Monitduino.prototype.activarluz2 = function(activate){
@@ -162,7 +159,7 @@ Monitduino.prototype.activarluz2 = function(activate){
 		activate ? this.luz2.on() : this.luz2.off();
 		result = true;
 	}
-	return result = true;
+	return result;
 };
 
 Monitduino.prototype.activaraire1 = function(activate){
@@ -171,7 +168,7 @@ Monitduino.prototype.activaraire1 = function(activate){
 		activate ? this.aire1.on() : this.aire1.off();
 		result = true;
 	}
-	return result = true;
+	return result;
 };
 
 Monitduino.prototype.activaraire2 = function(activate){
@@ -180,7 +177,7 @@ Monitduino.prototype.activaraire2 = function(activate){
 		activate ? this.aire2.on() : this.aire2.off();
 		result = true;
 	}
-	return result = true;
+	return result;
 };
 
 Monitduino.prototype.controlaire1 = function(control){
@@ -199,7 +196,7 @@ Monitduino.prototype.controlaire1 = function(control){
 			this.aire1.brightness(255);
 		}
 	}
-	return result = true;
+	return result;
 };
 
 Monitduino.prototype.controlaire2 = function(control){
@@ -218,7 +215,7 @@ Monitduino.prototype.controlaire2 = function(control){
 			this.aire2.brightness(255);
 		}
 	}
-	return result = true;
+	return result;
 };
 
 Monitduino.prototype.activatedesalarm = function(activate){
@@ -227,7 +224,7 @@ Monitduino.prototype.activatedesalarm = function(activate){
 		activate ? this.alarma.on() : this.alarma.off();
 		result = true;
 	}
-	return result = true;
+	return result;
 };
 
 var negativeValue = "0", positiveValue = "1";
@@ -283,8 +280,8 @@ Monitduino.prototype.setupBoard = function ()  {
 			that.alarma = new five.Led(13);
 			that.luz1 = new five.Led(30);
 			that.luz2 = new five.Led(31);
-			that.aire1 = new five.Led(32);
-			that.aire2 = new five.Led(33);
+			that.aire1 = new five.Led(9);
+			that.aire2 = new five.Led(8);
 
 			lcd = new five.LCD({
 				pins: [12, 11, 5, 4, 3, 2],
@@ -314,14 +311,14 @@ Monitduino.prototype.setupBoard = function ()  {
 	    }
 
 	    if(that.aires1){
-	    	that.aire1.on();
+	    	that.aire1.brightness(128);
 	    }
 	    else {
 	    	that.aire1.off();
 	    }
 
 	    if(that.aires2){
-	    	that.aire2.on();
+	    	that.aire2.brightness(128);
 	    }
 	    else {
 	    	that.aire2.off();
@@ -422,10 +419,10 @@ Monitduino.prototype.setupBoard = function ()  {
 	    });
 
 	});
+	
+};
 
 };
-};
-
 Monitduino.prototype.setupSerialPort = function() {
 	var that = this;
     /* 
