@@ -4,22 +4,25 @@ var redis = new require("redis"),
     client = redis.createClient();
 var socketIO;
 var five = require("johnny-five"),
-    com = require("serialport");
+com = require("serialport");
 var serialPort = new com.SerialPort("/dev/ttyUSB0", {
-    baudrate: 9600,
-    parser: com.parsers.readline('\r\n')
+	baudrate: 9600,
+	parser: com.parsers.readline('\r\n')
 });
 var time = 0;
 var l_a = 0;
 var l_b = 0;
 var h = 0;
+var cel = 0;
+var hum = 0;
 var counterLiquidsA = 0;
 var counterLiquidsB = 0;
 var counterTemperature = 0;
 var counterHumidity = 0;
 var counterSmog = 0;
-var datoT = new Array;
-var datoH = new Array;
+var datoT = [];
+var datoH = [];
+var regexp = /(^([\d.,])*)$/;
 
 var Monitduino = function(){
     var that = this;
@@ -55,69 +58,68 @@ var Monitduino = function(){
 };
 
 Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, counter, store) {
-    var registry = {name: name, value: value};
-    if (storage !== undefined && storage !== null) {
-	storage.createRegistry(registry.name, registry.value);	
-    } else { console.log("storage not defined"); }
-    this.count = 0;
-    if (this.socketIO !== undefined && this.socketIO !== null) {
-   	switch(registry.name) {
-   	case "Temperatura":
-   	case "temperatura":
-   	    datoT.push([registry.value]);
-	    if (registry.value >= Storage.schemas.Temperatura.schema.max) {
-		this.socketIO.emit('alert', {name: "temperatura alta.", value: registry.value});
-	    }
-	    this.socketIO.emit('promt', datoT);
-	    break;
-	case "Humedad":
-   	case "humedad":
-    	    datoH.push([registry.value]);
-	    if (registry.value) {
-		this.socketIO.emit('alert', {name: "Se ha detectado humedad en la sala.", value: registry.value});
-	    }
-	    this.socketIO.emit('humt', datoH);
-	    break;
-	case "liquidoA":
-	case "LiquidoA":
-	    if (registry.value) {
-	    	this.socketIO.emit('alert', {name: "Se ha detectado liquido en sala A.", value: registry.value});
-	    }
-	    break;
-	case "liquidoB":
-	case "LiquidoB":
-	    if (registry.value) {
-	    	this.socketIO.emit('alert', {name: "Se ha detectado liquido en sala B.", value: registry.value});
-	    }
-	    break;
-	case "liquidoC":
-	case "LiquidoC":
-	    if (registry.value >= Storage.schemas.LiquidoC.schema.max) {
-	    	this.socketIO.emit('alert', {name: "Se ha detectado liquido en sala C.", value: registry.value});
-	    }
-	    break;
-	case "humo":
-	case "humo":
-	    if (registry.value) {
-	    	this.socketIO.emit('alert', {name: "Se ha detectado humo en la sala.", value: registry.value});
-	    }
-	    break;
-	};   
-	
-	this.socketIO.emit('general', registry);    
-    } else {
-    }
-    return registry;
+	var registry = {name: name, value: value};
+	if (storage !== undefined && storage !== null) {
+		storage.createRegistry(registry.name, registry.value);	
+	} else { console.log("storage not defined"); }
+	this.count = 0;
+	if (this.socketIO !== undefined && this.socketIO !== null) {
+		switch(registry.name){
+			case "Temperatura":
+			case "temperatura":
+			datoT.push([registry.value]);
+			if (registry.value >= Storage.schemas.Temperatura.schema.max) {
+				this.socketIO.emit('alert', {name: "temperatura", value: registry.value});
+			}
+			this.socketIO.emit('promt', datoT);
+			break;
+			case "Humedad":
+			case "humedad":
+			datoH.push([registry.value]);
+			if (registry.value) {
+				this.socketIO.emit('alert', {name: "humedad", value: registry.value});
+			}
+			this.socketIO.emit('humt', datoH);
+			break;
+			case "liquidoA":
+			case "LiquidoA":
+			if (registry.value) {
+				this.socketIO.emit('alert', {name: "liquidoA", value: registry.value});
+			}
+			break;
+			case "liquidoB":
+			case "LiquidoB":
+			if (registry.value) {
+				this.socketIO.emit('alert', {name: "liquidoB", value: registry.value});
+			}
+			break;
+			case "liquidoC":
+			case "LiquidoC":
+			if (registry.value >= Storage.schemas.LiquidoC.schema.max) {
+				this.socketIO.emit('alert', {name: "liquidoC", value: registry.value});
+			}
+			break;
+			case "humo":
+			case "humo":
+			if (registry.value) {
+				this.socketIO.emit('alert', {name: "humo", value: registry.value});
+			}
+			break;
+		};   
+
+		this.socketIO.emit('general', registry); 
+	} 
+	else { console.log("SOCKET IO not found"); }
+	return registry;
 };
 
 Monitduino.prototype.initStorage = function() {
-    storage.init();
+	storage.init();
 };
 
 Monitduino.prototype.setSocket = function(io) {
-    this.socketIO = io;
-    this.setupSocketEvents();
-};
+     this.socketIO = io;
+ };
 
 Monitduino.prototype.setupSocketEvents = function(){
 	var that = this;
@@ -156,7 +158,6 @@ Monitduino.prototype.setupSocketEvents = function(){
 	that.airesC2 = data;
 	that.controlaire2(data);
     });
-
 };
 
 Monitduino.prototype.activarluz1 = function(activate){
@@ -165,8 +166,8 @@ Monitduino.prototype.activarluz1 = function(activate){
 		activate ? this.luz1.on() : this.luz1.off();
 		result = true;
 	}
-	return result = true;
-}
+	return result;
+};
 
 Monitduino.prototype.activarluz2 = function(activate){
 	var result = false;
@@ -174,8 +175,8 @@ Monitduino.prototype.activarluz2 = function(activate){
 		activate ? this.luz2.on() : this.luz2.off();
 		result = true;
 	}
-	return result = true;
-}
+	return result;
+};
 
 Monitduino.prototype.activaraire1 = function(activate){
 	var result = false;
@@ -183,8 +184,8 @@ Monitduino.prototype.activaraire1 = function(activate){
 		activate ? this.aire1.on() : this.aire1.off();
 		result = true;
 	}
-	return result = true;
-}
+	return result;
+};
 
 Monitduino.prototype.activaraire2 = function(activate){
 	var result = false;
@@ -192,46 +193,46 @@ Monitduino.prototype.activaraire2 = function(activate){
 		activate ? this.aire2.on() : this.aire2.off();
 		result = true;
 	}
-	return result = true;
-}
+	return result;
+};
 
 Monitduino.prototype.controlaire1 = function(control){
 	var result = false;
 	if(this.aire1 !== null && this.aire1 !== undefined){
-		if (control == 1){
+		if (control === 1){
 			this.aire1.brightness(64);
 		}
-		if (control == 2){
+		if (control === 2){
 			this.aire1.brightness(128);
 		}
-		if (control == 3){
+		if (control === 3){
 			this.aire1.brightness(190);
 		}
-		if (control == 4){
+		if (control === 4){
 			this.aire1.brightness(255);
 		}
 	}
-	return result = true;
-}
+	return result;
+};
 
 Monitduino.prototype.controlaire2 = function(control){
 	var result = false;
 	if(this.aire2 !== null && this.aire2 !== undefined){
-		if (control == 1){
+		if (control ===  1){
 			this.aire2.brightness(64);
 		}
-		if (control == 2){
+		if (control === 2){
 			this.aire2.brightness(128);
 		}
-		if (control == 3){
+		if (control === 3){
 			this.aire2.brightness(190);
 		}
-		if (control == 4){
+		if (control === 4){
 			this.aire2.brightness(255);
 		}
 	}
-	return result = true;
-}
+	return result;
+};
 
 Monitduino.prototype.activatedesalarm = function(activate){
 	var result = false;
@@ -239,144 +240,155 @@ Monitduino.prototype.activatedesalarm = function(activate){
 		activate ? this.alarma.on() : this.alarma.off();
 		result = true;
 	}
-	return result = true;
+	return result;
 };
 
 var negativeValue = "0", positiveValue = "1";
 
 Monitduino.prototype.setupBoard = function ()  {
 
-    var that = this;
-    that.board = five.Board();
-    if (that.board) {
-	that.board.on("ready", function(){
+	var that = this;
+	that.board = five.Board();
+	if (that.board) {
+		that.board.on("ready", function(){
 
-	    that.liq_a = new five.Button({
-		board: that.board,
-		pin: 22,
-		holdtime: 3000,
-		invert: false
-	    });
+			var lcdB = 0;
 
-	    that.liq_b = new five.Button({
-		board: that.board,
-		pin: 23,
-		holdtime: 3000,
-		invert: false
-	    });
+			that.liq_a = new five.Button({
+				board: that.board,
+				pin: 22,
+				holdtime: 3000,
+				invert: false
+			});
 
-	    that.liq_b = new five.Button({
-		board: that.board,
-		pin: 24,
-		holdtime: 3000,
-		invert: false
-	    });
+			that.liq_b = new five.Button({
+				board: that.board,
+				pin: 23,
+				holdtime: 3000,
+				invert: false
+			});
 
-	    that.hum_a = new five.Button({
-		board: that.board,
-		pin: 25,
-		holdtime: 3000,
-		invert: false
-	    });
+			that.liq_b = new five.Button({
+				board: that.board,
+				pin: 24,
+				holdtime: 3000,
+				invert: false
+			});
 
-	    that.t_rack = new five.Sensor({
-		pin: "A0",
-		freq: 30000
-	    });
+			that.hum_a = new five.Button({
+				board: that.board,
+				pin: 25,
+				holdtime: 3000,
+				invert: false
+			});
 
-	    that.alarma = new five.Led(13);
-	    that.luz1 = new five.Led(8);
-	    that.luz2 = new five.Led(9);
-	    that.aire1 = new five.Led(7);
-	    that.aire2 = new five.Led(6);
+			that.t_rack = new five.Sensor({
+				pin: "A0",
+				freq: 30000
+			});
+
+			var lcdButton = new five.Button({
+				board: that.board,
+				pin: 10,
+				holdtime: 1000	
+			});
+
+			that.alarma = new five.Led(13);
+			that.luz1 = new five.Led(30);
+			that.luz2 = new five.Led(31);
+			that.aire1 = new five.Led(32);
+			that.aire2 = new five.Led(33);
+
+			var lcd = new five.LCD({
+				pins: [12, 11, 5, 4, 3, 2],
+			});
 
 	    //probe
-	    
+
 	    if(that.humos){
-		that.alarma.on();
+	    	that.alarma.on();
 	    }
 	    else {
-		that.alarma.off();
+	    	that.alarma.off();
 	    }
-	    
+
 	    if(that.luces1){
-		that.luz1.on();
+	    	that.luz1.on();
 	    }
 	    else {
-		that.luz1.off();
+	    	that.luz1.off();
 	    }
 
 	    if(that.luces2){
-		that.luz2.on();
+	    	that.luz2.on();
 	    }
 	    else {
-		that.luz2.off();
+	    	that.luz2.off();
 	    }
 
 	    if(that.aires1){
-		that.aire1.on();
+	    	that.aire1.on();
 	    }
 	    else {
-		that.aire1.off();
+	    	that.aire1.off();
 	    }
 
 	    if(that.aires2){
-		that.aire2.on();
+	    	that.aire2.on();
 	    }
 	    else {
-		that.aire2.off();
+	    	that.aire2.off();
 	    }
 
-	    if(that.airesC == 1){
-		that.aire1.brightness(64);
+	    if(that.airesC === 1){
+	    	that.aire1.brightness(64);
 	    }
-	    if (that.airesC == 2){
-		that.aire1.brightness(128);
+	    if (that.airesC === 2){
+	    	that.aire1.brightness(128);
 	    }
-	    if (that.airesC == 3){
-		that.aire1.brightness(200);
+	    if (that.airesC === 3){
+	    	that.aire1.brightness(200);
 	    }
-	    if (that.airesC == 4){
-		that.aire1.brightness(255);
+	    if (that.airesC === 4){
+	    	that.aire1.brightness(255);
 	    }
 
-	    if(that.airesC2 == 1){
-		that.aire2.brightness(64);
+	    if(that.airesC2 === 1){
+	    	that.aire2.brightness(64);
 	    }
-	    if (that.airesC2 == 2){
-		that.aire2.brightness(128);
+	    if (that.airesC2 === 2){
+	    	that.aire2.brightness(128);
 	    }
 	    if (that.airesC2 == 3){
-		that.aire2.brightness(200);
+	    	that.aire2.brightness(200);
 	    }
-	    if (that.airesC2 == 4){
-		that.aire2.brightness(255);
+	    if (that.airesC2 === 4){
+	    	that.aire2.brightness(255);
 	    }
 
 	    // development
 	    that.liq_a.on('hold', function(data){
-		var registry = that.sendSocketAndMaybeStoreRegistry(Storage.data.LiquidoA, positiveValue, counterLiquidsA, true);
+	    	that.sendSocketAndMaybeStoreRegistry(Storage.data.LiquidoA, positiveValue, counterLiquidsA, true);
 	    });
 
 	    that.liq_a.on('up', function(data){
-		var object = that.sendSocketAndMaybeStoreRegistry(Storage.data.LiquidoA, negativeValue, counterLiquidsA, false);
+	    	that.sendSocketAndMaybeStoreRegistry(Storage.data.LiquidoA, negativeValue, counterLiquidsA, false);
 	    });
 
 	    that.liq_b.on('hold', function(data){
-		var object = that.sendSocketAndMaybeStoreRegistry(Storage.data.LiquidoB, positiveValue, counterLiquidsB, true);
+	    	that.sendSocketAndMaybeStoreRegistry(Storage.data.LiquidoB, positiveValue, counterLiquidsB, true);
 	    });
 
 	    that.liq_b.on('up', function(data){
-		var object = that.sendSocketAndMaybeStoreRegistry(Storage.data.LiquidoB, negativeValue, counterLiquidsB, false);
+	    	that.sendSocketAndMaybeStoreRegistry(Storage.data.LiquidoB, negativeValue, counterLiquidsB, false);
 	    });
 
 	    that.hum_a.on('hold', function(data){
-		var object = that.sendSocketAndMaybeStoreRegistry(Storage.data.Humo, positiveValue, counterSmog, true);
+	    	that.sendSocketAndMaybeStoreRegistry(Storage.data.Humo, positiveValue, counterSmog, true);
 	    });
 
 	    that.hum_a.on('up', function(data){
-		var object = that.sendSocketAndMaybeStoreRegistry(Storage.data.Humo, negativeValue, counterSmog, false);
-		return object;
+	    	that.sendSocketAndMaybeStoreRegistry(Storage.data.Humo, negativeValue, counterSmog, false);
 	    });
 
 	    that.t_rack.on('data', function() {
@@ -384,20 +396,55 @@ Monitduino.prototype.setupBoard = function ()  {
 		 var  tr = (5 * this.value * 100) / 1024;
 		 var  tro = tr.toFixed(2);
 		 */
+		});
+
+	    
+	    lcd.on("ready", function() {});
+
+		var refrescarLCD = function(act){
+			lcd.on("ready", function() { console.log("lcd ready"); });
+			if(act === 1){
+				lcd.on("ready", function() { console.log("lcd ready"); });
+				lcd.clear();
+				lcd.print("Temperatura:");
+				lcd.print(cel);
+				lcd.cursor(1, 0);
+				lcd.print("Humedad :");
+				lcd.print(hum);
+			}
+			else{
+				lcd.on("ready", function() { console.log("lcd ready"); });
+				lcd.clear();
+			}
+		}    
+
+	    lcdButton.on('hold', function(){
+	    	console.log("LCD");
+	    	refrescarLCD(1);
+	    });
+
+	    lcdButton.on('up', function(){
+	    		refrescarLCD(0)
+	    });
+
+	    
+	   		
+	    that.board.repl.inject({
+	    	lcd: lcd
 	    });
 
 	});
-    };
 
+};
 };
 
 Monitduino.prototype.setupSerialPort = function() {
-    var that = this;
+	var that = this;
     /* 
      * initS : 
      * A callback is supposed to be passed, when is opened, we do something. 
      */
-    serialPort.on('open',function() {});
+     serialPort.on('open',function() {});
 
     /* 
      * dataS : 
@@ -407,31 +454,48 @@ Monitduino.prototype.setupSerialPort = function() {
      *  {Celsius: 1, Humedad: 2}
      */
 
-    serialPort.on('data', function(data) {
-    	time++;
-        //recolecta info del puerto serial
-        var info = data; 
-        console.log(info);					
-        //divide la informacion (Hum, Temp)
-        var ext = info.split(","); 			
-        //recoge la temperatura
-        var celsius = parseFloat(ext[1]); 	
-        //recoge la humedad.
-        var hum_ = parseFloat(ext[0]);
-        // result object
-        var object  = {
-            Celsius: celsius,
-            Humedad: hum_
-	};
+     serialPort.on('data', function(data) {
 
-	if(time === 5){
-	    var alertForTemperature = (object.Celsius >= Storage.schemas.Temperatura.schema.max);
-	    var alertForHumidity = (object.Humedad >= Storage.schemas.Humedad.schema.max);
-	    that.sendSocketAndMaybeStoreRegistry(Storage.data.Celsius, object.Celsius, counterTemperature, alertForTemperature ? true : false);
-	    that.sendSocketAndMaybeStoreRegistry(Storage.data.Humedad, object.Humedad, counterHumidity, alertForHumidity ? true : false);
-            time = 0;
-	}
+        //recolecta info del puerto serial
+        var info = data;
+        var object = {
+        	Celsius: '',
+        	Humedad: '' 
+        };
+        // verificar la informacion
+        console.log(info);
+        var ok = regexp.test(info);
+        if(ok){
+        	time++;
+        	var ext = info.split(","); 			
+        	//recoge la temperatura
+        	celsius = parseFloat(ext[1]); 	
+        	cel = celsius;
+        	//recoge la humedad.
+        	hum_ = parseFloat(ext[0]);
+        	hum = hum_;
+        	// result object
+        	object  = {
+        		Celsius: celsius,
+        		Humedad: hum_
+        	};
+        	if(time === 5){
+        		var alertForTemperature = (object.Celsius >= Storage.schemas.Temperatura.schema.max);
+        		var alertForHumidity = (object.Humedad >= Storage.schemas.Humedad.schema.max);
+        		that.sendSocketAndMaybeStoreRegistry(Storage.data.Celsius, object.Celsius, counterTemperature, alertForTemperature ? true : false);
+        		that.sendSocketAndMaybeStoreRegistry(Storage.data.Humedad, object.Humedad, counterHumidity, alertForHumidity ? true : false);
+        		time = 0;
+        	}
+
+        }
+        else {
+        	console.log("No acceso");
+        	var puerta = info;
+        	if (puerta == "AOP" || puerta == "OP" || puerta == "EOP" || puerta == "CP"){
+        		console.log("estado puerta" + puerta);
+        	}
+        }					
+
     });
 };
-
 module.exports = Monitduino;
