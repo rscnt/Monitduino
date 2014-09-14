@@ -381,6 +381,7 @@ var apagarluz2 = function(){
 var encenderaire1 = function(){
 	$("#air1e").click(function(){
 		var state = 1; 
+		console.log("BotonON")
 		socket.emit('air1', state);
 	});
 };

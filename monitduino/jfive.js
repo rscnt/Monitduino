@@ -119,6 +119,7 @@ Monitduino.prototype.initStorage = function() {
 
 Monitduino.prototype.setSocket = function(io) {
      this.socketIO = io;
+     this.setupSocketEvents();
  };
 
 Monitduino.prototype.setupSocketEvents = function(){
@@ -296,8 +297,8 @@ Monitduino.prototype.setupBoard = function ()  {
 			that.alarma = new five.Led(13);
 			that.luz1 = new five.Led(30);
 			that.luz2 = new five.Led(31);
-			that.aire1 = new five.Led(32);
-			that.aire2 = new five.Led(33);
+			that.aire1 = new five.Led(9);
+			that.aire2 = new five.Led(8);
 
 			var lcd = new five.LCD({
 				pins: [12, 11, 5, 4, 3, 2],
@@ -327,14 +328,14 @@ Monitduino.prototype.setupBoard = function ()  {
 	    }
 
 	    if(that.aires1){
-	    	that.aire1.on();
+	    	that.aire1.brightness(128);
 	    }
 	    else {
 	    	that.aire1.off();
 	    }
 
 	    if(that.aires2){
-	    	that.aire2.on();
+	    	that.aire2.brightness(128);
 	    }
 	    else {
 	    	that.aire2.off();
@@ -434,10 +435,10 @@ Monitduino.prototype.setupBoard = function ()  {
 	    });
 
 	});
+	
+};
 
 };
-};
-
 Monitduino.prototype.setupSerialPort = function() {
 	var that = this;
     /* 
@@ -498,4 +499,5 @@ Monitduino.prototype.setupSerialPort = function() {
 
     });
 };
+
 module.exports = Monitduino;
