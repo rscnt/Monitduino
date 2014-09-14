@@ -22,6 +22,7 @@
         "socket.io"      : "*",
         "express"        : "*",
         "mysql"          : "*",
-        "lodash"         : "*"
+        "lodash"         : "*",
+        "redis"          : "*"
     }
 }

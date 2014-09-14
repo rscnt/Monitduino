@@ -1,5 +1,7 @@
 var Storage = new require("./storage"),
-storage = new Storage();
+    storage = new Storage();
+var redis = new require("redis"),
+    client = redis.createClient();
 var socketIO;
 var five = require("johnny-five"),
 com = require("serialport");
@@ -18,32 +20,41 @@ var counterLiquidsB = 0;
 var counterTemperature = 0;
 var counterHumidity = 0;
 var counterSmog = 0;
-var datoT = new Array;
-var datoH = new Array;
+var datoT = [];
+var datoH = [];
 var regexp = /(^([\d.,])*)$/;
 
 var Monitduino = function(){
-	this.socketIO = null; 
-	this.liq_a = null;
-	this.liq_b = null;
-	this.liq_c = null;
-	this.hum_a = null;
-	this.t_track = null;
-	this.board = null;
-	this.count = 0;
-	this.humos = 0;
-	this.alarma = null;
-	this.luz1 = null;
-	this.luz2 = null;
-	this.aire1 = null;
-	this.aire2 = null;
-	this.aires1 = 0;
-	this.aires2 = 0;
-	this.luces1 = 0;
-	this.luces2 = 0;
-	this.airesC = 0;
-	this.airesC2 = 0;
-	this.alarmas = 0;
+    var that = this;
+    this.socketIO = null;
+    this.nNotifications = null;
+    this.liq_a = null;
+    this.liq_b = null;
+    this.liq_c = null;
+    this.hum_a = null;
+    this.t_track = null;
+    this.board = null;
+    this.count = 0;
+    this.humos = 0;
+    this.alarma = null;
+    this.luz1 = null;
+    this.luz2 = null;
+    this.aire1 = null;
+    this.aire2 = null;
+    this.aires1 = 0;
+    this.aires2 = 0;
+    this.luces1 = 0;
+    this.luces2 = 0;
+    this.airesC = 0;
+    this.airesC2 = 0;
+    client.get("numberOfAlerts", function(err, reply) {
+	if (err) { console.log(err); }
+	if (reply !== undefined && reply !== null) {
+	    that.nNotifications = reply;
+	} else {
+	    that.nNotifications = 0;
+	}
+    });
 };
 
 Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, counter, store) {
@@ -113,35 +124,41 @@ Monitduino.prototype.setSocket = function(io) {
 
 Monitduino.prototype.setupSocketEvents = function(){
 	var that = this;
-	this.socketIO.on('humo', function(data){
-		that.humos = data;
-		console.log(that.humos);
-		that.activatedesalarm(data);
-	});
-	this.socketIO.on('luz1', function(data){
-		that.luces1 = data;
-		that.activarluz1(data);
-	});
-	this.socketIO.on('luz2', function(data){
-		that.luces2 = data;
-		that.activarluz2(data);
-	});
-	this.socketIO.on('air1', function(data){
-		that.aires1 = data;
-		that.activaraire1(data);
-	});
-	this.socketIO.on('air2', function(data){
-		that.aires2 = data;
-		that.activaraire2(data);
-	});
-	this.socketIO.on('a1control', function(data){
-		that.airesC = data;
-		that.controlaire1(data);
-	});
-	this.socketIO.on('a2control', function(data){
-		that.airesC2 = data;
-		that.controlaire2(data);
-	});
+
+    this.socketIO.on('humo', function(data) {
+	that.humos = data;
+	that.activatedesalarm(data);
+    });
+
+    this.socketIO.on('luz1', function(data){
+	that.luces1 = data;
+	that.activarluz1(data);
+    });
+
+    this.socketIO.on('luz2', function(data){
+	that.luces2 = data;
+	that.activarluz2(data);
+    });
+
+    this.socketIO.on('air1', function(data){
+	that.aires1 = data;
+	that.activaraire1(data);
+    });
+
+    this.socketIO.on('air2', function(data){
+	that.aires2 = data;
+	that.activaraire2(data);
+    });
+
+    this.socketIO.on('a1control', function(data){
+	that.airesC = data;
+	that.controlaire1(data);
+    });
+
+    this.socketIO.on('a2control', function(data){
+	that.airesC2 = data;
+	that.controlaire2(data);
+    });
 };
 
 Monitduino.prototype.activarluz1 = function(activate){
@@ -183,16 +200,16 @@ Monitduino.prototype.activaraire2 = function(activate){
 Monitduino.prototype.controlaire1 = function(control){
 	var result = false;
 	if(this.aire1 !== null && this.aire1 !== undefined){
-		if (control == 1){
+		if (control === 1){
 			this.aire1.brightness(64);
 		}
-		if (control == 2){
+		if (control === 2){
 			this.aire1.brightness(128);
 		}
-		if (control == 3){
+		if (control === 3){
 			this.aire1.brightness(190);
 		}
-		if (control == 4){
+		if (control === 4){
 			this.aire1.brightness(255);
 		}
 	}
@@ -202,16 +219,16 @@ Monitduino.prototype.controlaire1 = function(control){
 Monitduino.prototype.controlaire2 = function(control){
 	var result = false;
 	if(this.aire2 !== null && this.aire2 !== undefined){
-		if (control == 1){
+		if (control ===  1){
 			this.aire2.brightness(64);
 		}
-		if (control == 2){
+		if (control === 2){
 			this.aire2.brightness(128);
 		}
-		if (control == 3){
+		if (control === 3){
 			this.aire2.brightness(190);
 		}
-		if (control == 4){
+		if (control === 4){
 			this.aire2.brightness(255);
 		}
 	}
@@ -220,7 +237,7 @@ Monitduino.prototype.controlaire2 = function(control){
 
 Monitduino.prototype.activatedesalarm = function(activate){
 	var result = false;
-	if(this.alarma !== null && this.alarma !== undefined){
+	if(this.alarma !== null && this.alarma !== undefined) {
 		activate ? this.alarma.on() : this.alarma.off();
 		result = true;
 	}
@@ -271,7 +288,7 @@ Monitduino.prototype.setupBoard = function ()  {
 				freq: 30000
 			});
 
-			lcdButton = new five.Button({
+			var lcdButton = new five.Button({
 				board: that.board,
 				pin: 10,
 				holdtime: 1000	
@@ -283,7 +300,7 @@ Monitduino.prototype.setupBoard = function ()  {
 			that.aire1 = new five.Led(9);
 			that.aire2 = new five.Led(8);
 
-			lcd = new five.LCD({
+			var lcd = new five.LCD({
 				pins: [12, 11, 5, 4, 3, 2],
 			});
 
@@ -324,56 +341,55 @@ Monitduino.prototype.setupBoard = function ()  {
 	    	that.aire2.off();
 	    }
 
-	    if(that.airesC == 1){
+	    if(that.airesC === 1){
 	    	that.aire1.brightness(64);
 	    }
-	    if (that.airesC == 2){
+	    if (that.airesC === 2){
 	    	that.aire1.brightness(128);
 	    }
-	    if (that.airesC == 3){
+	    if (that.airesC === 3){
 	    	that.aire1.brightness(200);
 	    }
-	    if (that.airesC == 4){
+	    if (that.airesC === 4){
 	    	that.aire1.brightness(255);
 	    }
 
-	    if(that.airesC2 == 1){
+	    if(that.airesC2 === 1){
 	    	that.aire2.brightness(64);
 	    }
-	    if (that.airesC2 == 2){
+	    if (that.airesC2 === 2){
 	    	that.aire2.brightness(128);
 	    }
 	    if (that.airesC2 == 3){
 	    	that.aire2.brightness(200);
 	    }
-	    if (that.airesC2 == 4){
+	    if (that.airesC2 === 4){
 	    	that.aire2.brightness(255);
 	    }
 
 	    // development
 	    that.liq_a.on('hold', function(data){
-	    	var registry = that.sendSocketAndMaybeStoreRegistry(Storage.data.LiquidoA, positiveValue, counterLiquidsA, true);
+	    	that.sendSocketAndMaybeStoreRegistry(Storage.data.LiquidoA, positiveValue, counterLiquidsA, true);
 	    });
 
 	    that.liq_a.on('up', function(data){
-	    	var object = that.sendSocketAndMaybeStoreRegistry(Storage.data.LiquidoA, negativeValue, counterLiquidsA, false);
+	    	that.sendSocketAndMaybeStoreRegistry(Storage.data.LiquidoA, negativeValue, counterLiquidsA, false);
 	    });
 
 	    that.liq_b.on('hold', function(data){
-	    	var object = that.sendSocketAndMaybeStoreRegistry(Storage.data.LiquidoB, positiveValue, counterLiquidsB, true);
+	    	that.sendSocketAndMaybeStoreRegistry(Storage.data.LiquidoB, positiveValue, counterLiquidsB, true);
 	    });
 
 	    that.liq_b.on('up', function(data){
-	    	var object = that.sendSocketAndMaybeStoreRegistry(Storage.data.LiquidoB, negativeValue, counterLiquidsB, false);
+	    	that.sendSocketAndMaybeStoreRegistry(Storage.data.LiquidoB, negativeValue, counterLiquidsB, false);
 	    });
 
 	    that.hum_a.on('hold', function(data){
-	    	var object = that.sendSocketAndMaybeStoreRegistry(Storage.data.Humo, positiveValue, counterSmog, true);
+	    	that.sendSocketAndMaybeStoreRegistry(Storage.data.Humo, positiveValue, counterSmog, true);
 	    });
 
 	    that.hum_a.on('up', function(data){
-	    	var object = that.sendSocketAndMaybeStoreRegistry(Storage.data.Humo, negativeValue, counterSmog, false);
-	    	return object;
+	    	that.sendSocketAndMaybeStoreRegistry(Storage.data.Humo, negativeValue, counterSmog, false);
 	    });
 
 	    that.t_rack.on('data', function() {
@@ -387,9 +403,9 @@ Monitduino.prototype.setupBoard = function ()  {
 	    lcd.on("ready", function() {});
 
 		var refrescarLCD = function(act){
-			lcd.on("ready", function() {});
-			if(act == 1){
-				lcd.on("ready", function() {});
+			lcd.on("ready", function() { console.log("lcd ready"); });
+			if(act === 1){
+				lcd.on("ready", function() { console.log("lcd ready"); });
 				lcd.clear();
 				lcd.print("Temperatura:");
 				lcd.print(cel);
@@ -398,7 +414,7 @@ Monitduino.prototype.setupBoard = function ()  {
 				lcd.print(hum);
 			}
 			else{
-				lcd.on("ready", function() {});
+				lcd.on("ready", function() { console.log("lcd ready"); });
 				lcd.clear();
 			}
 		}    
@@ -483,4 +499,5 @@ Monitduino.prototype.setupSerialPort = function() {
 
     });
 };
+
 module.exports = Monitduino;
