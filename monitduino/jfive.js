@@ -1,7 +1,9 @@
 var Storage = new require("./storage"),
     storage = new Storage();
+/*
 var redis = new require("redis"),
     client = redis.createClient();
+*/
 var socketIO;
 var five = require("johnny-five"),
 com = require("serialport");
@@ -20,6 +22,7 @@ var counterLiquidsB = 0;
 var counterTemperature = 0;
 var counterHumidity = 0;
 var counterSmog = 0;
+var counterDoor = 0;
 var datoT = [];
 var datoH = [];
 var regexp = /(^([\d.,])*)$/;
@@ -47,6 +50,7 @@ var Monitduino = function(){
     this.luces2 = 0;
     this.airesC = 0;
     this.airesC2 = 0;
+    /*
     client.get("numberOfAlerts", function(err, reply) {
 	if (err) { console.log(err); }
 	if (reply !== undefined && reply !== null) {
@@ -55,9 +59,11 @@ var Monitduino = function(){
 	    that.nNotifications = 0;
 	}
     });
+	*/
 };
 
 Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, counter, store) {
+	var valor = value;
 	var registry = {name: name, value: value};
 	if (storage !== undefined && storage !== null) {
 		storage.createRegistry(registry.name, registry.value);	
@@ -103,6 +109,13 @@ Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, cou
 			case "humo":
 			if (registry.value) {
 				this.socketIO.emit('alert', {name: "humo", value: registry.value});
+			}
+			break;
+			case "principal":
+			if (registry.value){
+				this.socketIO.emit('estP', registry.value);
+				console.log("enviando puerta");
+				console.log(registry.value);
 			}
 			break;
 		};   
@@ -490,10 +503,33 @@ Monitduino.prototype.setupSerialPort = function() {
 
         }
         else {
-        	console.log("No acceso");
+        	console.log("Puerta");
         	var puerta = info;
+        	var pstado = 0;
+        	if (puerta === "U0"){
+        		console.log("Usuario Numero 1");
+        	}
+
+        	if (puerta === "U1"){
+        		console.log("Usuario Numero 2");
+        	}
         	if (puerta == "AOP" || puerta == "OP" || puerta == "EOP" || puerta == "CP"){
-        		console.log("estado puerta" + puerta);
+        		console.log("estado puerta :" + puerta);
+        		if(puerta == "OP")
+        		{	
+        			pstado = 1;
+    				that.sendSocketAndMaybeStoreRegistry(Storage.data.Puerta, pstado, counterDoor, false);
+        		}
+        		if(puerta == "AOP" || puerta == "EOP")
+        		{
+        			pstado = 2;
+        			that.sendSocketAndMaybeStoreRegistry(Storage.data.Puerta, pstado, counterDoor, false);
+        		}
+        		if(puerta == "CP")
+        		{
+        			pstado = 3;
+        			that.sendSocketAndMaybeStoreRegistry(Storage.data.Puerta, pstado, counterDoor, false);
+        		}
         	}
         }					
 
