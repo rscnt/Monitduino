@@ -510,9 +510,16 @@ Monitduino.prototype.setupSerialPort = function() {
         		console.log("Usuario Numero 1");
         	}
 
-        	if (puerta === "U1"){
+        	else if (puerta === "U1"){
         		console.log("Usuario Numero 2");
         	}
+        	else {
+        		console.log("Usuario Desconocido")
+        	}
+        	if (puerta === "UC"){
+        		console.log("Usuario Correcto");
+        	}
+        	if 
         	if (puerta == "AOP" || puerta == "OP" || puerta == "EOP" || puerta == "CP"){
         		console.log("estado puerta :" + puerta);
         		if(puerta == "OP")
