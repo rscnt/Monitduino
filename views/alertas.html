@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block header %}
-<h1 class="page-header">Temperatura <small>Metrica de la temperatura en el cuarto.</small></h1>
+<h1 class="page-header">Alertas <small>alertas emitidas en el sistema.</small></h1>
 {% endblock %}
 
 {% block temp %}
@@ -9,34 +9,6 @@
 
 <!-- begin row -->
 <div class="row">
-  <!-- begin col-12 -->
-  <div class="col-md-6 col-sm-6">
-    <div class="widget widget-state bg-blue">
-      <div class="state-icon"><i id="temperatura" class="glyphicon glyphicon-stats"></i></div>
-      <div class="state-info">
-	<h4>Temperatura</h4>
-	<p>
-	  <span id="valor-temperatura-not-dashboard"> 0.0 </span>
-	</p>	
-      </div>
-    </div>
-  </div>
-  <!-- end col-12 --> 
-  <!-- begin col-6 -->
-  <div class="col-md-6 col-sm-6">
-    <div class="widget widget-state bg-black">
-      <div class="state-icon"><i id="liqalarma" class="fa fa-bullhorn"></i></div>
-      <div class="state-info">
-        <h4>Des/Activar alarma</h4>
-        <p>
-          <input id="encender" type="button" class="btn btn-danger m-r-5 m-b-5" value="Encender">
-          <input id="apagar" type="button" class="btn btn-success m-r-5 m-b-5" value="Apagar">
-          <span class="label label-default"></span>
-        </p>  
-      </div>
-    </div>
-  </div>
-  <!-- end col-12 -->
   <!-- begin row -->
   <div class="row">
     <!-- begin col-12 -->
@@ -59,7 +31,7 @@
 		<tr>
                   <th>Nombre</th>
                   <th>Fecha</th>
-                  <th>Valor</th>
+                  <th>Prioridad</th>
 		</tr>
               </thead>
               <tbody>

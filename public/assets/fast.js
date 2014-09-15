@@ -129,7 +129,7 @@ var refreshAlertsDataTable = function() {
 	    $liquidosDataTable.find("tbody").html("");
 	    for(var i in data.items) {
 		var dDate = formatDate(data.items[i].date);
-		var alert = displayBlockOfAlert(data.items[i].value);
+		var alert = displayBlockOfAlert(data.items[i].priority);
 		$liquidosDataTable.find("tbody").append(
 		    "<tr><td>"+data.items[i].registry.name+"</td>"+
 			"<td>"+dDate+"</td>"+
@@ -529,3 +529,5 @@ apagaraire2();
 controlaire1();
 controlaire2();
 controlpuerta();
+refreshAlertsDataTable();
+refreshLiquidosTable();
