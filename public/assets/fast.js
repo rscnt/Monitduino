@@ -469,6 +469,47 @@ var controlaire2 = function(){
 	});
 };
 
+var pabierta = function (){
+	$( "#pabierta.badge" ).css("background-color", "green");
+	$("#pabierta").text("Puerta abierta");
+	$( "#palabierta.badge" ).css("background-color", "gray");
+	$("#palabierta").text("Nada");
+	$( "#pcerrada.badge" ).css("background-color", "gray");
+	$("#pcerrada").text("Nada");
+}
+var pcerrada = function (){
+	$( "#pabierta.badge" ).css("background-color", "gray");
+	$("#pabierta").text("Nada");
+	$( "#palabierta.badge" ).css("background-color", "gray");
+	$("#palabierta").text("Nada");
+	$( "#pcerrada.badge" ).css("background-color", "red");
+	$("#pcerrada").text("Puerta Cerrada");
+}
+var alertapuerta = function (){
+	$( "#pabierta.badge" ).css("background-color", "gray");
+	$("#pabierta").text("Nada");
+	$( "#palabierta.badge" ).css("background-color", "yellow");
+	$("#palabierta").text("Alerta, puerta abierta");
+	$( "#pcerrada.badge" ).css("background-color", "gray");
+	$("#pcerrada").text("Nada");
+}
+var controlpuerta = function()
+{
+	socket.on('estP', function(data) {
+		var estado = data;
+		console.log(estado);
+		if(estado == 1){
+			pabierta();
+		}
+		else if (estado == 2){
+			alertapuerta();
+		}
+		else if (estado == 3){
+			pcerrada();
+		}
+
+	});
+}
 refreshLiquidosTable();
 refreshTemperatruaDataTable();
 refreshHumoDataTable();
@@ -487,3 +528,4 @@ encenderaire2();
 apagaraire2();
 controlaire1();
 controlaire2();
+controlpuerta();
