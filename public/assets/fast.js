@@ -131,7 +131,7 @@ var refreshAlertsDataTable = function() {
 		var dDate = formatDate(data.items[i].date);
 		var alert = displayBlockOfAlert(data.items[i].value);
 		$liquidosDataTable.find("tbody").append(
-		    "<tr><td>"+data.items[i].name+"</td>"+
+		    "<tr><td>"+data.items[i].registry.name+"</td>"+
 			"<td>"+dDate+"</td>"+
 			"<td>"+alert+"</td></tr>"
 		);
