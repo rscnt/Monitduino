@@ -120,6 +120,27 @@ var refreshHumoDataTable = function() {
     }
 };
 
+
+var $refreshAlertTable;
+var refreshAlertsDataTable = function() {
+    $liquidosDataTable = $("#alertas-data-table");
+    if ($liquidosDataTable) {
+	fetchData("alertas", function(data){
+	    $liquidosDataTable.find("tbody").html("");
+	    for(var i in data.items) {
+		var dDate = formatDate(data.items[i].date);
+		var alert = displayBlockOfAlert(data.items[i].value);
+		$liquidosDataTable.find("tbody").append(
+		    "<tr><td>"+data.items[i].name+"</td>"+
+			"<td>"+dDate+"</td>"+
+			"<td>"+alert+"</td></tr>"
+		);
+	    }
+	});
+    }
+};
+
+
 var $label_quantity_alerts = $("#alerts-quantity-label");
 var $notificationSection = $("#notificationSection");
 var stupidWayToBuildDOMForTheAlert = function(message, formatedTime, type) {
@@ -451,6 +472,7 @@ var controlaire2 = function(){
 refreshLiquidosTable();
 refreshTemperatruaDataTable();
 refreshHumoDataTable();
+refreshAlertsDataTable();
 refreshHumedadDataTable();
 refreshLiquidosTable();
 encender();
