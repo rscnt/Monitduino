@@ -7,7 +7,7 @@ var redis = new require("redis"),
 var socketIO;
 var five = require("johnny-five"),
 com = require("serialport");
-var serialPort = new com.SerialPort("/dev/ttyUSB0", {
+var serialPort = new com.SerialPort("/dev/ttyUSB1", {
 	baudrate: 9600,
 	parser: com.parsers.readline('\r\n')
 });
@@ -506,6 +506,7 @@ Monitduino.prototype.setupSerialPort = function() {
         	console.log("Puerta");
         	var puerta = info;
         	var pstado = 0;
+        	/*
         	if (puerta === "U0"){
         		console.log("Usuario Numero 1");
         	}
@@ -519,7 +520,7 @@ Monitduino.prototype.setupSerialPort = function() {
         	if (puerta === "UC"){
         		console.log("Usuario Correcto");
         	}
-        	if 
+        	*/
         	if (puerta == "AOP" || puerta == "OP" || puerta == "EOP" || puerta == "CP"){
         		console.log("estado puerta :" + puerta);
         		if(puerta == "OP")
