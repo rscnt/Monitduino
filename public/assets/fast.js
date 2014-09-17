@@ -164,7 +164,7 @@ socket.on('general', function (data) {
     switch(data.name) {
     case "temperatura":
     case "Temperatura":
-	$("#tempt").text(data.value + " C");
+	$("#tempt").text(data.value + " °C");
 	socket.on('promt', function(data){
 	    var res = [];
 	    if(t.length == 0){
