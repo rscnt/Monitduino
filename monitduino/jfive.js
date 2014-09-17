@@ -11,6 +11,8 @@ var serialPort = new com.SerialPort("/dev/ttyUSB0", {
 	baudrate: 9600,
 	parser: com.parsers.readline('\r\n')
 });
+
+
 var time = 0;
 var l_a = 0;
 var l_b = 0;
@@ -62,12 +64,65 @@ var Monitduino = function(){
 	*/
 };
 
+Monitduino.globals = {alarms:{
+    state: false, 
+    humo: false, 
+    liquidos: false, 
+    liquidoA: false,
+    liquidoB: false,
+    liquidoC: false,
+    temperatura: false, 
+    huemdad: false
+}};
+
 Monitduino.prototype.buildChartOf = function(dataName, DOMContainer) {
       Highcharts.setOptions({
             global: {
                 useUTC: false
             }
         });
+};
+
+Monitduino.prototype.setAlertState = function(state, name) {
+    console.log("State : " + state + " and Name is : " + name);
+    if (state) {
+	switch(name) {
+	case Storage.schemas.Temperatura.schema.name:
+	    Monitduino.globals.alarms.temperatura = true;
+	    break;
+	case  Storage.schemas.Humedad.schema.name:
+	    Monitduino.globals.alarms.humedad = true;
+	    break;
+	case  Storage.schemas.Humo.schema.name:
+	    Monitduino.globals.alarms.humo = true;
+	    break;
+	case  Storage.schemas.LiquidoA.schema.name:
+	    Monitduino.globals.alarms.liquidoA = true;
+	    Monitduino.globals.alarms.liquidos = true;
+	    break;
+	case  Storage.schemas.LiquidoB.schema.name:
+	    Monitduino.globals.alarms.liquidoB = true;
+	    Monitduino.globals.alarms.liquidos = true;
+	    break;
+	case  Storage.schemas.LiquidoC.schema.name:
+	    Monitduino.globals.alarms.liquidoC = true;
+	    Monitduino.globals.alarms.liquidos = true;
+	    break;
+	}
+    } else {
+	console.log("Monitduino");
+	Monitduino.globals.alarms = {
+	    state: state, 
+	    humo: false, 
+	    liquidos: false,
+	    liquidoA: false,
+	    liquidoB: false,
+	    liquidoC: false,
+	    temperatura: false, 
+	    huemdad: false
+	};
+    }
+    Monitduino.globals.alarms.state = state;
 };
 
 Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, counter, store) {
@@ -83,7 +138,7 @@ Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, cou
 			case "temperatura":
 			datoT.push([registry.value]);
 			if (registry.value >= Storage.schemas.Temperatura.schema.max) {
-			    this.activatedesalarm(true);
+			    this.activatedesalarm(true, Storage.schemas.Temperatura.schema.name);
 			    this.socketIO.emit('alert', {name: "temperatura", value: registry.value});
 			}
 			this.socketIO.emit('promt', datoT);
@@ -92,7 +147,7 @@ Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, cou
 			case "humedad":
 			datoH.push([registry.value]);
 			if (registry.value >= Storage.schemas.Humedad.schema.max) {
-			    this.activatedesalarm(true);
+			    this.activatedesalarm(true, Storage.schemas.Humedad.schema.name);
 			    this.socketIO.emit('alert', {name: "humedad", value: registry.value});
 			}
 			this.socketIO.emit('humt', datoH);
@@ -100,28 +155,28 @@ Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, cou
 			case "liquidoA":
 			case "LiquidoA":
 			if (registry.value) {
-			    this.activatedesalarm(true);
+			    this.activatedesalarm(true, Storage.schemas.LiquidoA.schema.name);
 			    this.socketIO.emit('alert', {name: "liquidoA", value: registry.value});
 			}
 			break;
 			case "liquidoB":
 			case "LiquidoB":
 			if (registry.value) {
-			    this.activatedesalarm(true);
+			    this.activatedesalarm(true, Storage.schemas.LiquidoB.schema.name);
 				this.socketIO.emit('alert', {name: "liquidoB", value: registry.value});
 			}
 			break;
 			case "liquidoC":
 			case "LiquidoC":
 			if (registry.value >= Storage.schemas.LiquidoC.schema.max) {
-			    this.activatedesalarm(true);
+			    this.activatedesalarm(true, Storage.schemas.LiquidoC.schema.name);
 			    this.socketIO.emit('alert', {name: "liquidoC", value: registry.value});
 			}
 			break;
 			case "humo":
 			case "humo":
 			if (registry.value) {
-			    this.activatedesalarm(true);
+			    this.activatedesalarm(true, Storage.schemas.Humo.schema.name);
 			    this.socketIO.emit('alert', {name: "humo", value: registry.value});
 			}
 			break;
@@ -267,12 +322,16 @@ Monitduino.prototype.controlaire2 = function(control){
 	return result;
 };
 
-Monitduino.prototype.activatedesalarm = function(activate){
+Monitduino.prototype.activatedesalarm = function(activate, name){
 	var result = false;
 	if(this.alarma !== null && this.alarma !== undefined) {
 	    if(activate || activate === undefined) {
+		this.setAlertState(true, name);
+		this.socketIO.emit("onAlarmStatesChanged", Monitduino.globals.alarms);
 		this.alarma.on();
 	    } else {
+		this.setAlertState(false);
+		this.socketIO.emit("onAlarmStatesChanged", Monitduino.globals.alarms);
 		this.alarma.off();
 	    }
 		result = true;
@@ -330,6 +389,11 @@ Monitduino.prototype.setupBoard = function ()  {
 				holdtime: 1000	
 			});
 
+		    that.alarmaButton = new five.Button({
+			board: that.board,
+			pin: 26
+		    });
+		    
 			that.alarma = new five.Led(13);
 			that.luz1 = new five.Led(30);
 			that.luz2 = new five.Led(31);
@@ -431,6 +495,14 @@ Monitduino.prototype.setupBoard = function ()  {
 	    	that.sendSocketAndMaybeStoreRegistry(Storage.data.Humo, negativeValue, counterSmog, false);
 	    });
 
+		    that.alarmaButton.on("down", function(data){
+			that.setAlertState(true);
+		    });
+
+		    that.alarmaButton.on("up", function(data){
+			that.setAlertState(false);
+		    });
+		 
 	    that.t_rack.on('data', function() {
 		/*
 		 var  tr = (5 * this.value * 100) / 1024;

@@ -53,12 +53,7 @@
 	  <!-- begin header navigation right -->
 	  <ul class="nav navbar-nav navbar-right">
 	    <li>
-	      <form class="navbar-form full-width">
-		<div class="form-group">
-		  <input type="text" class="form-control" placeholder="Ingrese palabra clave" />
-		  <button type="submit" class="btn btn-search"><i class="fa fa-search"></i></button>
-		</div>
-	      </form>
+	      <div id="alert-icon-container" class="btn" style="margin-top: 8px;"> <i id="base-alert-icon" class="fa  fa-bullhorn"></i> </div>
 	    </li>
 	    <li class="dropdown">
 	      <a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle f-s-14">
@@ -266,6 +261,12 @@
     App.init();
     handleLiveUpdatedChart.call();
     handleLiveUpdatedChartH.call();
+    refreshLiquidosTable();
+    refreshTemperatruaDataTable();
+    refreshHumoDataTable();
+    refreshAlertsDataTable();
+    refreshHumedadDataTable();
+    refreshLiquidosTable();
     });
   </script>
 </body>

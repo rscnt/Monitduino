@@ -246,6 +246,177 @@ socket.on('general', function (data) {
     }
 });
 
+function setLabelHumoByValue(valuestr) {
+    if (valuestr === "1"){
+	$( "#humo.label-default" ).css("background-color", "#f89406");
+	$("#humo").text("Activo");
+    }
+    else if(valuestr === "0"){
+	$( "#humo.label-default" ).css("background-color", "#777");
+	$("#humo").text("Inactivo");
+    }
+    else {
+	$("#humo").text("No registro");
+    }
+}
+
+function setLabelLiquidoByValue(valuestr) {
+    if (valuestr === "1"){
+	$( "#liquid.label-default" ).css("background-color", "#f89406");
+	$("#liquid").text("Activo.");
+    }
+    else if(valuestr === "0"){
+	$( "#liquid.label-default" ).css("background-color", "#777");
+	$("#liquid").text("Inactivo.");
+    }
+    else {
+	$("#liquid").text("No registro");
+    }
+
+}
+
+function checkAlertState() {
+    $.get("/alertas/alarma", function(data){
+	setAlertIconState(data.alarma.state);
+	setBlockTemperaturaIconState(data.alarma.temperatura);
+	setBlockHumoIconState(data.alarma.humo);
+	setBlockLiquidoIconState(data.alarma.liquidos);	
+	setBlockLiquidoAIconState(data.liquidoA);
+	setBlockLiquidoBIconState(data.liquidoB);
+	setBlockLiquidoCIconState(data.liquidoC);
+	setBlockHumedadIconState(data.alarma.humedad);
+    });
+};
+checkAlertState();
+
+function setAlertIconState(state) {
+    var $alertIcon = $("#base-alert-icon");
+    if($alertIcon.length) {
+	if (state) {
+	    $alertIcon.css("color", "#990000");
+	} else {
+	    $alertIcon.css("color", "#ccc");
+	}
+    }
+};
+
+function setTemperaturaIconState(state) {
+    var $alertIcon = $("#base-temperatura-icon");
+    if($alertIcon.length) {
+	if (state) {
+	    $alertIcon.css("color", "#990000");
+	} else {
+	    $alertIcon.css("color", "#ccc");
+	}
+    }
+};
+
+function setBlockTemperaturaIconState(state) {
+    var $alertIcon = $("#base-temperatura-icon");
+    if($alertIcon.length) {
+	if (state) {
+	    $alertIcon.css("color", "#990000");
+	} else {
+	    $alertIcon.css("color", "#ccc");
+	}
+    }
+};
+
+function setBlockHumedadIconState(state) {
+    var $alertIcon = $("#base-humedad-icon");
+    if($alertIcon.length) {
+	if (state) {
+	    $alertIcon.css("color", "#990000");
+	} else {
+	    $alertIcon.css("color", "#ccc");
+	}
+    }
+};
+
+function setBlockLiquidoIconState(state) {
+    var $alertIcon = $("#base-liquido-icon");
+    if($alertIcon.length) {
+	if (state) {
+	    setLabelLiquidoByValue("1");
+	    $alertIcon.css("color", "#990000");
+	} else {
+	    setLabelLiquidoByValue("0");
+	    $alertIcon.css("color", "#ccc");
+	}
+    }
+};
+
+
+function setBlockLiquidoAIconState(state) {
+    var $alertIcon = $("#liquidoA");
+    if($alertIcon.length) {
+	if (state) {
+	    setLabelLiquidoByValue("1");
+	    $alertIcon.css("color", "#990000");
+	} else {
+	    setLabelLiquidoByValue("0");
+	    $alertIcon.css("color", "#ccc");
+	}
+    }
+};
+
+function setBlockLiquidoBIconState(state) {
+    var $alertIcon = $("#liquidoB");
+    if($alertIcon.length) {
+	if (state) {
+	    setLabelLiquidoByValue("1");
+	    $alertIcon.css("color", "#990000");
+	} else {
+	    setLabelLiquidoByValue("0");
+	    $alertIcon.css("color", "#ccc");
+	}
+    }
+};
+
+function setBlockLiquidoCIconState(state) {
+    var $alertIcon = $("#liquidoC");
+    if($alertIcon.length) {
+	if (state) {
+	    setLabelLiquidoByValue("1");
+	    $alertIcon.css("color", "#990000");
+	} else {
+	    setLabelLiquidoByValue("0");
+	    $alertIcon.css("color", "#ccc");
+	}
+    }
+};
+
+function setBlockHumoIconState(state) {
+    var $alertIcon = $("#base-humo-icon");
+    if($alertIcon.length) {
+	if (state) {
+	    setLabelHumoByValue("1");
+	    $alertIcon.css("color", "#990000");
+	} else {
+	    setLabelHumoByValue("0");
+	    $alertIcon.css("color", "#ccc");
+	}
+    }
+};
+
+socket.on("onAlarmStatesChanged", function(data){
+    console.log(data);
+    if (data) {
+	setAlertIconState(data.state);
+	setBlockTemperaturaIconState(data.temperatura);
+	setBlockHumedadIconState(data.humedad);
+	setBlockLiquidoIconState(data.liquidos);
+	setBlockLiquidoAIconState(data.liquidoA);
+	setBlockLiquidoBIconState(data.liquidoB);
+	setBlockLiquidoCIconState(data.liquidoC);
+	setBlockHumoIconState(data.humo);
+    }
+});
+
+socket.on('alertState', function(state){
+    setAlertIconState(state);
+});
+
 socket.on('alerta', function (data) {
     switch(data.name) {
     case "temperatura":
@@ -565,13 +736,8 @@ var usuariopuerta = function()
 			controlusuario();
 		}
 	});
-}
-refreshLiquidosTable();
-refreshTemperatruaDataTable();
-refreshHumoDataTable();
-refreshAlertsDataTable();
-refreshHumedadDataTable();
-refreshLiquidosTable();
+};
+
 encender();
 apagar();
 encenderluz1();
