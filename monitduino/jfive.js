@@ -83,7 +83,8 @@ Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, cou
 			case "temperatura":
 			datoT.push([registry.value]);
 			if (registry.value >= Storage.schemas.Temperatura.schema.max) {
-				this.socketIO.emit('alert', {name: "temperatura", value: registry.value});
+			    this.activatedesalarm(true);
+			    this.socketIO.emit('alert', {name: "temperatura", value: registry.value});
 			}
 			this.socketIO.emit('promt', datoT);
 			break;
@@ -91,32 +92,37 @@ Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, cou
 			case "humedad":
 			datoH.push([registry.value]);
 			if (registry.value >= Storage.schemas.Humedad.schema.max) {
-				this.socketIO.emit('alert', {name: "humedad", value: registry.value});
+			    this.activatedesalarm(true);
+			    this.socketIO.emit('alert', {name: "humedad", value: registry.value});
 			}
 			this.socketIO.emit('humt', datoH);
 			break;
 			case "liquidoA":
 			case "LiquidoA":
 			if (registry.value) {
-				this.socketIO.emit('alert', {name: "liquidoA", value: registry.value});
+			    this.activatedesalarm(true);
+			    this.socketIO.emit('alert', {name: "liquidoA", value: registry.value});
 			}
 			break;
 			case "liquidoB":
 			case "LiquidoB":
 			if (registry.value) {
+			    this.activatedesalarm(true);
 				this.socketIO.emit('alert', {name: "liquidoB", value: registry.value});
 			}
 			break;
 			case "liquidoC":
 			case "LiquidoC":
 			if (registry.value >= Storage.schemas.LiquidoC.schema.max) {
-				this.socketIO.emit('alert', {name: "liquidoC", value: registry.value});
+			    this.activatedesalarm(true);
+			    this.socketIO.emit('alert', {name: "liquidoC", value: registry.value});
 			}
 			break;
 			case "humo":
 			case "humo":
 			if (registry.value) {
-				this.socketIO.emit('alert', {name: "humo", value: registry.value});
+			    this.activatedesalarm(true);
+			    this.socketIO.emit('alert', {name: "humo", value: registry.value});
 			}
 			break;
 			case "principal":
@@ -264,7 +270,11 @@ Monitduino.prototype.controlaire2 = function(control){
 Monitduino.prototype.activatedesalarm = function(activate){
 	var result = false;
 	if(this.alarma !== null && this.alarma !== undefined) {
-		activate ? this.alarma.on() : this.alarma.off();
+	    if(activate || activate === undefined) {
+		this.alarma.on();
+	    } else {
+		this.alarma.off();
+	    }
 		result = true;
 	}
 	return result;
@@ -295,7 +305,7 @@ Monitduino.prototype.setupBoard = function ()  {
 				invert: false
 			});
 
-			that.liq_b = new five.Button({
+			that.liq_c = new five.Button({
 				board: that.board,
 				pin: 24,
 				holdtime: 3000,
@@ -327,7 +337,7 @@ Monitduino.prototype.setupBoard = function ()  {
 			that.aire2 = new five.Led(8);
 
 			var lcd = new five.LCD({
-				pins: [12, 11, 5, 4, 3, 2],
+				pins: [12, 11, 5, 4, 3, 2]
 			});
 
 	    //probe
@@ -383,12 +393,15 @@ Monitduino.prototype.setupBoard = function ()  {
 	    if(that.airesC2 === 1){
 	    	that.aire2.brightness(64);
 	    }
+
 	    if (that.airesC2 === 2){
 	    	that.aire2.brightness(128);
 	    }
+
 	    if (that.airesC2 == 3){
 	    	that.aire2.brightness(200);
 	    }
+
 	    if (that.airesC2 === 4){
 	    	that.aire2.brightness(255);
 	    }
@@ -443,7 +456,7 @@ Monitduino.prototype.setupBoard = function ()  {
 				lcd.on("ready", function() { console.log("lcd ready"); });
 				lcd.clear();
 			}
-		}    
+		}; 
 
 	    lcdButton.on('hold', function(){
 	    	console.log("LCD");
@@ -451,7 +464,7 @@ Monitduino.prototype.setupBoard = function ()  {
 	    });
 
 	    lcdButton.on('up', function(){
-	    		refrescarLCD(0)
+	    		refrescarLCD(0);
 	    });
 
 	    
@@ -496,7 +509,7 @@ Monitduino.prototype.setupSerialPort = function() {
         	time++;
         	var ext = info.split(","); 			
         	//recoge la temperatura
-        	celsius = parseFloat(ext[1]); 	
+                var celsius = parseFloat(ext[1]); 	
         	cel = celsius;
         	//recoge la humedad.
         	hum_ = parseFloat(ext[0]);
