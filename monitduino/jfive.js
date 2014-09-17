@@ -122,10 +122,15 @@ Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, cou
 			case "principal":
 			if (registry.value){
 				this.socketIO.emit('estP', registry.value);
-				console.log("enviando puerta");
-				console.log(registry.value);
+				//console.log("enviando puerta");
+				//console.log(registry.value);
 			}
 			break;
+			case "usuario":
+			if (registry.value){
+				this.socketIO.emit('usuario', registry.value);
+				//console.log("enviando usuario");
+			};
 		};   
 
 		this.socketIO.emit('general', registry); 
@@ -511,15 +516,43 @@ Monitduino.prototype.setupSerialPort = function() {
 
         }
         else {
-        	console.log("Puerta");
+        	//console.log("Puerta");
         	var puerta = info;
         	var pstado = 0;
-        	if (puerta === "U0"){
-        		console.log("Usuario Numero 1");
+        	var pusuario = 0;
+        	var pusuarioe = 0;
+        	
+        	if (puerta === "U1")
+        	{
+        		//console.log("Usuario Numero 1");
+        		pusuario = 1;
+        		that.sendSocketAndMaybeStoreRegistry(Storage.data.Usuario, pusuario, counterDoor, false);
         	}
-
-        	if (puerta === "U1"){
+        	else if (puerta === "U2")
+        	{
         		console.log("Usuario Numero 2");
+        		pusuario = 2;
+        		that.sendSocketAndMaybeStoreRegistry(Storage.data.Usuario, pusuario, counterDoor, false);
+        	}
+        	/*
+        	else 
+        	{
+        		//console.log("Usuario Desconocido")
+        		pusuario = 10;
+        		that.sendSocketAndMaybeStoreRegistry(Storage.data.Usuario, pusuario, counterDoor, false);
+        	}
+        	*/
+        	if (puerta === "UC")
+        	{
+        		//console.log("Usuario Correcto");
+        		pusuarioe = 11;
+        		that.sendSocketAndMaybeStoreRegistry(Storage.data.Usuario, pusuarioe, counterDoor, false);
+        	}
+        	else if (puerta === "UI")
+        	{
+        		//console.log("Usuario Incorrecto");
+        		pusuarioe = 12;
+        		that.sendSocketAndMaybeStoreRegistry(Storage.data.Usuario, pusuarioe, counterDoor, false);
         	}
         	if (puerta == "AOP" || puerta == "OP" || puerta == "EOP" || puerta == "CP"){
         		console.log("estado puerta :" + puerta);

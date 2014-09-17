@@ -183,7 +183,7 @@ socket.on('general', function (data) {
     switch(data.name) {
     case "temperatura":
     case "Temperatura":
-	$("#tempt").text(data.value + " C");
+	$("#tempt").text(data.value + " °C");
 	socket.on('promt', function(data){
 	    var res = [];
 	    if(t.length == 0){
@@ -496,16 +496,74 @@ var controlpuerta = function()
 	socket.on('estP', function(data) {
 		var estado = data;
 		console.log(estado);
-		if(estado == 1){
+		if(estado === 1){
 			pabierta();
 		}
-		else if (estado == 2){
+		else if (estado === 2){
 			alertapuerta();
 		}
-		else if (estado == 3){
+		else if (estado === 3){
 			pcerrada();
 		}
 
+	});
+}
+var controlusuario = function(valor){
+	if(valor == 1){
+		$( "#usuario.badge" ).css("background-color", "CadetBlue");
+		$("#usuario").text("Kevin Vasquez");
+	}
+	else if(valor == 2){
+		$( "#usuario.badge" ).css("background-color", "CadetBlue");
+		$("#usuario").text("Lisandro Guardado");	
+	}
+	/*
+	else if(valor == 10){
+		$( "#usuario.badge" ).css("background-color", "Tomato");
+		$("#usuario").text("Usuario Desconocido");	
+	}
+	*/
+	else if(valor === 11){
+		$( "#uscorrecto.badge" ).css("background-color", "MediumSeaGreen");
+		$("#uscorrecto").text("Usuario Correcto");	
+	}
+	else if(valor === 12){
+		$( "#usincorrecto.badge" ).css("background-color", "FireBrick");
+		$("#usincorrecto").text("Usuario Incorrecto");	
+	}
+	else{
+		$( "#usuario.badge" ).css("background-color", "gray");
+		$("#usuario").text("Nadie");
+		$( "#uscorrecto.badge" ).css("background-color", "gray");
+		$("#uscorrecto").text("Nada");
+		$( "#usincorrecto.badge" ).css("background-color", "gray");
+		$("#usincorrecto").text("Nada");	
+	}
+}
+
+var usuariopuerta = function()
+{
+	socket.on('usuario', function(data){
+		var usuario = data;
+		if(usuario === 1){
+			controlusuario(1);
+			//console.log("Kevin Vasquez");
+		}
+		else if(usuario === 2){
+			controlusuario(2);
+			//console.log("Lisandro Guardado");
+		}
+		/*
+		else if(usuario === 10){
+			controlusuario(10);
+		}
+		*/
+		else if(usuario === 11){
+
+		}
+		else{
+			controlusuario();
+		}
 	});
 }
 refreshLiquidosTable();
@@ -527,3 +585,4 @@ apagaraire2();
 controlaire1();
 controlaire2();
 controlpuerta();
+usuariopuerta();
