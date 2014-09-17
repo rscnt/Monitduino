@@ -119,6 +119,15 @@ Storage.schemas  = {
         parse: undefined,
         referenceID: undefined
     },
+    Usuario : {
+        schema : {
+            "name": "usuario",
+            "estado": "seguro",
+            "metric": "datos"
+        },
+        parse: undefined,
+        referenceID: undefined
+    },
     Humo : {
         schema: {
             "name": "humo",
@@ -144,7 +153,8 @@ Storage.data = {
     LiquidoA: "liquidoA",
     LiquidoB: "liquidoB",
     LiquidoC: "liquidoC",
-    Humo: "humo"
+    Humo: "humo",
+    Usuario: "usuario"
 
 };
 
