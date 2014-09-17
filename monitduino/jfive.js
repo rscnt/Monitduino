@@ -62,6 +62,14 @@ var Monitduino = function(){
 	*/
 };
 
+Monitduino.prototype.buildChartOf = function(dataName, DOMContainer) {
+      Highcharts.setOptions({
+            global: {
+                useUTC: false
+            }
+        });
+};
+
 Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, counter, store) {
 	var valor = value;
 	var registry = {name: name, value: value};
@@ -82,7 +90,7 @@ Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, cou
 			case "Humedad":
 			case "humedad":
 			datoH.push([registry.value]);
-			if (registry.value) {
+			if (registry.value >= Storage.schemas.Humedad.schema.max) {
 				this.socketIO.emit('alert', {name: "humedad", value: registry.value});
 			}
 			this.socketIO.emit('humt', datoH);

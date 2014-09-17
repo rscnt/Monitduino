@@ -9,7 +9,8 @@ router.get('/', function(req, resp){
 
 router.get("/data", function(req, resp) {
     db.Registry.findAll({
-        where: {name: {like: "humo"}}
+        where: {name: {like: "humo"}},
+	order: '`date` DESC'
     }).success(function(nodeRegistrations){
 	resp.json({name: "humo", items: nodeRegistrations});
     });    

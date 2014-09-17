@@ -9,7 +9,12 @@ router.get('/', function(req, resp){
 
 router.get("/data", function(req, resp) {
     var predicate = false;
-    db.Alert.findAll({include: [{model: db.Registry, require: true}]}).success(function(nodeRegistrations){
+    db.Alert.findAll(
+	{
+	    include: [{model: db.Registry, require: true}],
+	    order: '`date` DESC'
+	}
+    ).success(function(nodeRegistrations){
 	resp.json({name: "alertas", items: nodeRegistrations});
     });
 });

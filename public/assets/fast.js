@@ -60,7 +60,6 @@ var refreshTemperatruaDataTable = function() {
 
 var $humedadDataTable;
 var refreshHumedadDataTable = function() {
-    console.log("Humedad");
     $humedadDataTable = $("#humedad-data-table");
     if ($humedadDataTable.length) {
 	fetchData("humedad", function(data){
@@ -143,20 +142,19 @@ var refreshAlertsDataTable = function() {
 
 var $label_quantity_alerts = $("#alerts-quantity-label");
 var $notificationSection = $("#notificationSection");
-var stupidWayToBuildDOMForTheAlert = function(message, formatedTime, type) {
+var stupidWayToBuildDOMForTheAlert = function(message, formatedTime, type, linkTo) {
     var strDOM = "<li class=\"media\">";
-    strDOM += "<a href=\"javascript;;\">";
+    strDOM += "<a href=\"/"+ linkTo  +"\">";
     strDOM += "<div class=\"pull-left\">";
     strDOM += "<img src=\"\" class=\"media-object\" alt=\"\"/></div>";
-    strDOM += "<div class=\"media-body\"";
+    strDOM += "<div class=\"media-body\">";
     strDOM += "<h6 class=\"media-heading\">" + message + "</h6>";
     strDOM += "<div class=\"text-muted\">" + formatedTime + "</div>";
     strDOM += "</div></a><li>";
     return strDOM;
 };
+
 socket.on("alert", function(data){
-    console.log("Alerta ");
-    console.log(data);
     switch(data.name) {
     case "LiquidoA":
     case "liquidoA":
@@ -164,19 +162,19 @@ socket.on("alert", function(data){
     case "liquidoB":
     case "LiquidoC":
     case "liquidoC":
-	$notificationSection.append(stupidWayToBuildDOMForTheAlert("Se ha detectado liquidos", moment(Date.now()).format("Do - MM hh:mm:ss")));
+	$notificationSection.append(stupidWayToBuildDOMForTheAlert("Liquidos detectados", moment(Date.now()).format("Do - MM hh:mm:ss"), undefined, "liquidos"));
 	break;
     case "Humedad":
     case "humedad":
-	$notificationSection.append(stupidWayToBuildDOMForTheAlert("Se ha detectado humedad en el cuarto", moment(Date.now()).format("Do - MM hh:mm:ss")));
+	$notificationSection.append(stupidWayToBuildDOMForTheAlert("Niveles de humedad altos", moment(Date.now()).format("Do - MM hh:mm:ss"), undefined, "humedad"));
 	break;
     case "Temperatura":
     case "temperatura":
-	$notificationSection.append(stupidWayToBuildDOMForTheAlert("Se han detectado temperaturas altas", moment(Date.now()).format("Do - MM hh:mm:ss")));
+	$notificationSection.append(stupidWayToBuildDOMForTheAlert("Se han detectado temperaturas altas", moment(Date.now()).format("Do - MM hh:mm:ss"), undefined, "temperatura"));
 	break;
     case "Humo":
     case "humo":
-	$notificationSection.append(stupidWayToBuildDOMForTheAlert("Se han detectado precencia de humo", moment(Date.now()).format("Do - MM hh:mm:ss")));
+	$notificationSection.append(stupidWayToBuildDOMForTheAlert("Se han detectado precencia de humo", moment(Date.now()).format("Do - MM hh:mm:ss"), undefined, "humo"));
 	break;               
     }
 });
@@ -529,5 +527,3 @@ apagaraire2();
 controlaire1();
 controlaire2();
 controlpuerta();
-refreshAlertsDataTable();
-refreshLiquidosTable();
