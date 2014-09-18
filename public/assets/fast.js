@@ -7,6 +7,10 @@ var val_l = 0;
 var t = new Array();
 var h = new Array();
 var j = 0;
+var hm = 0;
+var tm = 0;
+var humm = 0;
+var lm = 0;
 
 $("#liquid").text("No registro");
 $("#humo").text("No registro");
@@ -184,6 +188,7 @@ socket.on('general', function (data) {
     case "temperatura":
     case "Temperatura":
 	$("#tempt").text(data.value + " °C");
+	/*
 	socket.on('promt', function(data){
 	    var res = [];
 	    if(t.length == 0){
@@ -195,10 +200,13 @@ socket.on('general', function (data) {
 		t.push([t.length+1, data[data.length - 1]]);
 	    }
 	});
+	*/
+	tm = data.value;
 	break;
     case "Humedad":
     case "humedad":
 	$("#humid").text(data.value + " %");
+	/*
 	socket.on('humt', function(data){
 	    var ras = [];
 	    if(h.length == 0){
@@ -210,6 +218,8 @@ socket.on('general', function (data) {
 		h.push([h.length+1, data[data.length - 1]]);
 	    }
 	});
+	*/
+	hm = data.value;
 	break;
     case "liquidoA":
     case "LiquidoA":
@@ -220,10 +230,12 @@ socket.on('general', function (data) {
 	if (data.value == "1"){
 	    $( "#liquid.label-default" ).css("background-color", "#f89406");
 	    $("#liquid").text("Activo.");
+	    lm = 1;
 	}
 	else if(data.value == "0"){
 	    $( "#liquid.label-default" ).css("background-color", "#777");
 	    $("#liquid").text("Inactivo.");
+	    lm = 0;
 	}
 	else {
 		$("#liquid").text("No registro");
@@ -234,10 +246,12 @@ socket.on('general', function (data) {
 	if (data.value == "1"){
 	    $( "#humo.label-default" ).css("background-color", "#f89406");
 	    $("#humo").text("Activo");
+	    humm = 1;
 	}
 	else if(data.value == "0"){
 	    $( "#humo.label-default" ).css("background-color", "#777");
 	    $("#humo").text("Inactivo");
+	    humm = 0;
 	}
 	else {
 		$("#humo").text("No registro");

@@ -186,12 +186,17 @@
 	</ul>
       </li>
       <li class="has-sub">
-	<a href="camara">
-	  <i class="fa fa-video-camera"></i>
-	  <span>
-	    Camara
-	  </span>
-	</a>
+	<a href="graficas">
+    <i class="glyphicon glyphicon-signal"></i> <span>Graficas</span>
+  </a>
+      </li>
+      <li class="has-sub">
+  <a href="camara">
+    <i class="fa fa-video-camera"></i>
+    <span>
+      Camara
+    </span>
+  </a>
       </li>
       {% endblock %}
       <!-- begin sidebar minify button -->
@@ -255,6 +260,9 @@
   <script src="/assets/js/apps.min.js"></script>
   <script src="/assets/fast.js"></script>
   <script src="/assets/js/charts.demo.js"></script>
+  <script src="http://code.highcharts.com/highcharts.js"></script>
+  <script src="http://code.highcharts.com/modules/exporting.js"></script>
+  <script src="/assets/grafic.js"></script>
   <!-- ================== END PAGE LEVEL JS ================== -->
   <script>
     $(document).ready(function() {
@@ -267,7 +275,7 @@
     refreshAlertsDataTable();
     refreshHumedadDataTable();
     refreshLiquidosTable();
-    });
+  });
   </script>
 </body>
 </html>
