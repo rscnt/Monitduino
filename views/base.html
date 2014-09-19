@@ -244,7 +244,7 @@
       <![endif]-->
   <script src="/assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
   <!-- ================== END BASE JS ================== -->
-  
+  {% block js %}
   <!-- ================== BEGIN PAGE LEVEL JS ================== -->
   <script src="/assets/plugins/gritter/js/jquery.gritter.js"></script>
   <script src="/assets/plugins/flot/jquery.flot.min.js"></script>
@@ -260,10 +260,8 @@
   <script src="/assets/js/apps.min.js"></script>
   <script src="/assets/fast.js"></script>
   <script src="/assets/js/charts.demo.js"></script>
-  <script src="http://code.highcharts.com/highcharts.js"></script>
-  <script src="http://code.highcharts.com/modules/exporting.js"></script>
-  <script src="/assets/grafic.js"></script>
   <!-- ================== END PAGE LEVEL JS ================== -->
+  {% endblock %}
   <script>
     $(document).ready(function() {
     App.init();

@@ -1,7 +1,7 @@
 1. Alertas:
     + Agregar alarma automatica, quitar la manual.
     + Las notificaciones para todo.
-2. Graficas:
+//Casi 2. Graficas:
     + Las graficas.
     + Cambiar rango de humedad y temperatura (Grafica)
     + Agregar humo y liquido.
@@ -12,5 +12,5 @@
     + Colocar simbologia para temperatura y humedad.
 5. Tareas: 
     + Agregar diagrama de planta.
-    + Colocar opcion graficos.
+//Terminado + Colocar opcion graficos.
     + Cambio de imagenes por Sensores
