@@ -591,7 +591,7 @@ Monitduino.prototype.setupSerialPort = function() {
         		Celsius: celsius,
         		Humedad: hum_
         	};
-        	if(time === 5){
+        	if(time === 1){
         		var alertForTemperature = (object.Celsius >= Storage.schemas.Temperatura.schema.max);
         		var alertForHumidity = (object.Humedad >= Storage.schemas.Humedad.schema.max);
         		that.sendSocketAndMaybeStoreRegistry(Storage.data.Celsius, object.Celsius, counterTemperature, alertForTemperature ? true : false);

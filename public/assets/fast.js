@@ -29,8 +29,9 @@ var fetchData = function(name, callback) {
 };
 
 var formatDate = function(stringDate) {
+    moment.locale("es");
     var date = Date.parse(stringDate),
-	dDate = moment(date).format("MMMM Do YYYY, h:mm:ss a");
+	dDate = moment(date).format("LLL");
     return dDate;
 };
 
@@ -52,7 +53,7 @@ var refreshTemperatruaDataTable = function() {
 		    $temperaturaDataTable.find("tbody").append (
 			"<tr><td> " + data.items[i].name  + "</td> " +
 			    "<td>" + dDate  +  "</td>" + 
-			    "<td>" + data.items[i].value  + "</td>" + 
+			    "<td>" + data.items[i].value  + " ºC </td>" + 
 			    "<td>" + alert + "<td>"
 			    +"</tr>"
 		    );
@@ -74,7 +75,7 @@ var refreshHumedadDataTable = function() {
                    $humedadDataTable.find("tbody").append (
                        "<tr><td> " + data.items[i].name  + "</td> " +
                            "<td>" + dDate  +  "</td>" + 
-                           "<td>" + data.items[i].value  + "</td>" + 
+                           "<td>" + data.items[i].value  + " % </td>" + 
                            "<td>" + alert + "<td>"		    
 			   +"</tr>"
 		    );
@@ -295,9 +296,9 @@ function checkAlertState() {
 	setBlockTemperaturaIconState(data.alarma.temperatura);
 	setBlockHumoIconState(data.alarma.humo);
 	setBlockLiquidoIconState(data.alarma.liquidos);	
-	setBlockLiquidoAIconState(data.liquidoA);
-	setBlockLiquidoBIconState(data.liquidoB);
-	setBlockLiquidoCIconState(data.liquidoC);
+	setBlockLiquidoAIconState(data.alarma.liquidoA);
+	setBlockLiquidoBIconState(data.alarma.liquidoB);
+	setBlockLiquidoCIconState(data.alarma.liquidoC);
 	setBlockHumedadIconState(data.alarma.humedad);
     });
 };
@@ -362,7 +363,8 @@ function setBlockLiquidoIconState(state) {
 
 
 function setBlockLiquidoAIconState(state) {
-    var $alertIcon = $("#liquidoA");
+    var $alertIcon = $("i#liquidoA");
+    console.log("Liquido A : " + state);
     if($alertIcon.length) {
 	if (state) {
 	    setLabelLiquidoByValue("1");
@@ -414,7 +416,6 @@ function setBlockHumoIconState(state) {
 };
 
 socket.on("onAlarmStatesChanged", function(data){
-    console.log(data);
     if (data) {
 	setAlertIconState(data.state);
 	setBlockTemperaturaIconState(data.temperatura);
