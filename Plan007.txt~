@@ -1,8 +1,16 @@
-+ Hacer la pagina de liquidos, pasillo 1, pasillo 2 y pasillo 3. Indiciador para cada uno. fecha y hora.
-+ La pagina de humo, que ahi solo seria el indiciador y poner la fecha y la hora de humazos.
-+ Las notificaciones para todo.
-+ Usuarios.
-+ Las graficas.
-+ La tarjeta, pospuesto. :(
-
-*Rutas de las vistas
+1. Alertas:
+    + Agregar alarma automatica, quitar la manual.
+    + Las notificaciones para todo.
+//Casi 2. Graficas:
+    + Las graficas.
+    + Cambiar rango de humedad y temperatura (Grafica)
+    + Agregar humo y liquido.
+3. Usuarios:
+    + Administracion Usuarios.
+    + Registro de usuarios RFID con fecha y hora.
+4. Registros:
+    + Colocar simbologia para temperatura y humedad.
+5. Tareas: 
+    + Agregar diagrama de planta.
+//Terminado + Colocar opcion graficos.
+    + Cambio de imagenes por Sensores

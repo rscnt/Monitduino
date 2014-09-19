@@ -1,10 +1,5 @@
 1. Alertas:
-    + Agregar alarma automatica, quitar la manual.
     + Las notificaciones para todo.
-//Casi 2. Graficas:
-    + Las graficas.
-    + Cambiar rango de humedad y temperatura (Grafica)
-    + Agregar humo y liquido.
 3. Usuarios:
     + Administracion Usuarios.
     + Registro de usuarios RFID con fecha y hora.
@@ -12,5 +7,4 @@
     + Colocar simbologia para temperatura y humedad.
 5. Tareas: 
     + Agregar diagrama de planta.
-//Terminado + Colocar opcion graficos.
     + Cambio de imagenes por Sensores
