@@ -31,6 +31,7 @@ var cam = require('./routes/cam');
 //var index = require('./routes/general');
 var alertas  = require('./routes/alertas');
 var grafica = require('./routes/graficas');
+var usuarios = require('./routes/usuarios');
 
 var app = express();
 var http = require('http').Server(app);
@@ -73,6 +74,7 @@ app.use('/airc', aircon);
 app.use('/camara', cam);
 app.use("/alertas", alertas);
 app.use("/graficas", grafica);
+app.use("/usuarios", usuarios);
 // app.use('/', index);
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {

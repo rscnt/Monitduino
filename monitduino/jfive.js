@@ -607,18 +607,22 @@ Monitduino.prototype.setupSerialPort = function() {
         	var pstado = 0;
         	var pusuario = 0;
         	var pusuarioe = 0;
-        	
+                var tmpPredicate = true;
         	if (infoPuerta[0] === "U1")
         	{
         		//console.log("Usuario Numero 1");
-        		pusuario = 1;
-        		that.sendSocketAndMaybeStoreRegistry(Storage.data.Usuario, pusuario, counterDoor, true);
+        	    pusuario = 1;
+        	    that.sendSocketAndMaybeStoreRegistry(Storage.data.Usuario, pusuario, counterDoor, tmpPredicate);
+		    tmpPredicate = false;
+		    setTimeout(function(){tmpPredicate = true;}, 2000);
         	}
         	else if (infoPuerta[0] === "U2")
         	{
-        		console.log("Usuario Numero 2");
-        		pusuario = 2;
-        		that.sendSocketAndMaybeStoreRegistry(Storage.data.Usuario, pusuario, counterDoor, true);
+        	    console.log("Usuario Numero 2");
+        	    pusuario = 2;
+        	    that.sendSocketAndMaybeStoreRegistry(Storage.data.Usuario, pusuario, counterDoor, tmpPredicate);
+		    tmpPredicate = false;
+		    setTimeout(function(){tmpPredicate = true;}, 2000);
         	}
         	/*
         	else 
