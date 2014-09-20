@@ -603,21 +603,22 @@ Monitduino.prototype.setupSerialPort = function() {
         else {
         	//console.log("Puerta");
         	var puerta = info;
+	        var infoPuerta = info.split(",");
         	var pstado = 0;
         	var pusuario = 0;
         	var pusuarioe = 0;
         	
-        	if (puerta === "U1")
+        	if (infoPuerta[0] === "U1")
         	{
         		//console.log("Usuario Numero 1");
         		pusuario = 1;
-        		that.sendSocketAndMaybeStoreRegistry(Storage.data.Usuario, pusuario, counterDoor, false);
+        		that.sendSocketAndMaybeStoreRegistry(Storage.data.Usuario, pusuario, counterDoor, true);
         	}
-        	else if (puerta === "U2")
+        	else if (infoPuerta[0] === "U2")
         	{
         		console.log("Usuario Numero 2");
         		pusuario = 2;
-        		that.sendSocketAndMaybeStoreRegistry(Storage.data.Usuario, pusuario, counterDoor, false);
+        		that.sendSocketAndMaybeStoreRegistry(Storage.data.Usuario, pusuario, counterDoor, true);
         	}
         	/*
         	else 
@@ -627,34 +628,34 @@ Monitduino.prototype.setupSerialPort = function() {
         		that.sendSocketAndMaybeStoreRegistry(Storage.data.Usuario, pusuario, counterDoor, false);
         	}
         	*/
-        	if (puerta === "UC")
+        	if (infoPuerta[1] === "UC")
         	{
         		//console.log("Usuario Correcto");
         		pusuarioe = 11;
-        		that.sendSocketAndMaybeStoreRegistry(Storage.data.Usuario, pusuarioe, counterDoor, false);
+        		that.sendSocketAndMaybeStoreRegistry(Storage.data.Usuario, pusuarioe, counterDoor, true);
         	}
-        	else if (puerta === "UI")
+        	else if (infoPuerta[1] === "UI")
         	{
         		//console.log("Usuario Incorrecto");
         		pusuarioe = 12;
-        		that.sendSocketAndMaybeStoreRegistry(Storage.data.Usuario, pusuarioe, counterDoor, false);
+        		that.sendSocketAndMaybeStoreRegistry(Storage.data.Usuario, pusuarioe, counterDoor, true);
         	}
         	if (puerta == "AOP" || puerta == "OP" || puerta == "EOP" || puerta == "CP"){
         		console.log("estado puerta :" + puerta);
         		if(puerta == "OP")
         		{	
         			pstado = 1;
-    				that.sendSocketAndMaybeStoreRegistry(Storage.data.Puerta, pstado, counterDoor, false);
+    				that.sendSocketAndMaybeStoreRegistry(Storage.data.Puerta, pstado, counterDoor, true);
         		}
         		if(puerta == "AOP" || puerta == "EOP")
         		{
         			pstado = 2;
-        			that.sendSocketAndMaybeStoreRegistry(Storage.data.Puerta, pstado, counterDoor, false);
+        			that.sendSocketAndMaybeStoreRegistry(Storage.data.Puerta, pstado, counterDoor, true);
         		}
         		if(puerta == "CP")
         		{
         			pstado = 3;
-        			that.sendSocketAndMaybeStoreRegistry(Storage.data.Puerta, pstado, counterDoor, false);
+        			that.sendSocketAndMaybeStoreRegistry(Storage.data.Puerta, pstado, counterDoor, true);
         		}
         	}
         }					

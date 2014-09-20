@@ -2,7 +2,7 @@ module.exports = function(sequelize, DataTypes) {
     var Registry = sequelize.define('Registry', {
         name: DataTypes.STRING,
         date: DataTypes.DATE,
-        value: DataTypes.FLOAT,
+        value: DataTypes.FLOAT
     }, {
         classMethods: {
             associate: function(models) {

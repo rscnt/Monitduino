@@ -8,4 +8,15 @@ router.get('/', function(req, resp){
     resp.render('puertastate.html', {title: 'Estado Puerta'});
 });
 
+
+router.get("/data", function(req, resp) {
+    db.Registry.findAll({
+        where: {name: {like: "puerta"}},
+	order: '`date` DESC'
+    }).success(function(nodeRegistrations){
+	resp.json({name: "puerta", items: nodeRegistrations});
+    });    
+});
+
+
 module.exports = router;

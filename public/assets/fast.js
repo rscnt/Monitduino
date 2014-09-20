@@ -694,6 +694,7 @@ var controlpuerta = function()
 
 	});
 }
+
 var controlusuario = function(valor){
 	if(valor == 1){
 		$( "#usuario.badge" ).css("background-color", "CadetBlue");
@@ -730,6 +731,7 @@ var controlusuario = function(valor){
 var usuariopuerta = function()
 {
 	socket.on('usuario', function(data){
+	    console.log(data);
 		var usuario = data;
 		if(usuario === 1){
 			controlusuario(1);
@@ -745,7 +747,7 @@ var usuariopuerta = function()
 		}
 		*/
 		else if(usuario === 11){
-
+		    controlusuario(11);
 		}
 		else{
 			controlusuario();
