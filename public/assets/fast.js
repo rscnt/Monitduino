@@ -668,6 +668,8 @@ var pcerrada = function (){
 	$("#palabierta").text("Nada");
 	$( "#pcerrada.badge" ).css("background-color", "red");
 	$("#pcerrada").text("Puerta Cerrada");
+	$( "#usuario.badge" ).css("background-color", "gray");
+	$("#usuario").text("Nadie");
 }
 var alertapuerta = function (){
 	$( "#pabierta.badge" ).css("background-color", "gray");
