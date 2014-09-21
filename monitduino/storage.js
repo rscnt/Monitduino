@@ -137,6 +137,22 @@ Storage.schemas  = {
         },
         parse: undefined,
         referenceID: undefined
+    },
+    Luz_1 : {
+        schema: {
+            "name": "luz_1",
+            "max": 1.0,
+            "min": 0.0,
+            "metric": "Boolean"
+        }
+    },
+    Luz_2 : {
+        schema: {
+            "name": "luz_2",
+            "max": 1.0,
+            "min": 0.0,
+            "metric": "Boolean"
+        }
     }
 };
 
@@ -154,7 +170,9 @@ Storage.data = {
     LiquidoB: "liquidoB",
     LiquidoC: "liquidoC",
     Humo: "humo",
-    Usuario: "usuario"
+    Usuario: "usuario",
+    Luz_1: "luz_1"
+    Luz_2: "luz_2"
 
 };
 
