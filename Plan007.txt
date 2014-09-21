@@ -3,8 +3,6 @@
 3. Usuarios:
     + Administracion Usuarios.
     + Registro de usuarios RFID con fecha y hora.
-4. Registros:
-    + Colocar simbologia para temperatura y humedad.
 5. Tareas: 
     + Agregar diagrama de planta.
     + Cambio de imagenes por Sensores

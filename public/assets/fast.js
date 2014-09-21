@@ -12,183 +12,184 @@ var tm = 0;
 var humm = 0;
 var lm = 0;
 
+/*
+
 $("#liquid").text("No registro");
 $("#humo").text("No registro");
-/*
 $("#tempt").text("No registro");
 $("#humid").text("No registro");
 */
 var fetchData = function(name, callback) {
-    var url = domain + "/" + name + "/data";
-    $.get(url, function(data){
-	console.log(data);
-	if (callback) {
-	    callback(data);
-	}
-    });
+	var url = domain + "/" + name + "/data";
+	$.get(url, function(data){
+		console.log(data);
+		if (callback) {
+			callback(data);
+		}
+	});
 };
 
 var formatDate = function(stringDate) {
-    moment.locale("es");
-    var date = Date.parse(stringDate),
+	moment.locale("es");
+	var date = Date.parse(stringDate),
 	dDate = moment(date).format("LLL");
-    return dDate;
+	return dDate;
 };
 
 var displayBlockOfAlert = function(b){
-    var redBlock = "<div style=\"background: red; width: 100%; height: 10px; display: block;\"></div>";
-    var whiteBlock = "<div style=\"background: white; width: 100%; height: 10px; display: block;\"></div>";
-    return b ? redBlock : whiteBlock;
+	var redBlock = "<div style=\"background: red; width: 100%; height: 10px; display: block;\"></div>";
+	var whiteBlock = "<div style=\"background: white; width: 100%; height: 10px; display: block;\"></div>";
+	return b ? redBlock : whiteBlock;
 };
 
 var $temperaturaDataTable;
 var refreshTemperatruaDataTable = function() {
-    $temperaturaDataTable = $("#temperatura-data-table");
-    if ($temperaturaDataTable) {
-	fetchData("temperatura", function(data){
-	    if (data) {
-		for(var i in data.items) {
-		    var dDate = formatDate(data.items[i].date);
-		    var alert = displayBlockOfAlert(data.items[i].AlertId);
-		    $temperaturaDataTable.find("tbody").append (
-			"<tr><td> " + data.items[i].name  + "</td> " +
-			    "<td>" + dDate  +  "</td>" + 
-			    "<td>" + data.items[i].value  + " ºC </td>" + 
-			    "<td>" + alert + "<td>"
-			    +"</tr>"
-		    );
-		}
-	    }
-	});
-    }
+	$temperaturaDataTable = $("#temperatura-data-table");
+	if ($temperaturaDataTable) {
+		fetchData("temperatura", function(data){
+			if (data) {
+				for(var i in data.items) {
+					var dDate = formatDate(data.items[i].date);
+					var alert = displayBlockOfAlert(data.items[i].AlertId);
+					$temperaturaDataTable.find("tbody").append (
+						"<tr><td> " + data.items[i].name  + "</td> " +
+						"<td>" + dDate  +  "</td>" + 
+						"<td>" + data.items[i].value  + " ºC </td>" + 
+						"<td>" + alert + "<td>"
+						+"</tr>"
+						);
+				}
+			}
+		});
+	}
 };
 
 var $humedadDataTable;
 var refreshHumedadDataTable = function() {
-    $humedadDataTable = $("#humedad-data-table");
-    if ($humedadDataTable.length) {
-	fetchData("humedad", function(data){
-	    if (data !== null && data !== undefined) {
-		for(var i in data.items) {
-		    var dDate = formatDate(data.items[i].date);
-		    var alert = displayBlockOfAlert(data.items[i].AlertId);
-                   $humedadDataTable.find("tbody").append (
-                       "<tr><td> " + data.items[i].name  + "</td> " +
-                           "<td>" + dDate  +  "</td>" + 
-                           "<td>" + data.items[i].value  + " % </td>" + 
-                           "<td>" + alert + "<td>"		    
-			   +"</tr>"
-		    );
-		}
-	    }
-	});
-    }
+	$humedadDataTable = $("#humedad-data-table");
+	if ($humedadDataTable.length) {
+		fetchData("humedad", function(data){
+			if (data !== null && data !== undefined) {
+				for(var i in data.items) {
+					var dDate = formatDate(data.items[i].date);
+					var alert = displayBlockOfAlert(data.items[i].AlertId);
+					$humedadDataTable.find("tbody").append (
+						"<tr><td> " + data.items[i].name  + "</td> " +
+						"<td>" + dDate  +  "</td>" + 
+						"<td>" + data.items[i].value  + " % </td>" + 
+						"<td>" + alert + "<td>"		    
+						+"</tr>"
+						);
+				}
+			}
+		});
+	}
 };
 
 var $liquidosDataTable;
 var refreshLiquidosTable = function() {
-    $liquidosDataTable = $("#liquidos-data-table");
-    if ($liquidosDataTable) {
-	fetchData("liquidos", function(data){
-	    $liquidosDataTable.find("tbody").html("");
-	    for(var i in data.items) {
-		var dDate = formatDate(data.items[i].date);
-		var alert = displayBlockOfAlert(data.items[i].value);
-		$liquidosDataTable.find("tbody").append(
-		    "<tr><td>"+data.items[i].name+"</td>"+
-			"<td>"+dDate+"</td>"+
-			"<td>"+alert+"</td></tr>"
-		);
-	    }
-	});
-    }
+	$liquidosDataTable = $("#liquidos-data-table");
+	if ($liquidosDataTable) {
+		fetchData("liquidos", function(data){
+			$liquidosDataTable.find("tbody").html("");
+			for(var i in data.items) {
+				var dDate = formatDate(data.items[i].date);
+				var alert = displayBlockOfAlert(data.items[i].value);
+				$liquidosDataTable.find("tbody").append(
+					"<tr><td>"+data.items[i].name+"</td>"+
+					"<td>"+dDate+"</td>"+
+					"<td>"+alert+"</td></tr>"
+					);
+			}
+		});
+	}
 };
 
 
 var $humoDataTable;
 var refreshHumoDataTable = function() {
-    $liquidosDataTable = $("#humo-data-table");
-    if ($liquidosDataTable) {
-	fetchData("humo", function(data){
-	    $liquidosDataTable.find("tbody").html("");
-	    for(var i in data.items) {
-		var dDate = formatDate(data.items[i].date);
-		var alert = displayBlockOfAlert(data.items[i].value);
-		$liquidosDataTable.find("tbody").append(
-		    "<tr><td>"+data.items[i].name+"</td>"+
-			"<td>"+dDate+"</td>"+
-			"<td>"+alert+"</td></tr>"
-		);
-	    }
-	});
-    }
+	$liquidosDataTable = $("#humo-data-table");
+	if ($liquidosDataTable) {
+		fetchData("humo", function(data){
+			$liquidosDataTable.find("tbody").html("");
+			for(var i in data.items) {
+				var dDate = formatDate(data.items[i].date);
+				var alert = displayBlockOfAlert(data.items[i].value);
+				$liquidosDataTable.find("tbody").append(
+					"<tr><td>"+data.items[i].name+"</td>"+
+					"<td>"+dDate+"</td>"+
+					"<td>"+alert+"</td></tr>"
+					);
+			}
+		});
+	}
 };
 
 
 var $refreshAlertTable;
 var refreshAlertsDataTable = function() {
-    $liquidosDataTable = $("#alertas-data-table");
-    if ($liquidosDataTable) {
-	fetchData("alertas", function(data){
-	    $liquidosDataTable.find("tbody").html("");
-	    for(var i in data.items) {
-		var dDate = formatDate(data.items[i].date);
-		var alert = displayBlockOfAlert(data.items[i].priority);
-		$liquidosDataTable.find("tbody").append(
-		    "<tr><td>"+data.items[i].registry.name+"</td>"+
-			"<td>"+dDate+"</td>"+
-			"<td>"+alert+"</td></tr>"
-		);
-	    }
-	});
-    }
+	$liquidosDataTable = $("#alertas-data-table");
+	if ($liquidosDataTable) {
+		fetchData("alertas", function(data){
+			$liquidosDataTable.find("tbody").html("");
+			for(var i in data.items) {
+				var dDate = formatDate(data.items[i].date);
+				var alert = displayBlockOfAlert(data.items[i].priority);
+				$liquidosDataTable.find("tbody").append(
+					"<tr><td>"+data.items[i].registry.name+"</td>"+
+					"<td>"+dDate+"</td>"+
+					"<td>"+alert+"</td></tr>"
+					);
+			}
+		});
+	}
 };
 
 
 var $label_quantity_alerts = $("#alerts-quantity-label");
 var $notificationSection = $("#notificationSection");
 var stupidWayToBuildDOMForTheAlert = function(message, formatedTime, type, linkTo) {
-    var strDOM = "<li class=\"media\">";
-    strDOM += "<a href=\"/"+ linkTo  +"\">";
-    strDOM += "<div class=\"pull-left\">";
-    strDOM += "<img src=\"\" class=\"media-object\" alt=\"\"/></div>";
-    strDOM += "<div class=\"media-body\">";
-    strDOM += "<h6 class=\"media-heading\">" + message + "</h6>";
-    strDOM += "<div class=\"text-muted\">" + formatedTime + "</div>";
-    strDOM += "</div></a><li>";
-    return strDOM;
+	var strDOM = "<li class=\"media\">";
+	strDOM += "<a href=\"/"+ linkTo  +"\">";
+	strDOM += "<div class=\"pull-left\">";
+	strDOM += "<img src=\"\" class=\"media-object\" alt=\"\"/></div>";
+	strDOM += "<div class=\"media-body\">";
+	strDOM += "<h6 class=\"media-heading\">" + message + "</h6>";
+	strDOM += "<div class=\"text-muted\">" + formatedTime + "</div>";
+	strDOM += "</div></a><li>";
+	return strDOM;
 };
 
 socket.on("alert", function(data){
-    switch(data.name) {
-    case "LiquidoA":
-    case "liquidoA":
-    case "LiquidoB":
-    case "liquidoB":
-    case "LiquidoC":
-    case "liquidoC":
-	$notificationSection.append(stupidWayToBuildDOMForTheAlert("Liquidos detectados", moment(Date.now()).format("Do - MM hh:mm:ss"), undefined, "liquidos"));
-	break;
-    case "Humedad":
-    case "humedad":
-	$notificationSection.append(stupidWayToBuildDOMForTheAlert("Niveles de humedad altos", moment(Date.now()).format("Do - MM hh:mm:ss"), undefined, "humedad"));
-	break;
-    case "Temperatura":
-    case "temperatura":
-	$notificationSection.append(stupidWayToBuildDOMForTheAlert("Se han detectado temperaturas altas", moment(Date.now()).format("Do - MM hh:mm:ss"), undefined, "temperatura"));
-	break;
-    case "Humo":
-    case "humo":
-	$notificationSection.append(stupidWayToBuildDOMForTheAlert("Se han detectado precencia de humo", moment(Date.now()).format("Do - MM hh:mm:ss"), undefined, "humo"));
-	break;               
-    }
+	switch(data.name) {
+		case "LiquidoA":
+		case "liquidoA":
+		case "LiquidoB":
+		case "liquidoB":
+		case "LiquidoC":
+		case "liquidoC":
+		$notificationSection.append(stupidWayToBuildDOMForTheAlert("Liquidos detectados", moment(Date.now()).format("Do - MM hh:mm:ss"), undefined, "liquidos"));
+		break;
+		case "Humedad":
+		case "humedad":
+		$notificationSection.append(stupidWayToBuildDOMForTheAlert("Niveles de humedad altos", moment(Date.now()).format("Do - MM hh:mm:ss"), undefined, "humedad"));
+		break;
+		case "Temperatura":
+		case "temperatura":
+		$notificationSection.append(stupidWayToBuildDOMForTheAlert("Se han detectado temperaturas altas", moment(Date.now()).format("Do - MM hh:mm:ss"), undefined, "temperatura"));
+		break;
+		case "Humo":
+		case "humo":
+		$notificationSection.append(stupidWayToBuildDOMForTheAlert("Se han detectado precencia de humo", moment(Date.now()).format("Do - MM hh:mm:ss"), undefined, "humo"));
+		break;               
+	}
 });
 
 socket.on('general', function (data) {
-    switch(data.name) {
-    case "temperatura":
-    case "Temperatura":
-	$("#tempt").text(data.value + " °C");
+	switch(data.name) {
+		case "temperatura":
+		case "Temperatura":
+		$("#tempt").text(data.value + " °C");
 	/*
 	socket.on('promt', function(data){
 	    var res = [];
@@ -201,12 +202,12 @@ socket.on('general', function (data) {
 		t.push([t.length+1, data[data.length - 1]]);
 	    }
 	});
-	*/
-	tm = data.value;
-	break;
-    case "Humedad":
-    case "humedad":
-	$("#humid").text(data.value + " %");
+*/
+tm = data.value;
+break;
+case "Humedad":
+case "humedad":
+$("#humid").text(data.value + " %");
 	/*
 	socket.on('humt', function(data){
 	    var ras = [];
@@ -219,234 +220,234 @@ socket.on('general', function (data) {
 		h.push([h.length+1, data[data.length - 1]]);
 	    }
 	});
-	*/
-	hm = data.value;
-	break;
-    case "liquidoA":
-    case "LiquidoA":
-    case "liquidoB":
-    case "LiquidoB":
-    case "LiquidoC":
-    case "liquidoC":
-	if (data.value == "1"){
-	    $( "#liquid.label-default" ).css("background-color", "#f89406");
-	    $("#liquid").text("Activo.");
-	    lm = 1;
+*/
+hm = data.value;
+break;
+case "liquidoA":
+case "LiquidoA":
+case "liquidoB":
+case "LiquidoB":
+case "LiquidoC":
+case "liquidoC":
+if (data.value == "1"){
+	$( "#liquid.label-default" ).css("background-color", "#f89406");
+	$("#liquid").text("Activo.");
+	lm = 1;
+}
+else if(data.value == "0"){
+	$( "#liquid.label-default" ).css("background-color", "#777");
+	$("#liquid").text("Inactivo.");
+	lm = 0;
+}
+else {
+	$("#liquid").text("No registro");
+}
+break;
+case "Humo":
+case "humo":
+if (data.value == "1"){
+	$( "#humo.label-default" ).css("background-color", "#f89406");
+	$("#humo").text("Activo");
+	humm = 1;
+}
+else if(data.value == "0"){
+	$( "#humo.label-default" ).css("background-color", "#777");
+	$("#humo").text("Inactivo");
+	humm = 0;
+}
+else {
+	$("#humo").text("No registro");
+}
+break;
+}
+});
+
+function setLabelHumoByValue(valuestr) {
+	if (valuestr === "1"){
+		$( "#humo.label-default" ).css("background-color", "#f89406");
+		$("#humo").text("Activo");
 	}
-	else if(data.value == "0"){
-	    $( "#liquid.label-default" ).css("background-color", "#777");
-	    $("#liquid").text("Inactivo.");
-	    lm = 0;
-	}
-	else {
-		$("#liquid").text("No registro");
-	}
-	break;
-    case "Humo":
-    case "humo":
-	if (data.value == "1"){
-	    $( "#humo.label-default" ).css("background-color", "#f89406");
-	    $("#humo").text("Activo");
-	    humm = 1;
-	}
-	else if(data.value == "0"){
-	    $( "#humo.label-default" ).css("background-color", "#777");
-	    $("#humo").text("Inactivo");
-	    humm = 0;
+	else if(valuestr === "0"){
+		$( "#humo.label-default" ).css("background-color", "#777");
+		$("#humo").text("Inactivo");
 	}
 	else {
 		$("#humo").text("No registro");
 	}
-	break;
-    }
-});
-
-function setLabelHumoByValue(valuestr) {
-    if (valuestr === "1"){
-	$( "#humo.label-default" ).css("background-color", "#f89406");
-	$("#humo").text("Activo");
-    }
-    else if(valuestr === "0"){
-	$( "#humo.label-default" ).css("background-color", "#777");
-	$("#humo").text("Inactivo");
-    }
-    else {
-	$("#humo").text("No registro");
-    }
 }
 
 function setLabelLiquidoByValue(valuestr) {
-    if (valuestr === "1"){
-	$( "#liquid.label-default" ).css("background-color", "#f89406");
-	$("#liquid").text("Activo.");
-    }
-    else if(valuestr === "0"){
-	$( "#liquid.label-default" ).css("background-color", "#777");
-	$("#liquid").text("Inactivo.");
-    }
-    else {
-	$("#liquid").text("No registro");
-    }
+	if (valuestr === "1"){
+		$( "#liquid.label-default" ).css("background-color", "#f89406");
+		$("#liquid").text("Activo.");
+	}
+	else if(valuestr === "0"){
+		$( "#liquid.label-default" ).css("background-color", "#777");
+		$("#liquid").text("Inactivo.");
+	}
+	else {
+		$("#liquid").text("No registro");
+	}
 
 }
 
 function checkAlertState() {
-    $.get("/alertas/alarma", function(data){
-	setAlertIconState(data.alarma.state);
-	setBlockTemperaturaIconState(data.alarma.temperatura);
-	setBlockHumoIconState(data.alarma.humo);
-	setBlockLiquidoIconState(data.alarma.liquidos);	
-	setBlockLiquidoAIconState(data.alarma.liquidoA);
-	setBlockLiquidoBIconState(data.alarma.liquidoB);
-	setBlockLiquidoCIconState(data.alarma.liquidoC);
-	setBlockHumedadIconState(data.alarma.humedad);
-    });
+	$.get("/alertas/alarma", function(data){
+		setAlertIconState(data.alarma.state);
+		setBlockTemperaturaIconState(data.alarma.temperatura);
+		setBlockHumoIconState(data.alarma.humo);
+		setBlockLiquidoIconState(data.alarma.liquidos);	
+		setBlockLiquidoAIconState(data.alarma.liquidoA);
+		setBlockLiquidoBIconState(data.alarma.liquidoB);
+		setBlockLiquidoCIconState(data.alarma.liquidoC);
+		setBlockHumedadIconState(data.alarma.humedad);
+	});
 };
 checkAlertState();
 
 function setAlertIconState(state) {
-    var $alertIcon = $("#base-alert-icon");
-    if($alertIcon.length) {
-	if (state) {
-	    $alertIcon.css("color", "#990000");
-	} else {
-	    $alertIcon.css("color", "#ccc");
+	var $alertIcon = $("#base-alert-icon");
+	if($alertIcon.length) {
+		if (state) {
+			$alertIcon.css("color", "#990000");
+		} else {
+			$alertIcon.css("color", "#ccc");
+		}
 	}
-    }
 };
 
 function setTemperaturaIconState(state) {
-    var $alertIcon = $("#base-temperatura-icon");
-    if($alertIcon.length) {
-	if (state) {
-	    $alertIcon.css("color", "#990000");
-	} else {
-	    $alertIcon.css("color", "#ccc");
+	var $alertIcon = $("#base-temperatura-icon");
+	if($alertIcon.length) {
+		if (state) {
+			$alertIcon.css("color", "#990000");
+		} else {
+			$alertIcon.css("color", "#ccc");
+		}
 	}
-    }
 };
 
 function setBlockTemperaturaIconState(state) {
-    var $alertIcon = $("#base-temperatura-icon");
-    if($alertIcon.length) {
-	if (state) {
-	    $alertIcon.css("color", "#990000");
-	} else {
-	    $alertIcon.css("color", "#ccc");
+	var $alertIcon = $("#base-temperatura-icon");
+	if($alertIcon.length) {
+		if (state) {
+			$alertIcon.css("color", "#990000");
+		} else {
+			$alertIcon.css("color", "#ccc");
+		}
 	}
-    }
 };
 
 function setBlockHumedadIconState(state) {
-    var $alertIcon = $("#base-humedad-icon");
-    if($alertIcon.length) {
-	if (state) {
-	    $alertIcon.css("color", "#990000");
-	} else {
-	    $alertIcon.css("color", "#ccc");
+	var $alertIcon = $("#base-humedad-icon");
+	if($alertIcon.length) {
+		if (state) {
+			$alertIcon.css("color", "#990000");
+		} else {
+			$alertIcon.css("color", "#ccc");
+		}
 	}
-    }
 };
 
 function setBlockLiquidoIconState(state) {
-    var $alertIcon = $("#base-liquido-icon");
-    if($alertIcon.length) {
-	if (state) {
-	    setLabelLiquidoByValue("1");
-	    $alertIcon.css("color", "#990000");
-	} else {
-	    setLabelLiquidoByValue("0");
-	    $alertIcon.css("color", "#ccc");
+	var $alertIcon = $("#base-liquido-icon");
+	if($alertIcon.length) {
+		if (state) {
+			setLabelLiquidoByValue("1");
+			$alertIcon.css("color", "#990000");
+		} else {
+			setLabelLiquidoByValue("0");
+			$alertIcon.css("color", "#ccc");
+		}
 	}
-    }
 };
 
 
 function setBlockLiquidoAIconState(state) {
-    var $alertIcon = $("i#liquidoA");
-    console.log("Liquido A : " + state);
-    if($alertIcon.length) {
-	if (state) {
-	    setLabelLiquidoByValue("1");
-	    $alertIcon.css("color", "#990000");
-	} else {
-	    setLabelLiquidoByValue("0");
-	    $alertIcon.css("color", "#ccc");
+	var $alertIcon = $("i#liquidoA");
+	console.log("Liquido A : " + state);
+	if($alertIcon.length) {
+		if (state) {
+			setLabelLiquidoByValue("1");
+			$alertIcon.css("color", "#990000");
+		} else {
+			setLabelLiquidoByValue("0");
+			$alertIcon.css("color", "#ccc");
+		}
 	}
-    }
 };
 
 function setBlockLiquidoBIconState(state) {
-    var $alertIcon = $("#liquidoB");
-    if($alertIcon.length) {
-	if (state) {
-	    setLabelLiquidoByValue("1");
-	    $alertIcon.css("color", "#990000");
-	} else {
-	    setLabelLiquidoByValue("0");
-	    $alertIcon.css("color", "#ccc");
+	var $alertIcon = $("#liquidoB");
+	if($alertIcon.length) {
+		if (state) {
+			setLabelLiquidoByValue("1");
+			$alertIcon.css("color", "#990000");
+		} else {
+			setLabelLiquidoByValue("0");
+			$alertIcon.css("color", "#ccc");
+		}
 	}
-    }
 };
 
 function setBlockLiquidoCIconState(state) {
-    var $alertIcon = $("#liquidoC");
-    if($alertIcon.length) {
-	if (state) {
-	    setLabelLiquidoByValue("1");
-	    $alertIcon.css("color", "#990000");
-	} else {
-	    setLabelLiquidoByValue("0");
-	    $alertIcon.css("color", "#ccc");
+	var $alertIcon = $("#liquidoC");
+	if($alertIcon.length) {
+		if (state) {
+			setLabelLiquidoByValue("1");
+			$alertIcon.css("color", "#990000");
+		} else {
+			setLabelLiquidoByValue("0");
+			$alertIcon.css("color", "#ccc");
+		}
 	}
-    }
 };
 
 function setBlockHumoIconState(state) {
-    var $alertIcon = $("#base-humo-icon");
-    if($alertIcon.length) {
-	if (state) {
-	    setLabelHumoByValue("1");
-	    $alertIcon.css("color", "#990000");
-	} else {
-	    setLabelHumoByValue("0");
-	    $alertIcon.css("color", "#ccc");
+	var $alertIcon = $("#base-humo-icon");
+	if($alertIcon.length) {
+		if (state) {
+			setLabelHumoByValue("1");
+			$alertIcon.css("color", "#990000");
+		} else {
+			setLabelHumoByValue("0");
+			$alertIcon.css("color", "#ccc");
+		}
 	}
-    }
 };
 
 socket.on("onAlarmStatesChanged", function(data){
-    if (data) {
-	setAlertIconState(data.state);
-	setBlockTemperaturaIconState(data.temperatura);
-	setBlockHumedadIconState(data.humedad);
-	setBlockLiquidoIconState(data.liquidos);
-	setBlockLiquidoAIconState(data.liquidoA);
-	setBlockLiquidoBIconState(data.liquidoB);
-	setBlockLiquidoCIconState(data.liquidoC);
-	setBlockHumoIconState(data.humo);
-    }
+	if (data) {
+		setAlertIconState(data.state);
+		setBlockTemperaturaIconState(data.temperatura);
+		setBlockHumedadIconState(data.humedad);
+		setBlockLiquidoIconState(data.liquidos);
+		setBlockLiquidoAIconState(data.liquidoA);
+		setBlockLiquidoBIconState(data.liquidoB);
+		setBlockLiquidoCIconState(data.liquidoC);
+		setBlockHumoIconState(data.humo);
+	}
 });
 
 socket.on('alertState', function(state){
-    setAlertIconState(state);
+	setAlertIconState(state);
 });
 
 socket.on('alerta', function (data) {
-    switch(data.name) {
-    case "temperatura":
-    case "Temperatura":
-	break;
-    case "Humedad":
-    case "humedad":
-	break;
-    case "liquido":
-    case "Liquido":
-	break;
-    case "Humo":
-    case "humo":
-	break;
-    }    
+	switch(data.name) {
+		case "temperatura":
+		case "Temperatura":
+		break;
+		case "Humedad":
+		case "humedad":
+		break;
+		case "liquido":
+		case "Liquido":
+		break;
+		case "Humo":
+		case "humo":
+		break;
+	}    
 });
 
 var $liquidoAEl = $("#liquidoA");
@@ -457,85 +458,85 @@ var $temperaturaIconDetail = $("#temperatura-icon-detail");
 var $humedadIndicator = $("#valor-humedad-not-dashboard");
 var $humedadIconDetail = $("#humedad-icon-detail");
 socket.on('general', function(data){
-    switch(data.name) {
-    case "Humedad":
-    case "humedad":
-	if ($humedadIndicator) {
-	    $humedadIndicator.html(data.value);
+	switch(data.name) {
+		case "Humedad":
+		case "humedad":
+		if ($humedadIndicator) {
+			$humedadIndicator.html(data.value);
+		}
+		if (data.AlertId) {
+			$humedadIconDetail.css("color", "red");
+		} else {
+			$humedadIconDetail.css("color", "white");
+		}
+		break;
+		case "Temperatura":
+		case "temperatura":
+		if ($temperatureIndicator) {
+			$temperatureIndicator.html(data.value);
+		}
+		if (data.AlertId) {
+			$temperaturaIconDetail.css("color", "red");
+		} else {
+			$temperaturaIconDetail.css("color", "white");
+		} 
+		break;
+		case "liquidoA":
+		case "LiquidoA":
+		if ($liquidoAEl) {
+			if (data.value === "1") {
+				$liquidoAEl.css('color', '#ed0000');
+			} else {
+				$liquidoAEl.css('color', '#fff');
+			}
+		}
+		break;
+		case "liquidoB":
+		case "LiquidoB":
+		if ($liquidoBEl) {
+			if (data.value === "1") {
+				$liquidoBEl.css('color', '#ed0000');
+			} else {
+				$liquidoBEl.css('color', '#fff');
+			}
+		}	
+		break;
+		case "LiquidoC":
+		case "liquidoC":
+		if ($liquidoCEl) {
+			if (data.value === "1") {
+				$liquidoCEl.css('color', '#ed0000');
+			} else {
+				$liquidoCEl.css('color', '#fff');
+			}
+		}	
+		break;
 	}
-	if (data.AlertId) {
-	    $humedadIconDetail.css("color", "red");
-	} else {
-	    $humedadIconDetail.css("color", "white");
-	}
-  	break;
-    case "Temperatura":
-    case "temperatura":
-	if ($temperatureIndicator) {
-	    $temperatureIndicator.html(data.value);
-	}
-	if (data.AlertId) {
-	    $temperaturaIconDetail.css("color", "red");
-	} else {
-	    $temperaturaIconDetail.css("color", "white");
-	} 
-	break;
-    case "liquidoA":
-    case "LiquidoA":
-	if ($liquidoAEl) {
-	    if (data.value === "1") {
-		$liquidoAEl.css('color', '#ed0000');
-	    } else {
-		$liquidoAEl.css('color', '#fff');
-	    }
-	}
-	break;
-    case "liquidoB":
-    case "LiquidoB":
-	if ($liquidoBEl) {
-	    if (data.value === "1") {
-		$liquidoBEl.css('color', '#ed0000');
-	    } else {
-		$liquidoBEl.css('color', '#fff');
-	    }
-	}	
-	break;
-    case "LiquidoC":
-    case "liquidoC":
-	if ($liquidoCEl) {
-	    if (data.value === "1") {
-		$liquidoCEl.css('color', '#ed0000');
-	    } else {
-		$liquidoCEl.css('color', '#fff');
-	    }
-	}	
-	break;
-    }
 }); 
 
 socket.on('promt', function(data){
-    var res = [];
-    if(t.length == 0){
-	for (var i = 0; i <= data.length; ++i) {
-	    res.push([i, data[i]]);
+	var res = [];
+	if(t.length == 0){
+		for (var i = 0; i <= data.length; ++i) {
+			res.push([i, data[i]]);
+		}
+		t = res;
+	} else {
+		t.push([t.length+1, data[data.length - 1]]);
 	}
-	t = res;
-    } else {
-	t.push([t.length+1, data[data.length - 1]]);
-    }
-    j++;
+	j++;
 });
 
 socket.on('humt', function(data){
-    var ras = [];
-    if(h.length == 0){
-	for (var i = 0; i < data.length; ++i) {
-	    ras.push([i, data[i]]);
+	var ras = [];
+	if(h.length == 0){
+		for (var i = 0; i < data.length; ++i) {
+			ras.push([i, data[i]]);
+		}
+		h = ras;
+	} else {
+		h.push([h.length+1, data[data.length - 1]]);
 	}
-	h = ras;
-    } else {
-	h.push([h.length+1, data[data.length - 1]]);
-    }
 });
 
 var encender = function (){
@@ -660,6 +661,7 @@ var pabierta = function (){
 	$("#palabierta").text("Nada");
 	$( "#pcerrada.badge" ).css("background-color", "gray");
 	$("#pcerrada").text("Nada");
+	$("#puerta").attr('src','pexpoab.jpg')
 }
 var pcerrada = function (){
 	$( "#pabierta.badge" ).css("background-color", "gray");
@@ -670,6 +672,7 @@ var pcerrada = function (){
 	$("#pcerrada").text("Puerta Cerrada");
 	$( "#usuario.badge" ).css("background-color", "gray");
 	$("#usuario").text("Nadie");
+	$("#puerta").attr('src','pexpofa.jpg')
 }
 var alertapuerta = function (){
 	$( "#pabierta.badge" ).css("background-color", "gray");
@@ -678,6 +681,7 @@ var alertapuerta = function (){
 	$("#palabierta").text("Alerta, puerta abierta");
 	$( "#pcerrada.badge" ).css("background-color", "gray");
 	$("#pcerrada").text("Nada");
+	$("#puerta").attr('src','pexpoab.jpg')
 }
 var controlpuerta = function()
 {
@@ -733,7 +737,7 @@ var controlusuario = function(valor){
 var usuariopuerta = function()
 {
 	socket.on('usuario', function(data){
-	    console.log(data);
+		console.log(data);
 		var usuario = data;
 		if(usuario === 1){
 			controlusuario(1);
@@ -749,13 +753,18 @@ var usuariopuerta = function()
 		}
 		*/
 		else if(usuario === 11){
-		    controlusuario(11);
+			controlusuario(11);
 		}
 		else{
 			controlusuario();
 		}
 	});
 };
+
+var luzencendida = function()
+{
+	socket.on('')
+}
 
 encender();
 apagar();

@@ -1,132 +1,131 @@
 {% extends "base.html" %}
 
 {% block header %}
-			<h1 class="page-header">Control de temperatura <small>Control de los aires y temperatura.</small></h1>
+<h1 class="page-header">Control de temperatura <small>Control de los aires y temperatura.</small></h1>
 {% endblock %}
 
 {% block temp %}
 <!-- begin row -->
-			<div class="row">
-			    <!-- begin col-6 -->
-			    <div class="col-md-6">
-			        <div class="panel panel-inverse">
-                        <div class="panel-heading">
-                            <div class="panel-heading-btn">
-                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
-                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
-                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
-                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
-                            </div>
-                            <h4 class="panel-title">Control Aire 1</h4>
-                        </div>
-                        <div class="panel-body">
-                            <p>
-								<div class="btn-group">
-								<input id="a1b" type="button" class="btn btn-white" value="Bajo">
-								<input id="a1m" type="button" class="btn btn-white" value="Medio">
-								<input id="a1o" type="button" class="btn btn-white" value="Optimo">
-								<input id="a1a" type="button" class="btn btn-white" value="Alto">
-							</div>
-							</p>
-                        </div>
-                    </div>
-			    </div>
-			    <!-- end col-6 -->
-			    <!-- begin col-6 -->
-			    <div class="col-md-6">
-			        <div class="panel panel-inverse">
-                        <div class="panel-heading">
-                            <div class="panel-heading-btn">
-                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
-                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
-                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
-                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
-                            </div>
-                            <h4 class="panel-title">Control Aire 2</h4>
-                        </div>
-                        <div class="panel-body">
-                            <p>
-								<div class="btn-group">
-								<input id="a2b" type="button" class="btn btn-white" value="Bajo">
-								<input id="a2m" type="button" class="btn btn-white" value="Medio">
-								<input id="a2o" type="button" class="btn btn-white" value="Optimo">
-								<input id="a2a" type="button" class="btn btn-white" value="Alto">
-							</div>
-							</p>
-                        </div>
-                    </div>
-			    </div>
-			    <!-- end col-6 -->
-			</div>
-			<!-- end row -->
-			    <!-- begin row -->
-			    <div class="row">
-			    <!-- begin col-6 -->
-			    <div class="col-md-6">
-			        <div class="panel panel-inverse">
-                        <div class="panel-heading">
-                            <div class="panel-heading-btn">
-                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
-                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
-                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
-                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
-                            </div>
-                            <h4 class="panel-title">Aire 1</h4>
-                        </div>
-                        <div class="panel-body">
-							 <p>
-								<input id="air1e" type="button" class="btn btn-danger m-r-5 m-b-5" value="Encender">
-								<input id="air1o" type="button" class="btn btn-success m-r-5 m-b-5" value="Apagar">
-								<span class="fa fa-cubes">Estado</span>
-							</p>
-                        </div>
-                    </div>
-			    </div>
-			    <!-- end col-6 -->
-			    <!-- begin col-6 -->
-			    <div class="col-md-6">
-			        <div class="panel panel-inverse">
-                        <div class="panel-heading">
-                            <div class="panel-heading-btn">
-                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
-                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
-                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
-                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
-                            </div>
-                            <h4 class="panel-title">Aire 2</h4>
-                        </div>
-                        <div class="panel-body">
-							 <p>
-								<input id="air2e" type="button" class="btn btn-danger m-r-5 m-b-5" value="Encender">
-								<input id="air2o" type="button" class="btn btn-success m-r-5 m-b-5" value="Apagar">
-								<span class="fa fa-cubes">Estado</span>
-							</p>
-						</div>
-					</div>
-			    </div>
-			    <!-- end col-6 -->
-			</div>
-			<!-- end row -->
-			<!-- begin row -->
-			<div class="row">
-				<!-- begin panel -->
-				<div class="panel panel-primary">
-					<div class="panel-heading">
-						<div class="panel-heading-btn">
-							<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
-							<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
-							<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
-							<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
-						</div>
-						<h4 class="panel-title">
-						Ubicación de Aires.
-						</h4>
-					</div>
-					<div class="panel-body">
-						<div style="width: 100%; height: 500px; background: #2e2e2e"></div>
-						<img src="/assets/img/DiagramaAires.jpg" alt="Ubicacion Aires" height="400px" width="80%">
-					</div>
+<div class="row">
+	<!-- begin col-6 -->
+	<div class="col-md-6">
+		<div class="panel panel-inverse">
+			<div class="panel-heading">
+				<div class="panel-heading-btn">
+					<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+					<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
+					<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+					<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
 				</div>
-				<!-- end panel -->
+				<h4 class="panel-title">Control Aire 1</h4>
 			</div>
+			<div class="panel-body">
+				<p>
+					<div class="btn-group">
+						<input id="a1b" type="button" class="btn btn-white" value="Bajo">
+						<input id="a1m" type="button" class="btn btn-white" value="Medio">
+						<input id="a1o" type="button" class="btn btn-white" value="Optimo">
+						<input id="a1a" type="button" class="btn btn-white" value="Alto">
+					</div>
+				</p>
+			</div>
+		</div>
+	</div>
+	<!-- end col-6 -->
+	<!-- begin col-6 -->
+	<div class="col-md-6">
+		<div class="panel panel-inverse">
+			<div class="panel-heading">
+				<div class="panel-heading-btn">
+					<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+					<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
+					<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+					<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+				</div>
+				<h4 class="panel-title">Control Aire 2</h4>
+			</div>
+			<div class="panel-body">
+				<p>
+					<div class="btn-group">
+						<input id="a2b" type="button" class="btn btn-white" value="Bajo">
+						<input id="a2m" type="button" class="btn btn-white" value="Medio">
+						<input id="a2o" type="button" class="btn btn-white" value="Optimo">
+						<input id="a2a" type="button" class="btn btn-white" value="Alto">
+					</div>
+				</p>
+			</div>
+		</div>
+	</div>
+	<!-- end col-6 -->
+</div>
+<!-- end row -->
+<!-- begin row -->
+<div class="row">
+	<!-- begin col-6 -->
+	<div class="col-md-6">
+		<div class="panel panel-inverse">
+			<div class="panel-heading">
+				<div class="panel-heading-btn">
+					<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+					<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
+					<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+					<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+				</div>
+				<h4 class="panel-title">Aire 1</h4>
+			</div>
+			<div class="panel-body">
+				<p>
+					<input id="air1e" type="button" class="btn btn-danger m-r-5 m-b-5" value="Encender">
+					<input id="air1o" type="button" class="btn btn-success m-r-5 m-b-5" value="Apagar">
+					<span class="fa fa-cubes">Estado</span>
+				</p>
+			</div>
+		</div>
+	</div>
+	<!-- end col-6 -->
+	<!-- begin col-6 -->
+	<div class="col-md-6">
+		<div class="panel panel-inverse">
+			<div class="panel-heading">
+				<div class="panel-heading-btn">
+					<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+					<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
+					<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+					<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+				</div>
+				<h4 class="panel-title">Aire 2</h4>
+			</div>
+			<div class="panel-body">
+				<p>
+					<input id="air2e" type="button" class="btn btn-danger m-r-5 m-b-5" value="Encender">
+					<input id="air2o" type="button" class="btn btn-success m-r-5 m-b-5" value="Apagar">
+					<span class="fa fa-cubes">Estado</span>
+				</p>
+			</div>
+		</div>
+	</div>
+	<!-- end col-6 -->
+</div>
+<!-- end row -->
+<!-- begin row -->
+<div class="row">
+	<!-- begin panel -->
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<div class="panel-heading-btn">
+				<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+				<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
+				<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
+				<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
+			</div>
+			<h4 class="panel-title">
+				Ubicación de Aires.
+			</h4>
+		</div>
+		<div class="panel-body">
+			<img id="puerta" src="/assets/img/pexpove.jpg" alt="Vista cuarto"  style="display: block; margin-top: 0px; margin-bootom:0px; margin-left: auto; margin-right: auto; width: 60%;">
+		</div>
+	</div>
+	<!-- end panel -->
+</div>
 {% endblock %}

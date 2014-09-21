@@ -21,10 +21,13 @@ var cel = 0;
 var hum = 0;
 var counterLiquidsA = 0;
 var counterLiquidsB = 0;
+var counterLiquidsc = 0;
 var counterTemperature = 0;
 var counterHumidity = 0;
 var counterSmog = 0;
 var counterDoor = 0;
+var counterLuz = 0;
+var counterLuz2 = 0;
 var datoT = [];
 var datoH = [];
 var regexp = /(^([\d.,])*)$/;
@@ -119,7 +122,7 @@ Monitduino.prototype.setAlertState = function(state, name) {
 	    liquidoB: false,
 	    liquidoC: false,
 	    temperatura: false, 
-	    huemdad: false
+	    humedad: false
 	};
     }
     Monitduino.globals.alarms.state = state;
@@ -191,7 +194,18 @@ Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, cou
 			if (registry.value){
 				this.socketIO.emit('usuario', registry.value);
 				//console.log("enviando usuario");
-			};
+			}
+			break;
+			case "luz_1":
+			if (registry.value){
+				this.socketIO.emit('estL', registry.value);
+			}
+			break;
+			case "luz_2":
+			if (registry.value){
+				this.socketIO.emit('estL', registry.value);
+			}
+			break;
 		};   
 
 		this.socketIO.emit('general', registry); 
@@ -393,7 +407,17 @@ Monitduino.prototype.setupBoard = function ()  {
 			board: that.board,
 			pin: 26
 		    });
+
+		    that.luz_1 = new five.Button({
+		    	board: that.board,
+		    	pin: 40
+		    });
 		    
+		    that.luz_2 = new five.Button({
+		    	board: that.board,
+		    	pin: 41
+		    });
+
 			that.alarma = new five.Led(13);
 			that.luz1 = new five.Led(30);
 			that.luz2 = new five.Led(31);
@@ -487,6 +511,14 @@ Monitduino.prototype.setupBoard = function ()  {
 	    	that.sendSocketAndMaybeStoreRegistry(Storage.data.LiquidoB, negativeValue, counterLiquidsB, false);
 	    });
 
+	     that.liq_c.on('hold', function(data){
+	    	that.sendSocketAndMaybeStoreRegistry(Storage.data.LiquidoC, positiveValue, counterLiquidsC, true);
+	    });
+
+	    that.liq_c.on('up', function(data){
+	    	that.sendSocketAndMaybeStoreRegistry(Storage.data.LiquidoC, negativeValue, counterLiquidsC, false);
+	    });
+
 	    that.hum_a.on('hold', function(data){
 	    	that.sendSocketAndMaybeStoreRegistry(Storage.data.Humo, positiveValue, counterSmog, true);
 	    });
@@ -510,6 +542,12 @@ Monitduino.prototype.setupBoard = function ()  {
 		 */
 		});
 
+	    that.luz_1.on('down', function(){
+	    	that.sendSocketAndMaybeStoreRegistry(Storage.data.Luz_1, positiveValue, counterSmog, false);
+	    });
+	    that.luz_1.on('up', function(){
+	    	that.sendSocketAndMaybeStoreRegistry(Storage.data.Luz_1, negativeValue, counterSmog, false);
+	    });
 	    
 	    lcd.on("ready", function() {});
 
