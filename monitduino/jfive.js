@@ -21,7 +21,7 @@ var cel = 0;
 var hum = 0;
 var counterLiquidsA = 0;
 var counterLiquidsB = 0;
-var counterLiquidsc = 0;
+var counterLiquidsC = 0;
 var counterTemperature = 0;
 var counterHumidity = 0;
 var counterSmog = 0;
@@ -199,13 +199,20 @@ Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, cou
 			case "luz_1":
 			if (registry.value){
 				this.socketIO.emit('estL', registry.value);
+				console.log(registry.value);
 			}
 			break;
 			case "luz_2":
 			if (registry.value){
-				this.socketIO.emit('estL', registry.value);
+				this.socketIO.emit('estL2', registry.value);
 			}
 			break;
+			case "aire_1":
+			if (registry.value){
+				this.socketIO.emit('estA', registry.value);
+				console.log(registry.value);
+			}
+			break;			
 		};   
 
 		this.socketIO.emit('general', registry); 
@@ -410,12 +417,23 @@ Monitduino.prototype.setupBoard = function ()  {
 
 		    that.luz_1 = new five.Button({
 		    	board: that.board,
-		    	pin: 40
+		    	pin: 40,
+		    	holdtime: 500,
+		    	invert: false
 		    });
 		    
 		    that.luz_2 = new five.Button({
 		    	board: that.board,
-		    	pin: 41
+		    	pin: 41,
+		    	holdtime: 500,
+		    	invert: false
+		    });
+
+		    that.aire_1 = new five.Button({
+		    	board: that.board,
+		    	pin: 42,
+		    	holdtime: 500,
+		    	invert: false
 		    });
 
 			that.alarma = new five.Led(13);
@@ -542,12 +560,25 @@ Monitduino.prototype.setupBoard = function ()  {
 		 */
 		});
 
-	    that.luz_1.on('down', function(){
-	    	that.sendSocketAndMaybeStoreRegistry(Storage.data.Luz_1, positiveValue, counterSmog, false);
+	    that.luz_1.on('hold', function(){
+	    	that.sendSocketAndMaybeStoreRegistry(Storage.data.Luz_1, positiveValue, 0, false);
 	    });
 	    that.luz_1.on('up', function(){
-	    	that.sendSocketAndMaybeStoreRegistry(Storage.data.Luz_1, negativeValue, counterSmog, false);
+	    	that.sendSocketAndMaybeStoreRegistry(Storage.data.Luz_1, negativeValue, 0, false);
 	    });
+	    that.luz_2.on('hold', function(){
+	    	that.sendSocketAndMaybeStoreRegistry(Storage.data.Luz_2, positiveValue, 0, false);
+	    });
+	    that.luz_2.on('up', function(){
+	    	that.sendSocketAndMaybeStoreRegistry(Storage.data.Luz_2, negativeValue, 0, false);
+	    });
+	    that.aire_1.on('hold', function(){
+	    	that.sendSocketAndMaybeStoreRegistry(Storage.data.Aire_1, positiveValue, 0, false);
+	    });
+	    that.aire_1.on('up', function(){
+	    	that.sendSocketAndMaybeStoreRegistry(Storage.data.Aire_1, negativeValue, 0, false);
+	    });
+
 	    
 	    lcd.on("ready", function() {});
 
@@ -629,7 +660,7 @@ Monitduino.prototype.setupSerialPort = function() {
         		Celsius: celsius,
         		Humedad: hum_
         	};
-        	if(time === 1){
+        	if(time === 7){
         		var alertForTemperature = (object.Celsius >= Storage.schemas.Temperatura.schema.max);
         		var alertForHumidity = (object.Humedad >= Storage.schemas.Humedad.schema.max);
         		that.sendSocketAndMaybeStoreRegistry(Storage.data.Celsius, object.Celsius, counterTemperature, alertForTemperature ? true : false);

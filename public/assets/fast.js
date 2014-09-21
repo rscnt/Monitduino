@@ -761,9 +761,66 @@ var usuariopuerta = function()
 	});
 };
 
-var luzencendida = function()
-{
-	socket.on('')
+var estadoLuz = function()
+{	
+
+	socket.on('estL', function(data){
+		var estado = data;
+		console.log(estado + "hola");
+		if(estado === "1"){
+			console.log("Encendido");
+			$("#luz1st .fa.fa-bolt").css("color", "orange");
+			$("#luz1sttext").text(" Encendido");
+		}
+		else if(estado === "0"){
+			console.log("Apagado");
+			$("#luz1st .fa.fa-bolt").css("color", "gray");
+			$("#luz1sttext").text(" Apagado");
+
+		}
+		else {
+			$("#luz1st.fa fa-bolt").css("color", "gray");
+			$("#luz1st").text(" Sin estado");
+		}
+	});
+	socket.on('estL2', function(data){
+		var estat = data;
+		if(estat === "1"){
+			$("#luz2st .fa.fa-bolt").css("color", "orange");
+			$("#luz2sttext").text(" Encendido");
+		}
+		else if(estat === "0"){
+			$("#luz2st .fa.fa-bolt").css("color", "gray");
+			$("#luz2sttext").text(" Apagado");
+		}
+		else {
+			$("#luz2st").css("background-color", "gray");
+			$("#luz2st").text(" Sin estado");
+		}
+	});
+}
+
+var estadoAire = function() {
+
+	socket.on('estA', function(data){
+		var estad = data;
+		console.log(estad + "hola");
+		if(estad === "1"){
+			console.log("Encendido");
+			$("#air1st .fa.fa-cubes").css("color", "blue");
+			$("#air1sttext").text(" Encendido");
+		}
+		else if(estad === "0"){
+			console.log("Apagado");
+			$("#air1st .fa.fa-cubes").css("color", "gray");
+			$("#air1sttext").text(" Apagado");
+
+		}
+		else {
+			$("#air1st.fa fa-bolt").css("color", "gray");
+			$("#air1st").text(" Sin estado");
+		}
+	});
 }
 
 encender();
@@ -780,3 +837,5 @@ controlaire1();
 controlaire2();
 controlpuerta();
 usuariopuerta();
+estadoLuz();
+estadoAire();

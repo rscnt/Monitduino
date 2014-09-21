@@ -141,7 +141,7 @@ Storage.schemas  = {
     Luz_1 : {
         schema: {
             "name": "luz_1",
-            "max": 1.0,
+            "max": 100,
             "min": 0.0,
             "metric": "Boolean"
         }
@@ -149,7 +149,15 @@ Storage.schemas  = {
     Luz_2 : {
         schema: {
             "name": "luz_2",
-            "max": 1.0,
+            "max": 100,
+            "min": 0.0,
+            "metric": "Boolean"
+        }
+    },
+    Aire_1 : {
+        schema: {
+            "name": "aire_1",
+            "max": 100,
             "min": 0.0,
             "metric": "Boolean"
         }
@@ -171,8 +179,9 @@ Storage.data = {
     LiquidoC: "liquidoC",
     Humo: "humo",
     Usuario: "usuario",
-    Luz_1: "luz_1"
-    Luz_2: "luz_2"
+    Luz_1: "luz_1",
+    Luz_2: "luz_2",
+    Aire_1: "aire_1"
 
 };
 
