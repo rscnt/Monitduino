@@ -126,9 +126,11 @@ db
         var server = http.listen(app.get('port'), function() {
             debug('Express server listening on port ' + server.address().port);
 	    monitduino.initStorage();
-            io.on('connection', function(socket) {
-		monitduino.setSocket(socket);
-            });
+
+        monitduino.setSocket(io);
+        io.sockets.on('connection', function(socket) {
+            console.log(socket.id);
+        });
         });
     }
 });

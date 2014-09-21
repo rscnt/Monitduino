@@ -1,5 +1,6 @@
 var Storage = new require("./storage"),
     storage = new Storage();
+var _ = require("lodash");
 /*
 var redis = new require("redis"),
     client = redis.createClient();
@@ -7,7 +8,7 @@ var redis = new require("redis"),
 var socketIO;
 var five = require("johnny-five"),
 com = require("serialport");
-var serialPort = new com.SerialPort("/dev/ttyUSB0", {
+var serialPort = new com.SerialPort("/dev/ttyUSB1", {
 	baudrate: 9600,
 	parser: com.parsers.readline('\r\n')
 });
@@ -142,80 +143,80 @@ Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, cou
 			datoT.push([registry.value]);
 			if (registry.value >= Storage.schemas.Temperatura.schema.max) {
 			    this.activatedesalarm(true, Storage.schemas.Temperatura.schema.name);
-			    this.socketIO.emit('alert', {name: "temperatura", value: registry.value});
+			    this.socketIO.sockets.emit('alert', {name: "temperatura", value: registry.value});
 			}
-			this.socketIO.emit('promt', datoT);
+			this.socketIO.sockets.emit('promt', datoT);
 			break;
 			case "Humedad":
 			case "humedad":
 			datoH.push([registry.value]);
 			if (registry.value >= Storage.schemas.Humedad.schema.max) {
 			    this.activatedesalarm(true, Storage.schemas.Humedad.schema.name);
-			    this.socketIO.emit('alert', {name: "humedad", value: registry.value});
+			    this.socketIO.sockets.emit('alert', {name: "humedad", value: registry.value});
 			}
-			this.socketIO.emit('humt', datoH);
+			this.socketIO.sockets.emit('humt', datoH);
 			break;
 			case "liquidoA":
 			case "LiquidoA":
 			if (registry.value) {
 			    this.activatedesalarm(true, Storage.schemas.LiquidoA.schema.name);
-			    this.socketIO.emit('alert', {name: "liquidoA", value: registry.value});
+			    this.socketIO.sockets.emit('alert', {name: "liquidoA", value: registry.value});
 			}
 			break;
 			case "liquidoB":
 			case "LiquidoB":
 			if (registry.value) {
 			    this.activatedesalarm(true, Storage.schemas.LiquidoB.schema.name);
-				this.socketIO.emit('alert', {name: "liquidoB", value: registry.value});
+				this.socketIO.sockets.emit('alert', {name: "liquidoB", value: registry.value});
 			}
 			break;
 			case "liquidoC":
 			case "LiquidoC":
 			if (registry.value >= Storage.schemas.LiquidoC.schema.max) {
 			    this.activatedesalarm(true, Storage.schemas.LiquidoC.schema.name);
-			    this.socketIO.emit('alert', {name: "liquidoC", value: registry.value});
+			    this.socketIO.sockets.emit('alert', {name: "liquidoC", value: registry.value});
 			}
 			break;
 			case "humo":
 			case "humo":
 			if (registry.value) {
 			    this.activatedesalarm(true, Storage.schemas.Humo.schema.name);
-			    this.socketIO.emit('alert', {name: "humo", value: registry.value});
+			    this.socketIO.sockets.emit('alert', {name: "humo", value: registry.value});
 			}
 			break;
 			case "principal":
 			if (registry.value){
-				this.socketIO.emit('estP', registry.value);
+				this.socketIO.sockets.emit('estP', registry.value);
 				//console.log("enviando puerta");
 				//console.log(registry.value);
 			}
 			break;
 			case "usuario":
 			if (registry.value){
-				this.socketIO.emit('usuario', registry.value);
+				this.socketIO.sockets.emit('usuario', registry.value);
 				//console.log("enviando usuario");
 			}
 			break;
 			case "luz_1":
 			if (registry.value){
-				this.socketIO.emit('estL', registry.value);
+				this.socketIO.sockets.emit('estL', registry.value);
 				console.log(registry.value);
 			}
 			break;
 			case "luz_2":
 			if (registry.value){
-				this.socketIO.emit('estL2', registry.value);
+				this.socketIO.sockets.emit('estL2', registry.value);
 			}
 			break;
 			case "aire_1":
 			if (registry.value){
-				this.socketIO.emit('estA', registry.value);
+				this.socketIO.sockets.emit('estA', registry.value);
 				console.log(registry.value);
 			}
 			break;			
 		};   
 
-		this.socketIO.emit('general', registry); 
+		this.socketIO.sockets.emit('general', registry); 
 	} 
 	else { console.log("SOCKET IO not found"); }
 	return registry;
@@ -266,6 +267,18 @@ Monitduino.prototype.setupSocketEvents = function(){
     this.socketIO.on('a2control', function(data){
 	that.airesC2 = data;
 	that.controlaire2(data);
+    });
+
+    this.socketIO.on('schemaData', function(data) {
+    	_.forEach(Storage.schemas, function(schema) {
+    		console.log(data.name);
+    		console.log(schema.schema.name);
+	    	if (schema.schema.name === data.name) {
+	    		console.log(schema.schema);
+	    		schema.schema.max = data.max;
+	    		schema.schema.min = data.min;
+	    	}
+	    });
     });
 };
 
@@ -348,11 +361,11 @@ Monitduino.prototype.activatedesalarm = function(activate, name){
 	if(this.alarma !== null && this.alarma !== undefined) {
 	    if(activate || activate === undefined) {
 		this.setAlertState(true, name);
-		this.socketIO.emit("onAlarmStatesChanged", Monitduino.globals.alarms);
+		this.socketIO.sockets.emit("onAlarmStatesChanged", Monitduino.globals.alarms);
 		this.alarma.on();
 	    } else {
 		this.setAlertState(false);
-		this.socketIO.emit("onAlarmStatesChanged", Monitduino.globals.alarms);
+		this.socketIO.sockets.emit("onAlarmStatesChanged", Monitduino.globals.alarms);
 		this.alarma.off();
 	    }
 		result = true;
@@ -561,9 +574,15 @@ Monitduino.prototype.setupBoard = function ()  {
 		});
 
 	    that.luz_1.on('hold', function(){
+	    	console.log("==========================================================");
+	    	console.log("====================== X =================================");
+	    	console.log("==========================================================");
 	    	that.sendSocketAndMaybeStoreRegistry(Storage.data.Luz_1, positiveValue, 0, false);
 	    });
 	    that.luz_1.on('up', function(){
+	    	console.log("==========================================================");
+	    	console.log("====================== X =================================");
+	    	console.log("==========================================================");
 	    	that.sendSocketAndMaybeStoreRegistry(Storage.data.Luz_1, negativeValue, 0, false);
 	    });
 	    that.luz_2.on('hold', function(){
@@ -660,7 +679,7 @@ Monitduino.prototype.setupSerialPort = function() {
         		Celsius: celsius,
         		Humedad: hum_
         	};
-        	if(time === 7){
+        	if(time === 1){
         		var alertForTemperature = (object.Celsius >= Storage.schemas.Temperatura.schema.max);
         		var alertForHumidity = (object.Humedad >= Storage.schemas.Humedad.schema.max);
         		that.sendSocketAndMaybeStoreRegistry(Storage.data.Celsius, object.Celsius, counterTemperature, alertForTemperature ? true : false);

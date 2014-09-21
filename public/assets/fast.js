@@ -1,4 +1,4 @@
-var domain = "http://127.0.0.1:3000";
+var domain = "http://192.168.1.3:3000";
 var socket = io.connect(domain);
 var val_t = 0;
 var val_h = 0;
@@ -20,7 +20,7 @@ $("#tempt").text("No registro");
 $("#humid").text("No registro");
 */
 var fetchData = function(name, callback) {
-	var url = domain + "/" + name + "/data";
+	var url = "/" + name + "/data";
 	$.get(url, function(data){
 		console.log(data);
 		if (callback) {
@@ -769,12 +769,12 @@ var estadoLuz = function()
 		console.log(estado + "hola");
 		if(estado === "1"){
 			console.log("Encendido");
-			$("#luz1st .fa.fa-bolt").css("color", "orange");
+			$("#luz1st>i").first().css("color", "orange");
 			$("#luz1sttext").text(" Encendido");
 		}
 		else if(estado === "0"){
 			console.log("Apagado");
-			$("#luz1st .fa.fa-bolt").css("color", "gray");
+			$("#luz1st>i").css("color", "gray");
 			$("#luz1sttext").text(" Apagado");
 
 		}
@@ -857,7 +857,10 @@ var fetchSchemas = function() {
 				+schema.schema.min+
 				"</td><td>"
 				+schema.schema.max+
-				"</td><td><button class=\"btn btn-primary btn-small editarEsquema\""+
+				"</td><td><button onclick=\"modifySchemaData($(this));\" data-schema-max=\""+schema.schema.max+"\""+
+				"data-schema-min=\""+schema.schema.min+"\""+
+				"data-schema-name=\""+schema.schema.name+"\""+
+				"class=\"btn btn-primary btn-small editarEsquema\""+
 				"style=\"float: right;\" data-toggle=\"modal\" data-target=\"#editSchemas\">Editar</button>"	
 				+"</td>/tr>";
 				 $tableSchemas.find("tbody").append(strDOM);
@@ -866,6 +869,26 @@ var fetchSchemas = function() {
 		} 
 	});
 };
+
+var modifySchemaData = function($el) {
+	var max = $el.attr("data-schema-max");
+	var min = $el.attr("data-schema-min");
+	var name = $el.attr("data-schema-name");
+	var $tName = $("#modalDataToEdit");
+	var $iMin = $("#modalDataToEditMin");
+	var $iMax = $("#modalDataToEditMax");
+	$tName.text(name);
+	$iMin.val(min);
+	$iMax.val(max);
+};
+
+var sendSchemaData = function() {
+	var schema = {name : $("#modalDataToEdit").text(), max: $("#modalDataToEditMax").val(), min: $("#modalDataToEditMin").val()};
+	console.log(schema);
+	socket.emit('schemaData', schema);
+	fetchSchemas();
+}
+
 encender();
 apagar();
 encenderluz1();
@@ -882,3 +905,4 @@ controlpuerta();
 usuariopuerta();
 estadoLuz();
 estadoAire();
+fetchSchemas();
