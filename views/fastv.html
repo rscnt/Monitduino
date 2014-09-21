@@ -63,7 +63,7 @@
 			<div class="state-info">
 				<h4>LIQUIDO EN LA SALA</h4>
 				<p>
-					<span id="liquidos" class="label label-default"></span>
+					<span id="liquid" class="label label-default"></span>
 
 				</p>	
 			</div>
@@ -84,14 +84,14 @@
 			<div class="panel-heading">
 				<div class="panel-heading-btn">
 					<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
-					<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
+					<a href="javascript:;" onclick="fetchSchemas();" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload"><i class="fa fa-repeat"></i></a>
 					<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse"><i class="fa fa-minus"></i></a>
 					<a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-danger" data-click="panel-remove"><i class="fa fa-times"></i></a>
 				</div>
 				<h4 class="panel-title">Limites de la sala</h4>
 			</div>
 			<div class="panel-body">
-				<table class="table table-bordered">
+				<table id="schemasTable" class="table table-bordered">
 					<thead>
 						<tr>
 							<th>Descripcion</th>
@@ -111,8 +111,7 @@
 							<td>30</td>
 						</tr>
 					</tbody>
-				</table>
-			</div>
+				</table>		
 		</div>
 		<!-- end panel -->
 	</div>
@@ -140,5 +139,40 @@
 		</div>
 		<!-- end panel -->
 	</div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="editSchemas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+        <span aria-hidden="true">&times;</span>
+        <span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="editarEsquemaTitulo">Editar Temperatura</h4>
+      </div>
+      <div class="modal-body">
+		<form class="form-horizontal" role="form">
+		  <div class="form-group">
+		    <label for="inputMinimoSchema" class="col-sm-2 control-label">Minimo</label>
+		    <div class="col-sm-10">
+		      <input type="number" class="form-control" min="0" id="inputMinimoSchema" placeholder="Minimo">
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="inputMaximoSchema" class="col-sm-2 control-label">Maximo</label>
+		    <div class="col-sm-10">
+		      <input type="number" min="0" class="form-control" id="inputMaximoSchema" placeholder="Maximo">
+		    </div>
+		  </div>
+		</form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary">Guardar cambios</button>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

@@ -661,7 +661,7 @@ var pabierta = function (){
 	$("#palabierta").text("Nada");
 	$( "#pcerrada.badge" ).css("background-color", "gray");
 	$("#pcerrada").text("Nada");
-	$("#puerta").attr('src','pexpoab.jpg')
+	$("#puerta").attr('src','/assets/img/pexpoab.jpg')
 }
 var pcerrada = function (){
 	$( "#pabierta.badge" ).css("background-color", "gray");
@@ -672,7 +672,7 @@ var pcerrada = function (){
 	$("#pcerrada").text("Puerta Cerrada");
 	$( "#usuario.badge" ).css("background-color", "gray");
 	$("#usuario").text("Nadie");
-	$("#puerta").attr('src','pexpofa.jpg')
+	$("#puerta").attr('src','/assets/img/pexpofa.jpg')
 }
 var alertapuerta = function (){
 	$( "#pabierta.badge" ).css("background-color", "gray");
@@ -681,7 +681,7 @@ var alertapuerta = function (){
 	$("#palabierta").text("Alerta, puerta abierta");
 	$( "#pcerrada.badge" ).css("background-color", "gray");
 	$("#pcerrada").text("Nada");
-	$("#puerta").attr('src','pexpoab.jpg')
+	$("#puerta").attr('src','/assets/img/pexpoab.jpg')
 }
 var controlpuerta = function()
 {
@@ -821,7 +821,7 @@ var estadoAire = function() {
 			$("#air1st").text(" Sin estado");
 		}
 	});
-
+};
 
 var $refreshUsuarioTable;
 var refreshUsuarioDataTable = function() {
@@ -834,7 +834,7 @@ var refreshUsuarioDataTable = function() {
 				//var alert = displayBlockOfAlert(data.items[i].priority);
                 var name = data.items[i].value == 2 ? "Kevin Vasquez" : "Lisandro Guardado";
 				$refreshUsuarioTable.find("tbody").append(
-					"<tr><td>"+data.items[i].registry.name+"</td>"+
+					"<tr><td>"+data.items[i].name+"</td>"+
 					"<td>"+dDate+"</td>"+
 					"<td>"+name+"</td></tr>"
 					);
@@ -843,6 +843,29 @@ var refreshUsuarioDataTable = function() {
 	}
 };
 
+var fetchSchemas = function() {
+	var $tableSchemas = $("#schemasTable");
+	$.getJSON("/schemas", function(json){
+		$tableSchemas.find("tbody").html("");
+		if (json.schemas) {
+			_.forEach(json.schemas, function(schema) {
+				console.log(schema);
+				if(schema.schema.name == "temperatura" || schema.schema.name == "humedad"){
+				var strDOM = "<tr> <td>"
+				+schema.schema.name
+				+"</td><td>"
+				+schema.schema.min+
+				"</td><td>"
+				+schema.schema.max+
+				"</td><td><button class=\"btn btn-primary btn-small editarEsquema\""+
+				"style=\"float: right;\" data-toggle=\"modal\" data-target=\"#editSchemas\">Editar</button>"	
+				+"</td>/tr>";
+				 $tableSchemas.find("tbody").append(strDOM);
+				}
+			});
+		} 
+	});
+};
 encender();
 apagar();
 encenderluz1();
