@@ -761,6 +761,27 @@ var usuariopuerta = function()
 	});
 };
 
+
+var $refreshUsuarioTable;
+var refreshUsuarioDataTable = function() {
+	$refreshUsuarioTable = $("#usuario-data-table");
+	if ($refreshUsuarioTable) {
+		fetchData("usuarios", function(data){
+			$refreshUsuarioTable.find("tbody").html("");
+			for(var i in data.items) {
+				var dDate = formatDate(data.items[i].date);
+				//var alert = displayBlockOfAlert(data.items[i].priority);
+                var name = data.items[i].value == 2 ? "Kevin Vasquez" : "Lisandro Guardado";
+				$refreshUsuarioTable.find("tbody").append(
+					"<tr><td>"+data.items[i].registry.name+"</td>"+
+					"<td>"+dDate+"</td>"+
+					"<td>"+name+"</td></tr>"
+					);
+			}
+		});
+	}
+};
+
 var luzencendida = function()
 {
 	socket.on('')
