@@ -10,7 +10,7 @@ var transporter = nodemailer.createTransport({
     }
 });
 var twitlio = require("twilio");
-var clientTwitlio = new twitlio.RestClient("AC46ad049dd593f00da5e138386594f70c", "79517d281b9cbe2a1e8c7c52224da519");
+var clientTwitlio = new twitlio.RestClient("AC8191d0a24073858a6c78199f14467e73", "e012540e9eb712f6049936cbe1581427");
 /*
 var redis = new require("redis"),
     client = redis.createClient();
