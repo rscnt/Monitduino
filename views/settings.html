@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block header %}
+<h1 class="page-header">Configuraciones <small>configuraciones.</small></h1>
+{% endblock %}
+
+{% block fast %}
+<!-- begin row -->
+<div class="row">
+    <table class="table  table-bordered">
+        <tbody>
+            <tr>
+                <td> Llamadas habilitadas: </td>
+                <td> <button id="llamadasHabilitadas" type="button" class="btn btn-danger" data-toggle="button">Habilitar llamdas</button> </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript">
+    var doTrueCall = function() {
+        var f = true;
+        var $llamadasHabilitadas = $("#llamadasHabilitadas");
+        $(document).on("click", $llamadasHabilitadas, function(){
+            if (!f) {
+                $.getJSON("/calls/state/on", function(data){
+                    $llamadasHabilitadas.addClass("active");
+                });
+            }
+        });
+        $.getJSON("/calls/state", function(json){ 
+            if (json.settings.enabledCalls) { 
+                $llamadasHabilitadas.addClass("active");  
+            } else {
+                $llamadasHabilitadas.removeClass("active");  
+            }
+            f = false;
+        });
+    }
+</script>
+{% endblock %}

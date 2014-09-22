@@ -1,4 +1,4 @@
-var domain = "http://192.168.1.3:3000";
+var domain = "http://127.0.0.1:3000";
 var socket = io.connect(domain);
 var val_t = 0;
 var val_h = 0;

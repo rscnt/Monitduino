@@ -1,6 +1,16 @@
 var Storage = new require("./storage"),
     storage = new Storage();
 var _ = require("lodash");
+var nodemailer = require('nodemailer');
+var transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+        user: 'monitduino@gmail.com',
+        pass: 'monitduino2014'
+    }
+});
+var twitlio = require("twilio");
+var clientTwitlio = new twitlio.RestClient("AC46ad049dd593f00da5e138386594f70c", "79517d281b9cbe2a1e8c7c52224da519");
 /*
 var redis = new require("redis"),
     client = redis.createClient();
@@ -8,7 +18,7 @@ var redis = new require("redis"),
 var socketIO;
 var five = require("johnny-five"),
 com = require("serialport");
-var serialPort = new com.SerialPort("/dev/ttyUSB1", {
+var serialPort = new com.SerialPort("/dev/ttyUSB0", {
 	baudrate: 9600,
 	parser: com.parsers.readline('\r\n')
 });
@@ -67,6 +77,8 @@ var Monitduino = function(){
     });
 	*/
 };
+
+Monitduino.enabledCalls = false;
 
 Monitduino.globals = {alarms:{
     state: false, 
@@ -129,6 +141,56 @@ Monitduino.prototype.setAlertState = function(state, name) {
     Monitduino.globals.alarms.state = state;
 };
 
+
+Monitduino.emails = [
+    "reascencio@grupoautofacil.com",
+    "henanty@gmail.com",
+    "rascnt@gmail.com"
+];
+
+var sendAMailToABrotha = function(subject, bodyText, warpHtml) {
+    // setup e-mail data with unicode symbols
+    var mailOptions = {
+        from: 'Monitduino sistema de alertas ✔ <monitduino@gmail.com>', // sender address
+        to: Monitduino.emails.join(","), // list of receivers
+        subject: subject, // Subject line
+        text: bodyText, // plaintext body
+        html: warpHtml // html body
+    };
+    // send mail with defined transport object
+    transporter.sendMail(mailOptions, function(error, info){
+        if(error){
+            console.log(error);
+        }else{
+            console.log('Message sent: ' + info.response);
+        }
+    });
+};
+
+var sendACallToABrotha = function (name, value) {
+    // A simple example of making a phone call using promises
+    if (Monitduino.enabledCalls) {
+        var promise = clientTwitlio.makeCall({
+            to:'+50371017545', 
+            from:'+50321133252 ',
+            url:'http://rscnt.com:8080/?name='+name+'&value='+value
+        });
+        Monitduino.enabledCalls = false;
+        promise.then(function(call) {
+            console.log('Se llamo a : '+call.sid);
+        }, function(error) {
+            console.error('La llamada fallo: '+error.message);
+            
+        });    
+    }
+};
+
+var getFormattedDate = function() {
+    var date  = new Date();
+    var formatD = date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear() + " " + date.getHours() +":" + date.getMinutes() + ":" + date.getSeconds() + ":" + date.getMilliseconds();
+    return formatD;
+};
+
 Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, counter, store) {
 	var valor = value;
 	var registry = {name: name, value: value};
@@ -136,6 +198,7 @@ Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, cou
 		storage.createRegistry(registry.name, registry.value);	
 	} else { console.log("storage not defined"); }
 	this.count = 0;
+    var alertBodyText;
 	if (this.socketIO !== undefined && this.socketIO !== null) {
 		switch(registry.name){
 			case "Temperatura":
@@ -144,6 +207,13 @@ Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, cou
 			if (registry.value >= Storage.schemas.Temperatura.schema.max) {
 			    this.activatedesalarm(true, Storage.schemas.Temperatura.schema.name);
 			    this.socketIO.sockets.emit('alert', {name: "temperatura", value: registry.value});
+                alertBodyText = "Los niveles de temperatura han alcanzdo o sobrepasado su maximo nivel, valor registrado:  " + registry.value + ", tiempo: " + getFormattedDate();
+                sendAMailToABrotha("Alerta, Temperatura Alta", 
+                                   alertBodyText,
+                                  "<p>Los niveles de temperatura han alcanzdo o sobrepasado su maximo nivel</p> " + 
+                                      "<p>Valor registrado:  " + registry.value + ",  tiempo: " + getFormattedDate() + "</p>"
+                                  );
+                sendACallToABrotha(registry.name, registry.value);
 			}
 			this.socketIO.sockets.emit('promt', datoT);
 			break;
@@ -153,6 +223,12 @@ Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, cou
 			if (registry.value >= Storage.schemas.Humedad.schema.max) {
 			    this.activatedesalarm(true, Storage.schemas.Humedad.schema.name);
 			    this.socketIO.sockets.emit('alert', {name: "humedad", value: registry.value});
+                alertBodyText =  "Niveles de humedad demasiado altos:  " + registry.value + ", tiempo: " + getFormattedDate();
+                sendAMailToABrotha("Humedad detectada", 
+                                  alertBodyText,
+                                  "<p>Niveles de humedad demasiado altos</p> <p>Valor registrado:  " + registry.value + ", tiempo: " + getFormattedDate() + "</p>"
+                                  );
+                sendACallToABrotha(registry.name, registry.value);
 			}
 			this.socketIO.sockets.emit('humt', datoH);
 			break;
@@ -161,6 +237,12 @@ Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, cou
 			if (registry.value) {
 			    this.activatedesalarm(true, Storage.schemas.LiquidoA.schema.name);
 			    this.socketIO.sockets.emit('alert', {name: "liquidoA", value: registry.value});
+                alertBodyText = "Liquidos dectectados por el sensor numero 1, tiempo: " + getFormattedDate();
+                sendAMailToABrotha("Liquidos detectados", 
+                                   alertBodyText,
+                                  "<p>Liquidos dectectados por el sensor numero 1, tiempo: " + getFormattedDate() + "</p>"
+                                  );
+                sendACallToABrotha(registry.name, registry.value);
 			}
 			break;
 			case "liquidoB":
@@ -168,6 +250,12 @@ Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, cou
 			if (registry.value) {
 			    this.activatedesalarm(true, Storage.schemas.LiquidoB.schema.name);
 				this.socketIO.sockets.emit('alert', {name: "liquidoB", value: registry.value});
+                alertBodyText = "Liquidos dectectados por el sensor numero 2, tiempo: " + getFormattedDate();
+                sendAMailToABrotha("Liquidos detectados", 
+                                  alertBodyText,
+                                  "<p>Liquidos dectectados por el sensor numero 2, tiempo: " + getFormattedDate() + "</p>"
+                                  );
+                sendACallToABrotha(registry.name, registry.value);
 			}
 			break;
 			case "liquidoC":
@@ -175,6 +263,12 @@ Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, cou
 			if (registry.value >= Storage.schemas.LiquidoC.schema.max) {
 			    this.activatedesalarm(true, Storage.schemas.LiquidoC.schema.name);
 			    this.socketIO.sockets.emit('alert', {name: "liquidoC", value: registry.value});
+                alertBodyText = "Liquidos dectectados por el sensor numero 3, tiempo: " + getFormattedDate();
+                sendAMailToABrotha("Liquidos detectados", 
+                                  alertBodyText,
+                                  "<p>Liquidos dectectados por el sensor numero 3, tiempo: " + getFormattedDate() + "</p>"
+                                  );
+                sendACallToABrotha(registry.name, registry.value);
 			}
 			break;
 			case "humo":
@@ -182,6 +276,12 @@ Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, cou
 			if (registry.value) {
 			    this.activatedesalarm(true, Storage.schemas.Humo.schema.name);
 			    this.socketIO.sockets.emit('alert', {name: "humo", value: registry.value});
+                alertBodyText ="Humo dectectado, tiempo: " + getFormattedDate();
+                sendAMailToABrotha("Presencia de humo detectado ", 
+                                  alertBodyText,
+                                  "<p>Humo dectectado, tiempo: " + getFormattedDate() + "</p>"
+                                  );
+                sendACallToABrotha(registry.name, registry.value);
 			}
 			break;
 			case "principal":

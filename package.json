@@ -25,6 +25,7 @@
         "lodash"         : "*",
         "nodemailer"     : "*",
         "email-templates": "*",
+        "twilio"         : "*",
         "redis"          : "*"
     }
 }
