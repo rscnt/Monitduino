@@ -23,6 +23,8 @@
         "express"        : "*",
         "mysql"          : "*",
         "lodash"         : "*",
+        "nodemailer"     : "*",
+        "email-templates": "*",
         "redis"          : "*"
     }
 }

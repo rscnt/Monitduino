@@ -7,7 +7,6 @@ module.exports = function(sequelize, DataTypes) {
         classMethods: {
             associate: function(models) {
                 Registry.belongsTo(models.Data);
-                Registry.belongsTo(models.Alert);
             }
         }
     });
