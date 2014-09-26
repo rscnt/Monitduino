@@ -462,7 +462,7 @@ socket.on('general', function(data){
 		case "Humedad":
 		case "humedad":
 		if ($humedadIndicator) {
-			$humedadIndicator.html(data.value);
+			$humedadIndicator.html(data.value + " %");
 		}
 		if (data.AlertId) {
 			$humedadIconDetail.css("color", "red");
@@ -473,7 +473,7 @@ socket.on('general', function(data){
 		case "Temperatura":
 		case "temperatura":
 		if ($temperatureIndicator) {
-			$temperatureIndicator.html(data.value);
+			$temperatureIndicator.html(data.value + " °C");
 		}
 		if (data.AlertId) {
 			$temperaturaIconDetail.css("color", "red");
@@ -544,7 +544,7 @@ var encender = function (){
 		var state = 1;
 		console.log("Boton Encendido");
 		socket.emit('humo', state);
-	});
+		}); 
 };
 
 var apagar = function(){
@@ -558,8 +558,9 @@ var apagar = function(){
 var encenderluz1 = function(){
 	$("#luz1e").click(function(){
 		var state = 1;
-		socket.emit('luz1', state);
-
+		socket.emit('luz1', state, function(confirmation){
+			console.log(confirmation);
+		});
 	});
 };
 

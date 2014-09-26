@@ -1,0 +1,1 @@
+Webcam.attach( '#my_camera' );
