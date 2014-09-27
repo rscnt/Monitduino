@@ -558,15 +558,13 @@ var apagar = function(){
 var encenderluz1 = function(){
 	$("#luz1e").click(function(){
 		var state = 1;
-		socket.emit('luz1', state, function(confirmation){
-			console.log(confirmation);
-		});
+		socket.emit('luz1', state);
 	});
 };
-
 var apagarluz1 = function(){
-	$("#luz1o").click(function(){
+	$(document).on("onclick", "#luz1o", function(){
 		var state = 0;
+		console.log("Foobar: " + state);
 		socket.emit('luz1', state);
 	});
 };

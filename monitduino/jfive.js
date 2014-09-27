@@ -47,10 +47,10 @@ var Monitduino = function(){
     var that = this;
     this.socketIO = null;
     this.nNotifications = null;
-    this.liq_a = null;
-    this.liq_b = null;
-    this.liq_c = null;
-    this.hum_a = null;
+    this.liq_a = 0;
+    this.liq_b = 0;
+    this.liq_c = 0;
+    this.hum_a = 0;
     this.t_track = null;
     this.board = null;
     this.count = 0;
@@ -66,6 +66,8 @@ var Monitduino = function(){
     this.luces2 = 0;
     this.airesC = 0;
     this.airesC2 = 0;
+    this.lcd = null;
+    this.lcd_2 = null;
     /*
     client.get("numberOfAlerts", function(err, reply) {
 	if (err) { console.log(err); }
@@ -247,7 +249,7 @@ Monitduino.prototype.sendSocketAndMaybeStoreRegistry = function(name, value, cou
 			break;
 			case "liquidoB":
 			case "LiquidoB":
-			if (registry.value) {
+			if (registry.value >= Storage.schemas.LiquidoB.schema.max) {
 			    this.activatedesalarm(true, Storage.schemas.LiquidoB.schema.name);
 				this.socketIO.sockets.emit('alert', {name: "liquidoB", value: registry.value});
                 alertBodyText = "Liquidos dectectados por el sensor numero 2, tiempo: " + getFormattedDate();
@@ -341,17 +343,17 @@ Monitduino.prototype.setupSocketEvents = function(){
 
     this.socketIO.on('foo', function(data) {
     	console.log(data);
-    	console.log("--------------------------------------");
     });
 
-    this.socketIO.sockets.on('luz1', function(data, fn){
-    var est = data;
-	that.luces1 = est;
-	that.activarluz1(est);
-	fn (true);
+    this.socketIO.on('luz1', function(data, fn){
+    	var est = data;
+		that.luces1 = est;
+		that.activarluz1(est);
+		console.log("Data : " + data);
+		fn (true);
     });
 
-    this.socketIO.sockets.on('luz2', function(data){
+    this.socketIO.on('luz2', function(data){
 	that.luces2 = data;
 	that.activarluz2(data);
     });
@@ -594,18 +596,15 @@ Monitduino.prototype.setupBoard = function ()  {
 			that.l7 = new five.Led(38);
 			that.l8 = new five.Led(39);
 
-			var lcd = new five.LCD({
-				pins: [15, 16, 18, 19, 20, 21]
+			that.lcd = new five.LCD({
+				pins: [15, 16, 21, 20, 19, 18]
 			});
 
 			that.lcd_2 = new five.LCD({
 				pins: [40, 41, 42, 43, 44, 45]
 			});
-
+			that.alarma.on();
 	    //probe
-	    that.luz1.on();
-	    that.luz2.on();
-
 	    if(that.humos){
 	    	that.alarma.on();
 	    }
@@ -746,10 +745,15 @@ Monitduino.prototype.setupBoard = function ()  {
 	    });
 
 	    
-	    lcd.on("ready", function() {
-	    	lcd.print("Hola Mundo");
+	    that.lcd.on("ready", function() {
+	    	that.lcd.print("Hola Mundo");
 	    });
-	    that.lcd_2.on("ready", function() {});
+	    that.lcd_2.on("ready", function() {
+	    	that.lcd_2.clear();
+	    	that.lcd_2.print("Bienvenido");
+	    	that.lcd_2.cursor(1, 0);
+	    	that.lcd_2.print("Pase su tarjeta");
+	    });
 
 		var refrescarLCD = function(act){
 			that.lcd.on("ready", function() { console.log("lcd ready"); });
