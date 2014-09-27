@@ -129,7 +129,7 @@ db
 
         monitduino.setSocket(io);
         io.sockets.on('connection', function(socket) {
-            console.log(socket.id);
+            monitduino.setupSocketEvents(socket);
         });
         });
     }
